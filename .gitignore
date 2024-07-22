@@ -2,7 +2,7 @@
 .DS_Store*
 .env
 node_modules
-bun.lockb
+
 # Logs
 logs
 *.log
