@@ -7,6 +7,18 @@ services:
       - ./backend:/app
     ports:
       - "3000:3000"
+    environment:
+      DB_HOST: db
+      DB_HOST_PORT: 3306
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+      JWT_ACCESS_TOKEN: ${JWT_ACCESS_TOKEN}
+      JWT_ACCESS_TOKEN_EXPIRES: ${JWT_ACCESS_TOKEN_EXPIRES}
+      JWT_REFRESH_TOKEN: ${JWT_REFRESH_TOKEN}
+      JWT_REFRESH_TOKEN_EXPIRES: ${JWT_REFRESH_TOKEN_EXPIRES}
+      GMAIL_USER: ${GMAIL_USER}
+      GMAIL_PASS: ${GMAIL_PASS}
     depends_on:
       - postgres
 
@@ -29,8 +41,11 @@ services:
       POSTGRES_DB: ${DB_NAME}
     volumes:
       - pgdata:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "5432:5432"
+    expose:
+      - "5432"
 
   pgadmin:
     image: dpage/pgadmin4

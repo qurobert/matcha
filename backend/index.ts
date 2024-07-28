@@ -1,21 +1,37 @@
 import express from "express";
+import 'express-async-errors'
 import cookieParser from "cookie-parser"
-import logger from "morgan"
+import morgan from "morgan"
+import cors from 'cors'
 const app = express();
 const port = process.env.PORT || 3000;
 import http from "http";
+import UserRouter from "./routes/userRouter.ts";
+import AuthRouter from "./routes/authRouter.ts";
+import {error404, globalErrorLogger, globalErrorMiddleware} from "./middlewares/errorMiddleware.ts";
+import IndexRouter from "./routes";
 
 // Configuring the app
-app.use(logger("dev"));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(cors({
+	origin: 'http://localhost:80',
+	methods: ['GET', 'POST', 'PUT', 'DELETE'],
+	credentials: true,
+	preflightContinue: false,
+}))
+app.use(morgan("dev"));
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: false, limit: '50mb' }));
 app.use(cookieParser());
+app.options('*', cors());
+app.use('/', IndexRouter);
+app.use('/users', UserRouter);
+app.use('/auth', AuthRouter);
 
-// Server test
-app.get("/", (req: any, res: any) => {
-	// send a simple json response
-	res.json({ message: "Hello World!" });
-});
+app.use(
+	error404,
+	globalErrorLogger,
+	globalErrorMiddleware,
+)
 
 const server = http.createServer(app);
 
