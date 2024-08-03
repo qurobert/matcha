@@ -3,15 +3,6 @@ import pool from "./db.ts";
 import AuthController from "../controllers/authController.js";
 import ErrorMiddleware from "../middlewares/errorMiddleware.js";
 
-interface User {
-    id: string,
-    email: string,
-    username: string,
-    password: string,
-    verify_email: boolean,
-    code_password_reset: string
-}
-
 export default class UserModel {
 
     static async findOneByEmail(email: string) {
