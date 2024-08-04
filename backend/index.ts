@@ -13,7 +13,7 @@ import IndexRouter from "./routes";
 
 // Configuring the app
 app.use(cors({
-	origin: 'http://localhost:80',
+	origin: 'http://localhost',
 	methods: ['GET', 'POST', 'PUT', 'DELETE'],
 	credentials: true,
 	preflightContinue: false,
