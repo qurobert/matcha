@@ -26,14 +26,14 @@ export default class AuthController {
 
 
     static async login(req: Request, res: Response) {
-        const {email, password} = req.body;
-        const user = await UserModel.login(email, password);
+        const {username, password} = req.body;
+        const user = await UserModel.login(username, password);
 
         return res.json({
             status: 200,
             message: "User logged in successfully",
         // @ts-ignore
-            accessToken: JWTAccessToken.sign({email, id: user.id}),
+            accessToken: JWTAccessToken.sign({email: user.email, id: user.id}),
         // @ts-ignore
             refreshToken: JWTRefreshToken.sign({id: user.id}),
         });
@@ -41,8 +41,6 @@ export default class AuthController {
 
     static async verifyEmail(req: Request, res: Response) {
         const {token} = req.query;
-        console.log("COUCOU")
-        console.log(token);
         // @ts-ignore
         JWTAccessToken.verify(token, async (err, emailTokenInfo) => {
             console.log(emailTokenInfo, err);
@@ -51,7 +49,7 @@ export default class AuthController {
             const user = await UserModel.findById(emailTokenInfo.id);
             if (!user) return res.sendStatus(403);
             await UserModel.validate_email(user.email);
-            return res.redirect('http://localhost:80/email-verified');
+            return res.redirect('http://localhost/verify-email');
         })
     }
 

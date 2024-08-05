@@ -78,10 +78,10 @@ export default class UserModel {
         }
     }
 
-    static async login(email: string, password: string) {
+    static async login(username: string, password: string) {
         const client = await pool.connect()
         try {
-            const {rows} = await client.query('SELECT * FROM Users WHERE email = $1', [email])
+            const {rows} = await client.query('SELECT * FROM Users WHERE username = $1', [username])
             const user = rows[0]
             if (!user) throw new ErrorMiddleware(404, "User not found")
             if (!bcrypt.compareSync(password, user.password)) throw new ErrorMiddleware(401, "Invalid password")

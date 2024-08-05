@@ -2,9 +2,10 @@
 import ButtonForm from "@/components/forms/ButtonForm.vue";
 import InputForm from "@/components/forms/InputForm.vue";
 import {useForm} from 'vee-validate';
-import {ref} from "vue";
+import {onMounted, onUnmounted, ref} from "vue";
 import * as yup from 'yup';
-import {signup} from "@/services/authService";
+import {emailIsVerified, signup} from "@/services/authService";
+import {useRouter} from "vue-router";
 
 const schema = yup.object({
   email: yup.string()
@@ -25,9 +26,9 @@ const {defineField, errors, handleSubmit} = useForm({
   validationSchema: schema
 })
 
-const [email, emailAttrs] = defineField('email')
-const [password, passwordAttrs] = defineField('password')
-const [username, usernameAttrs] = defineField('username')
+const [email, emailAttrs] = defineField('email');
+const [password, passwordAttrs] = defineField('password');
+const [username, usernameAttrs] = defineField('username');
 
 const isValidate = ref(false);
 const errorSignupMessage = ref("");
@@ -40,6 +41,26 @@ const onSubmit = handleSubmit(values => {
     errorSignupMessage.value = err;
   });
 });
+
+const router = useRouter();
+let intervalId : number | null = null;
+
+onMounted(() => {
+  intervalId = setInterval(() => {
+    if (isValidate.value) {
+      emailIsVerified().then((isVerify: boolean) => {
+        if (isVerify) {
+          intervalId ? clearInterval(intervalId) : null;
+          router.push({name: 'create-profile'});
+        }
+      });
+    }
+  }, 5000);
+})
+
+onUnmounted(() => {
+  intervalId ? clearInterval(intervalId) : null;
+})
 </script>
 
 <template>
@@ -84,7 +105,10 @@ const onSubmit = handleSubmit(values => {
       </form>
       <div v-else>
         <h2 class="text-xl text-center">Email sent.</h2>
-        <p class="text-center text-gray-100 mt-2">Please check your email to confirm your account.</p>
+        <p class="text-center text-gray-100 mt-2">
+          Please check your email to confirm your account.<br>
+          This page will refresh automatically once your email has been verified.
+        </p>
       </div>
     </div>
   </div>
