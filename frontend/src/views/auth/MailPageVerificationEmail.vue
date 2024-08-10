@@ -1,0 +1,15 @@
+<script setup lang="ts">
+
+</script>
+
+<template>
+  <div class="relative">
+    <p class="text-center text-gray-100 absolute top-[50%] md:left-[50%]  md:translate-x-[-50%] translate-y-[-50%]">
+      Your email has been verified. You can now close this tab and return to the login page.
+    </p>
+  </div>
+</template>
+
+<style scoped>
+
+</style>

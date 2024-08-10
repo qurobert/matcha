@@ -12,7 +12,7 @@ export const registerValidator = () => [
 ]
 
 export const refreshTokenValidator = () => [
-	body('refreshToken').isString().withMessage('Refresh token must be a string'),
+	body('refresh_token').isString().withMessage('Refresh token must be a string'),
 	globalHandleValidationResult
 ]
 export const codeEmailValidator = () => [

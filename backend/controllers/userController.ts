@@ -2,24 +2,69 @@ import UserModel from "../models/userModel.ts";
 import ErrorMiddleware from "../middlewares/errorMiddleware.ts";
 import {sendMail} from "../mail/sendMail.ts";
 import {generateVerificationCode} from "../helpers/generateVerificationCode.ts";
-import type {Request, Response, NextFunction} from "express";
+import type {NextFunction, Request, Response} from "express";
+import {verifyAuth} from "../middlewares/authMiddleware.ts";
+import {JWTAccessToken} from "../helpers/jwt.ts";
+
+export interface RequestWithUser extends Request {
+	user: {
+		id: number;
+		email: string;
+		username: string;
+		verify_email: boolean;
+		create_profile: boolean;
+	}
+}
 
 export default class UserController {
-	static async getUserConnected (req: Request, res: Response) {
-		// @ts-ignore
-		const user = await UserModel.findOneByEmail(req.user.email);
+	static async getUserConnected (req: RequestWithUser, res: Response) {
+		const {email} = req.user;
+		const user = await UserModel.findOneByEmail(email);
 		if (!user) throw new ErrorMiddleware(404, "User not found");
-		// @ts-ignore
+
 		return res.json({
 			status: 200,
 			message: "User connected",
-			user: {
-				id: user.id,
-				email: user.email,
-				username: user.username,
-				verify_email: user.verify_email,
-			}
+			user: UserController._responseUser(user),
 		});
+	}
+
+	static async verifyTokenAsync(token: string) {
+		return new Promise((resolve, reject) => {
+			JWTAccessToken.verify(token, (err, decoded) => {
+				if (err) {
+					return reject(err);
+				}
+				resolve(decoded);
+			});
+		});
+	}
+
+	static async userStatus (req: Request, res: Response, next: NextFunction) {
+		const authHeader = req.headers['authorization'];
+		const token = authHeader && authHeader.split(' ')[1];
+
+		if (token == null) {
+			return res.json({
+				connected: false,
+			});
+		}
+		try {
+			const user = await UserController.verifyTokenAsync(token);
+
+			// @ts-ignore
+			const userDb = await UserModel.findOneByEmail(user.email);
+			return res.json({
+				connected: true,
+				user: UserController._responseUser(userDb),
+			});
+
+		} catch(err) {
+			return res.json({
+				connected: false,
+				token_expired: true,
+			});
+		}
 	}
 
 	static async getUserById (req: Request, res: Response) {
@@ -30,12 +75,7 @@ export default class UserController {
 		return res.status(200).json({
 			status: 200,
 			message: "User found",
-			user: {
-				id: user.id,
-				email: user.email,
-				username: user.username,
-				verify_email: user.verify_email,
-			}
+			user: UserController._responseUser(user),
 		});
 	}
 
@@ -76,5 +116,15 @@ export default class UserController {
 			status: 200,
 			message: "User updated",
 		});
+	}
+
+	static _responseUser(user: any) {
+		return {
+			id: user.id,
+			email: user.email,
+			username: user.username,
+			verify_email: user.verify_email,
+			create_profile: false,
+		};
 	}
 }

@@ -1,6 +1,6 @@
 import api from './api';
 
-export const fetchSignup = async (email: string, username: string, password: string) => {
+export const fetchSignup = async (email: string, username: string, password: string)  => {
 	const response = await api.post('/auth/register', {
 		email,
 		username,
@@ -14,10 +14,22 @@ export const fetchMe = async () => {
 	return response.data;
 }
 
+export const fetchStatus = async () => {
+	const response = await api.get('/users/status');
+	return response.data;
+}
+
 export const fetchLogin = async (username: string, password: string) => {
 	const response = await api.post('/auth/login', {
 		username,
 		password
+	});
+	return response.data;
+}
+
+export const fetchResendEmail = async (email: string) => {
+	const response = await api.post('/auth/send-email-verify', {
+		email
 	});
 	return response.data;
 }

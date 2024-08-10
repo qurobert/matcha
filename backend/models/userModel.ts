@@ -85,7 +85,6 @@ export default class UserModel {
             const user = rows[0]
             if (!user) throw new ErrorMiddleware(404, "User not found")
             if (!bcrypt.compareSync(password, user.password)) throw new ErrorMiddleware(401, "Invalid password")
-            if (!user.verify_email) throw new ErrorMiddleware(401, "Email not verified")
             return user
         } finally {
             client.release()

@@ -10,9 +10,7 @@ const authRouter = express.Router();
 
 // @ts-ignore
 authRouter.post('/register',registerValidator(), AuthController.register);
-// @ts-ignore
 authRouter.get('/verify-email', AuthController.verifyEmail);
-// @ts-ignore
 authRouter.post('/login', AuthController.login);
 // @ts-ignore
 authRouter.post('/send-email-verify', emailValidator(), AuthController.sendVerificationEmail);

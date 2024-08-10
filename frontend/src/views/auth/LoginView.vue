@@ -4,7 +4,7 @@ import ButtonForm from "@/components/forms/ButtonForm.vue";
 import InputForm from "@/components/forms/InputForm.vue";
 import {useForm} from 'vee-validate';
 import * as yup from 'yup';
-import {login} from "@/services/authService";
+import {login} from "@/services/auth";
 import {useRouter} from "vue-router";
 
 const router = useRouter();
@@ -30,8 +30,7 @@ const onSubmit = handleSubmit(values => {
   const {username, password} = values;
 
   login(username, password).then(() => {
-    console.log("Login success");
-    router.push({name: 'home'});
+    router.push({name: 'profile'});
   }).catch(err => {
     console.log(err);
   });

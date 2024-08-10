@@ -11,6 +11,7 @@ const userRouter = express.Router();
 
 // @ts-ignore
 userRouter.get('/me', verifyAuth, UserController.getUserConnected);
+userRouter.get('/status', UserController.userStatus);
 // @ts-ignore
 userRouter.get('/:id', verifyAuth, UserController.getUserById);
 // @ts-ignore

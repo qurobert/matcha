@@ -1,8 +1,9 @@
 import UserModel from "../models/userModel.ts";
-import {JWT, JWTAccessToken, JWTRefreshToken} from "../helpers/jwt.ts";
+import {JWTAccessToken, JWTRefreshToken} from "../helpers/jwt.ts";
 import ErrorMiddleware from "../middlewares/errorMiddleware.ts";
 import {sendMail} from "../mail/sendMail.ts";
 import type {Request, Response} from "express";
+import UserController from "./userController.ts";
 
 export default class AuthController {
     static async register(req: Request, res: Response) {
@@ -17,10 +18,14 @@ export default class AuthController {
         return res.json({
             status: 200,
             message: "User created successfully",
-        // @ts-ignore
-            access_token: JWTAccessToken.sign({email, id: user[0]}),
-        // @ts-ignore
-            refresh_token: JWTRefreshToken.sign({id: user[0]}),
+            user: UserController._responseUser(user),
+            access_token: JWTAccessToken.sign({
+                email,
+                id: user.id,
+            }),
+            refresh_token: JWTRefreshToken.sign({
+                id: user.id
+            }),
         });
     }
 
@@ -32,24 +37,21 @@ export default class AuthController {
         return res.json({
             status: 200,
             message: "User logged in successfully",
-        // @ts-ignore
-            accessToken: JWTAccessToken.sign({email: user.email, id: user.id}),
-        // @ts-ignore
-            refreshToken: JWTRefreshToken.sign({id: user.id}),
+            user: UserController._responseUser(user),
+            access_token: JWTAccessToken.sign({email: user.email, id: user.id}),
+            refresh_token: JWTRefreshToken.sign({id: user.id}),
         });
     }
 
     static async verifyEmail(req: Request, res: Response) {
         const {token} = req.query;
-        // @ts-ignore
         JWTAccessToken.verify(token, async (err, emailTokenInfo) => {
-            console.log(emailTokenInfo, err);
-            if (err) return res.sendStatus(403);
+            if (err) return res.status(403).send("The link is invalid or has expired. Please request a new one");
 
             const user = await UserModel.findById(emailTokenInfo.id);
-            if (!user) return res.sendStatus(403);
+            if (!user) return res.status(403).send("Error refresh token");
             await UserModel.validate_email(user.email);
-            return res.redirect('http://localhost/verify-email');
+            return res.redirect('http://localhost/mail-verify-email');
         })
     }
 
@@ -64,29 +66,29 @@ export default class AuthController {
     }
 
     static async refreshAuth(req: Request, res: Response) {
-        const refreshToken = req.body.refreshToken;
+        const refresh_token = req.body.refresh_token;
 
-        JWTRefreshToken.verify(refreshToken, async (err, refreshTokenInfo) => {
+        JWTRefreshToken.verify(refresh_token, async (err, refresh_token_info) => {
+            console.log(err);
             if (err) return res.sendStatus(403);
 
-            const user = await UserModel.findById(refreshTokenInfo.id);
+            const user = await UserModel.findById(refresh_token_info.id);
+            console.log(refresh_token_info);
             if (!user) return res.sendStatus(403);
-        // @ts-ignore
-            const accessToken = JWTAccessToken.sign({email: user.email, id: user.id});
-        // @ts-ignore
-            const refreshToken = JWTRefreshToken.sign({id: user.id});
+            const access_token = JWTAccessToken.sign({email: user.email, id: user.id});
+            const refresh_token = JWTRefreshToken.sign({id: user.id});
+
             res.json({
                 status: 200,
                 message: "User reauthenticated",
-                accessToken,
-                refreshToken
+                access_token,
+                refresh_token
             });
         })
     }
 
     static async _checkUserExist(email: string) {
         const userExist = await UserModel.findOneByEmail(email);
-        console.log(userExist);
         if (userExist) throw new ErrorMiddleware(400, "User already exists");
     }
 
@@ -94,7 +96,6 @@ export default class AuthController {
         const user = await UserModel.findOneByEmail(email);
         if (!user)
             throw new ErrorMiddleware(404, "User not found");
-        // @ts-ignore
         const token = JWTAccessToken.sign({id: user.id});
         const verificationLink = `http://localhost:3000/auth/verify-email?token=${token}`;
         const emailContent = `<p>Please verify your email by clicking on the following <a href="${verificationLink}">link</a></p>`;
