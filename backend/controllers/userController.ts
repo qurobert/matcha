@@ -93,6 +93,7 @@ export default class UserController {
 	static async resetPassword(req: Request, res: Response) {
 		const {email, code, password} = req.body;
 		const user = await UserModel.findOneByEmail(email);
+		console.log(user);
 		if (user.code_password_reset !== code) throw new ErrorMiddleware(400, "Code verification is not valid");
 		await UserModel.updatePassword(email, password);
 		res.json({

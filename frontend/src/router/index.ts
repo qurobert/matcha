@@ -3,8 +3,17 @@ import HomeView from '../views/HomeView.vue'
 import LoginView from '@/views/auth/LoginView.vue'
 import SignupView from '@/views/auth/SignupView.vue'
 import {useAuthStore} from "@/stores/userStore";
-import {fetchMe, fetchStatus} from "@/api/auth";
-import {useRouter} from "vue-router";
+import {fetchStatus} from "@/api/auth";
+
+const redirectToProfile = async (to: any, from: any, next: any) => {
+  const authStore = useAuthStore();
+
+  if (authStore.email) {
+    console.log("redirect to profile");
+    return next({name: 'profile'})
+  }
+  return next();
+}
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -18,34 +27,27 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: LoginView,
-      beforeEnter: (to, from, next) => {
-        const authStore = useAuthStore();
-
-        if (authStore.email) {
-          console.log("redirect to profile");
-          return next({name: 'profile'})
-        }
-        return next();
-      }
+      meta: {hideHeaderInfo: true},
+      beforeEnter: redirectToProfile
     },
     {
       path: '/signup',
       name: 'signup',
       component: SignupView,
-      beforeEnter: (to, from, next) => {
-        const authStore = useAuthStore();
-
-        if (authStore.email) {
-          console.log("redirect to profile");
-          return next({name: 'profile'})
-        }
-        return next();
-      }
+      meta: {hideHeaderInfo: true},
+      beforeEnter: redirectToProfile
     },
     {
       path: '/forgot-password',
       name: 'forgot-password',
-      component: () => import('@/views/auth/ForgotPasswordView.vue')
+      meta: {hideHeaderInfo: true},
+      component: () => import('@/views/auth/forgot-password/ForgotPasswordView.vue'),
+    },
+    {
+      path: '/reset-password',
+      name: 'reset-password',
+      component: () => import('@/views/auth/forgot-password/ResetPassword.vue'),
+      meta: {hideHeaderInfo: true}
     },
     {
       path: '/verify-email',
@@ -73,14 +75,12 @@ const router = createRouter({
   ]
 })
 
-
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore();
   try {
     const userInfo = await fetchStatus();
     const {connected, user} = userInfo;
 
-    console.log('User info', userInfo);
     if (user) authStore.storeUserInfo(user);
     if (to.meta.requiresAuth) {
         if (!connected && to.name !== 'login') {

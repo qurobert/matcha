@@ -33,3 +33,19 @@ export const fetchResendEmail = async (email: string) => {
 	});
 	return response.data;
 }
+
+export const fetchForgotPassword = async (email: string) => {
+	const response = await api.post('/users/forgot-password', {
+		email
+	});
+	return response.data;
+}
+
+export const fetchResetPassword = async (code: string, email: string, password: string) => {
+	const response = await api.post('/users/reset-password', {
+		code,
+		email,
+		password
+	});
+	return response.data;
+}

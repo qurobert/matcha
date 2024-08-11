@@ -1,17 +1,26 @@
 <script setup lang="ts">
-import {RouterLink} from "vue-router";
-import IconLogo from "@/components/icons/IconLogo.vue";
+import {useAuthStore} from "@/stores/userStore";
+import {ref, computed} from "vue";
+import {useRoute} from "vue-router";
+import HeaderConnected from "@/components/headers/HeaderConnected.vue";
+import HeaderGlobal from "@/components/headers/HeaderGlobal.vue";
+import HeaderDisconnected from "@/components/headers/HeaderDisconnected.vue";
+
+const authStore = useAuthStore();
+const is_connected = ref(authStore.is_connected);
+const route = useRoute();
+
+const hideHeaderChildren = computed(() => {
+  return route.meta.hideHeaderInfo || false;
+})
+
 </script>
 
 <template>
-    <nav class="flex justify-center py-3 sticky top-0 bg-light">
-    <RouterLink to="/" class="flex">
-        <IconLogo :size="30" class="mr-2"/>
-        <span class="text-gradient-primary text-3xl">Matcha</span>
-      </RouterLink>
-    </nav>
+  <HeaderGlobal :class-for-nav="hideHeaderChildren ? 'justify-center' : 'justify-between'">
+    <template v-if="!hideHeaderChildren">
+      <HeaderConnected v-if="is_connected" />
+      <HeaderDisconnected v-else />
+    </template>
+  </HeaderGlobal>
 </template>
-
-<style scoped>
-
-</style>

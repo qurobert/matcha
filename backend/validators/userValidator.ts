@@ -26,6 +26,7 @@ export const emailValidator = () => [
 ]
 
 export const resetPassValidator = () => [
+	body('email').isEmail().withMessage('Email is not valid'),
 	body('code').isString().withMessage('Code must be a non-empty string'),
 	body('password').isLength({min: 6}).withMessage('Password must be at least 6 characters'),
 	globalHandleValidationResult

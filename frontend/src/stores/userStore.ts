@@ -9,6 +9,7 @@ type UserType = {
 export const useAuthStore = defineStore('auth', {
 	state: () => ({
 		user: {} as UserType,
+		tmpEmail: null,
 		access_token: localStorage.getItem('access_token') || null,
 		refresh_token: localStorage.getItem('refresh_token') || null,
 	}),
@@ -16,7 +17,8 @@ export const useAuthStore = defineStore('auth', {
 		verify_email: (state) => state.user?.verify_email,
 		email: (state) => state.user?.email,
 		username: (state) => state.user?.username,
-		token: (state) => [state.access_token, state.refresh_token]
+		token: (state) => [state.access_token, state.refresh_token],
+		is_connected: (state) => state.user?.email !== undefined,
 	},
 	actions: {
 		store_token(access_token: string, refresh_token: string) {
