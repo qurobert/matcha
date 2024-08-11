@@ -7,7 +7,6 @@ import HeaderGlobal from "@/components/headers/HeaderGlobal.vue";
 import HeaderDisconnected from "@/components/headers/HeaderDisconnected.vue";
 
 const authStore = useAuthStore();
-const is_connected = ref(authStore.is_connected);
 const route = useRoute();
 
 const hideHeaderChildren = computed(() => {
@@ -19,7 +18,7 @@ const hideHeaderChildren = computed(() => {
 <template>
   <HeaderGlobal :class-for-nav="hideHeaderChildren ? 'justify-center' : 'justify-between'">
     <template v-if="!hideHeaderChildren">
-      <HeaderConnected v-if="is_connected" />
+      <HeaderConnected v-if="authStore.is_connected" />
       <HeaderDisconnected v-else />
     </template>
   </HeaderGlobal>
