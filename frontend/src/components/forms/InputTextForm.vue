@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import type { PropType } from "vue";
+import { useField, type YupSchema } from 'vee-validate'
 
-defineProps({
+const props = defineProps({
   label: {
     type: String,
-    default: "Label",
+    required: true,
   },
   type: {
     type: String,
@@ -11,27 +13,27 @@ defineProps({
   },
   name: {
     type: String,
-    default: "id_input",
+    required: true,
   },
   placeholder: {
     type: String,
-    default: "Placeholder",
+    required: true,
   },
   mandatory: {
     type: Boolean,
     default: false,
   },
-  errorMessage: {
-    type: String,
-    default: "",
+  size: {
+    type: String as PropType<"sm" | "md" | "lg">,
+    default: "lg",
   },
-  bind: {
-    type: Object,
-    default: () => ({}),
+  yupSchema: {
+    type: Object as PropType<YupSchema>,
+    required: true,
   },
 });
 
-const model = defineModel();
+const {value, errorMessage} = useField(props.name, props.yupSchema);
 </script>
 
 <template>
@@ -46,9 +48,12 @@ const model = defineModel();
            :name="name"
            class="border-2 border-gray-100 border-opacity-60
            placeholder:text-gray-0 placeholder:opacity-60
-           rounded-full md:py-1 py-2 px-3 md:w-96 w-full block"
-           v-model="model"
-           v-bind="bind"
+           rounded-full md:py-1 py-2 px-3 block w-full"
+            :class="{
+              'md:w-96': size === 'lg',
+              'md:w-44': size === 'md',
+            }"
+           v-model="value"
     />
     <span class="mt-1.5 pl-3 text-primary-100" v-if="errorMessage">{{errorMessage}}</span>
   </div>

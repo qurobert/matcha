@@ -1,14 +1,11 @@
 <script setup lang="ts">
-import InputForm from "@/components/forms/InputForm.vue";
-import PrimaryButton from "@/components/_global/PrimaryButton.vue";
+import InputForm from "@/components/forms/InputTextForm.vue";
+import PrimaryButton from "@/components/button/PrimaryButton.vue";
 import {useForgotPassword} from "@/composables/useForgotPassword";
+import {useYup} from "@/composables/useYup";
 
-const {
-  onSubmit,
-  email,
-  emailAttrs,
-  errors
-} = useForgotPassword();
+const {onSubmit} = useForgotPassword();
+const {emailSchema} = useYup();
 </script>
 
 <template>
@@ -22,9 +19,7 @@ const {
             name="email"
             label="Email"
             placeholder="Enter your email"
-            v-model="email"
-            :bind="emailAttrs"
-            :error-message="errors.email"
+            :yup-schema="emailSchema"
         />
         <PrimaryButton text="Reset password" is-submit  class="mt-6" />
       </form>

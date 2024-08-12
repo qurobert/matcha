@@ -1,23 +1,13 @@
 import {useForm} from 'vee-validate';
-import * as yup from 'yup';
-import {login} from "@/services/auth";
 import {useRouter} from "vue-router";
 import {fetchForgotPassword, fetchResetPassword} from "@/api/auth";
 import {useAuthStore} from "@/stores/userStore";
-
-const schema = yup.object({
-	email: yup.string()
-	.email()
-	.required("Email is required"),
-})
+import {ref} from 'vue'
 
 export const useForgotPassword = () => {
 	const router = useRouter();
 	const authStore = useAuthStore();
-	const {defineField, errors, handleSubmit} = useForm({
-		validationSchema: schema
-	});
-	const [email, emailAttrs] = defineField('email');
+	const {handleSubmit} = useForm();
 
 	const onSubmit = handleSubmit(values => {
 		const {email} = values;
@@ -31,35 +21,15 @@ export const useForgotPassword = () => {
 	});
 
 	return {
-		email,
-		emailAttrs,
 		onSubmit,
-		errors
 	}
 }
-
-const schemaResetPassword = yup.object({
-	password: yup.string()
-	.min(8, "Minimum 8 characters")
-	.matches(/[A-Z]/, 'Minimum 1 uppercase letter')
-	.matches(/[!@#$%^&*(),.?":{}|<>]/, 'Minimum 1 special character')
-	.required("Password is required"),
-	confirmPassword: yup.string()
-	.oneOf([yup.ref('password')], 'Passwords must match'),
-	code: yup.string()
-	.length(6, "Code must be 6 characters")
-	.required("Code is required")
-})
 
 export const useResetPassword = () => {
 	const router = useRouter();
 	const authStore = useAuthStore();
-	const {defineField, errors, handleSubmit} = useForm({
-		validationSchema: schemaResetPassword
-	});
-	const [code, codeAttrs] = defineField('code');
-	const [password, passwordAttrs] = defineField('password');
-	const [confirmPassword, confirmPasswordAttrs] = defineField('confirmPassword');
+	const {handleSubmit} = useForm();
+	const globalError = ref('')
 
 	const onSubmit = handleSubmit(values => {
 		const {code, password} = values;
@@ -74,17 +44,12 @@ export const useResetPassword = () => {
 			router.push('/login');
 		}).catch((err: any) => {
 			console.log(err);
+			globalError.value = err;
 		});
 	});
 
 	return {
-		code,
-		codeAttrs,
-		password,
-		passwordAttrs,
-		confirmPassword,
-		confirmPasswordAttrs,
-		errors,
-		onSubmit
+		onSubmit,
+		globalError
 	}
 }

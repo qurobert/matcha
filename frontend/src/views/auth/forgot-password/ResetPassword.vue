@@ -1,18 +1,11 @@
 <script setup lang="ts">
-import PrimaryButton from "@/components/_global/PrimaryButton.vue";
-import InputForm from "@/components/forms/InputForm.vue";
+import PrimaryButton from "@/components/button/PrimaryButton.vue";
+import InputForm from "@/components/forms/InputTextForm.vue";
 import {useResetPassword} from "@/composables/useForgotPassword";
+import {useYup} from "@/composables/useYup";
 
-const {
-  code,
-  codeAttrs,
-  onSubmit,
-  password,
-  passwordAttrs,
-  confirmPassword,
-  confirmPasswordAttrs,
-  errors
-} = useResetPassword();
+const {onSubmit, globalError} = useResetPassword();
+const {codeSchema, passwordSchema, confirmPasswordSchema} = useYup();
 </script>
 
 <template>
@@ -29,9 +22,7 @@ const {
             name="code"
             label="Code"
             placeholder="Enter the code sent to your email"
-            v-model="code"
-            :bind="codeAttrs"
-            :error-message="errors.code"
+            :yup-schema="codeSchema"
         />
         <InputForm
             mandatory
@@ -39,9 +30,7 @@ const {
             name="password"
             label="Password"
             placeholder="Enter your password"
-            v-model="password"
-            :bind="passwordAttrs"
-            :error-message="errors.password"
+            :yup-schema="passwordSchema"
         />
         <InputForm
             mandatory
@@ -49,12 +38,13 @@ const {
             name="confirm_password"
             label="Confirm Password"
             placeholder="Enter again your password"
-            v-model="confirmPassword"
-            :bind="confirmPasswordAttrs"
-            :error-message="errors.confirmPassword"
+            :yup-schema="confirmPasswordSchema"
         />
         <PrimaryButton text="Reset password" is-submit  class="mt-6" />
       </form>
+      <p class="text-primary-100 mt-2" v-if="globalError">
+        {{globalError}}
+      </p>
       <p class="text-gray-100 mt-6 text-center">
         <span class="whitespace-pre">
           Remember your password ?

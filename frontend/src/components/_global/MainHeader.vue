@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {useAuthStore} from "@/stores/userStore";
-import {ref, computed} from "vue";
+import {computed} from "vue";
 import {useRoute} from "vue-router";
 import HeaderConnected from "@/components/headers/HeaderConnected.vue";
 import HeaderGlobal from "@/components/headers/HeaderGlobal.vue";

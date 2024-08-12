@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { PropType } from 'vue';
+import GlobalButton from "@/components/button/GlobalButton.vue";
 
 defineProps({
   text: {
@@ -22,17 +23,7 @@ defineProps({
 </script>
 
 <template>
-  <button :type="isSubmit ? 'submit' : undefined"
-          class="background-gradient-primary text-light rounded-full text-xl"
-          :class="{
-            'px-10 py-1 text-lg': size === 'sm',
-            'px-16 py-2 text-xl': size === 'md',
-          }"
-  @click="onClick"
-  >
-    {{text}}
-  </button>
-
+  <GlobalButton :text="text" :is-submit="isSubmit" :size="size" :on-click="onClick" button_class="background-gradient-primary text-light"/>
 </template>
 
 <style scoped>
