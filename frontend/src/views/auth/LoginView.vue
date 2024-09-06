@@ -7,7 +7,6 @@ import {useYup} from "@/composables/useYup";
 
 const {onSubmit, globalError} = useLogin()
 const {usernameSchema, passwordSchema} = useYup();
-
 </script>
 
 <template>

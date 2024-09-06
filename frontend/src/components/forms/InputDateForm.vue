@@ -34,7 +34,6 @@ const props = defineProps({
 });
 
 const {value, errorMessage} = useField(props.name, props.yupSchema);
-
 </script>
 
 <template>

@@ -75,11 +75,10 @@ const router = createRouter({
   ]
 })
 
-router.beforeEach(async (to, from, next) => {
+router.beforeResolve(async (to, from, next) => {
   const authStore = useAuthStore();
   try {
-    const userInfo = await fetchStatus();
-    const {connected, user} = userInfo;
+    const { connected, user } = await fetchStatus();
 
     if (user) authStore.storeUserInfo(user);
     if (to.meta.requiresAuth) {

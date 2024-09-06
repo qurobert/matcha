@@ -1,5 +1,4 @@
 import {useForm} from 'vee-validate';
-import * as yup from 'yup';
 import {login} from "@/services/auth";
 import {useRouter} from "vue-router";
 import {ref} from "vue";

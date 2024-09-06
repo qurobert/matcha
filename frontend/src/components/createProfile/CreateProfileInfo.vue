@@ -12,9 +12,9 @@ const schema = {
 <template>
   <div class="flex md:w-auto w-full">
     <InputForm label="First name" name="firstName" placeholder="First name" class="md:mr-8" size="md" mandatory :yup-schema="schema.first_name" />
-    <InputForm label="Last name" placeholder="Last name" size="md" mandatory />
+    <InputForm label="Last name" name="lastName" placeholder="Last name" size="md" mandatory :yup-schema="schema.last_name"/>
   </div>
-  <InputForm label="Your location" placeholder="Enter your location" mandatory />
+  <InputForm label="Your location" name="location" :yup-schema="schema.location" placeholder="Enter your location" mandatory />
   <div class="flex">
 <!--    <InputDate />-->
   </div>

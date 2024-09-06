@@ -26,7 +26,7 @@ defineProps({
 </script>
 
 <template>
-  <button :type="isSubmit ? 'submit' : undefined"
+  <button :type="isSubmit ? 'submit' : 'button'"
           class="rounded-full text-xl"
           :class="{
             'px-10 py-1': size === 'sm',
