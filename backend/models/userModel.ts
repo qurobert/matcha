@@ -125,4 +125,22 @@ export default class UserModel {
             client.release()
         }
     }
+    static async updatePictures(userId: string, pictures: string[] | null) {
+        const client = await pool.connect()
+        try {
+            await client.query('UPDATE Users SET pictures = $1 WHERE id = $2', [pictures, userId])
+        } finally {
+            client.release()
+        }
+    }
+
+    static async getPictures(userId: string) {
+        const client = await pool.connect()
+        try {
+            const {rows} = await client.query('SELECT pictures FROM Users WHERE id = $1', [userId])
+            return rows[0].pictures
+        } finally {
+            client.release()
+        }
+    }
 }

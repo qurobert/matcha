@@ -5,6 +5,8 @@ import {generateVerificationCode} from "../helpers/generateVerificationCode.ts";
 import type {NextFunction, Request, Response} from "express";
 import {verifyAuth} from "../middlewares/authMiddleware.ts";
 import {JWTAccessToken} from "../helpers/jwt.ts";
+import fs from "fs";
+import * as path from "node:path";
 
 export interface RequestWithUser extends Request {
 	user: {
@@ -127,5 +129,45 @@ export default class UserController {
 			verify_email: user.verify_email,
 			create_profile: false,
 		};
+	}
+
+	static async updateUserProfile(req: Request, res: Response) {
+		// const { firstname, last_name, date_of_birth, gender, interested_in, biography, location_lat, location_lng, interests, pictures } = req.body;
+		console.log(req.body);
+		res.status(200).json({ message: 'User profile updated', user: req.body });
+	}
+
+	static async updateUserImage(req: Request, res: Response) {
+		// DELETE OLD PICTURES
+		// @ts-ignore
+		const pictures = await UserModel.getPictures(req.user.id);
+		if (pictures)
+			for (const picture of pictures) {
+				fs.unlinkSync(path.join(__dirname, '..', 'uploads', picture));
+			}
+
+		// SAVE NEW PICTURES
+		// @ts-ignore
+		await UserModel.updatePictures(req.user.id, req.files.pictures.map((file: any) => file.filename));
+		res.status(200).json({ status: 200, message: 'User profile image updated' });
+	}
+
+	static async getUserImage(req: Request, res: Response) {
+		// @ts-ignore
+		// const pictures = await UserModel.getPictures(req.user.id);
+		res.status(200).json({ status: 200, message: 'User profile image found' });
+	}
+
+	static async deleteUserImage(req: Request, res: Response) {
+		// @ts-ignore
+		const pictures = await UserModel.getPictures(req.user.id);
+		if (pictures)
+			for (const picture of pictures) {
+				fs.unlinkSync(path.join(__dirname, '..', 'uploads', picture));
+			}
+		// @ts-ignore
+		await UserModel.updatePictures(req.user.id, null);
+
+		res.status(200).json({ status: 200, message: 'User profile image deleted' });
 	}
 }

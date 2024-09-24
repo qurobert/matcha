@@ -39,6 +39,9 @@ export const useFormStore = defineStore('form', {
 		decrementPageIndex() {
 			this.index_page = this.index_page - 1;
 		},
+		getMaxPage() {
+			return this.max_page;
+		},
 		setMaxPage(maxPage: number) {
 			this.max_page = maxPage;
 		}

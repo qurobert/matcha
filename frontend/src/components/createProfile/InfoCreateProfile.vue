@@ -6,6 +6,8 @@ import * as yup from "yup";
 import CreateProfileFormPage from "@/components/createProfile/utility/FormPageCreateProfile.vue";
 import MapLocation from "@/components/createProfile/utility/MapLocation.vue";
 import {useInfoCreateProfile} from "@/composables/useCreateProfile";
+import {Badge} from "@/components/ui/badge";
+import {capitalize} from "@/lib/utils";
 
 const {usernameSchema, dateSchema} = useYup();
 const profileInfoSchema = yup.object().shape({
@@ -15,13 +17,26 @@ const profileInfoSchema = yup.object().shape({
   location: yup.object().shape({
     lat: yup.number(),
     lng: yup.number(),
-  })
+  }),
+  interestedIn: yup.string().required("You need to choose one of this field"),
+  gender: yup.string().required("You need to choose one of this field"),
 })
 
-const {onSubmit, setFieldValue} = useInfoCreateProfile(profileInfoSchema);
+const {onSubmit, setFieldValue, values} = useInfoCreateProfile(profileInfoSchema);
 
 function onLocationSelected(location: string) {
   setFieldValue('location', location);
+}
+
+const interestedInOptions = ['men', 'women', 'both'];
+const genderOptions = ['man', 'woman'];
+
+function onInterestedInClick(interestedIn: string) {
+  setFieldValue('interestedIn', interestedIn);
+}
+
+function onGenderClick(gender: string) {
+  setFieldValue('gender', gender);
 }
 </script>
 
@@ -60,5 +75,41 @@ function onLocationSelected(location: string) {
     </FormField>
 
     <MapLocation @location-selected="onLocationSelected"/>
+
+    <FormField name="interestedIn">
+      <FormItem>
+        <FormLabel>Interested in *</FormLabel>
+        <FormControl>
+          <br/>
+          <Badge
+              v-for="interestedIn in interestedInOptions"
+              :variant="values.interestedIn === interestedIn ? 'default' : 'outline'"
+              @click="() => onInterestedInClick(interestedIn)"
+              class="cursor-pointer mr-2 text-sm px-6"
+          >
+            {{capitalize(interestedIn)}}
+          </Badge>
+        </FormControl>
+        <FormMessage />
+      </FormItem>
+    </FormField>
+
+    <FormField name="gender">
+      <FormItem>
+        <FormLabel>Gender *</FormLabel>
+        <FormControl>
+          <br/>
+          <Badge
+              v-for="gender in genderOptions"
+              :variant="values.gender === gender ? 'default' : 'outline'"
+              @click="() => onGenderClick(gender)"
+              class="cursor-pointer mr-2 text-sm px-6"
+          >
+            {{capitalize(gender)}}
+          </Badge>
+        </FormControl>
+        <FormMessage />
+      </FormItem>
+    </FormField>
   </CreateProfileFormPage>
 </template>

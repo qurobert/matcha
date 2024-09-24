@@ -10,10 +10,10 @@ const max_page = formStore.max_page;
 
 <template>
   <div class="mt-8">
-    <div class="flex flex-col md:flex-row justify-between px-5 md:px-0">
-      <Button variant="secondary" :disabled="index_page === 0" @click="decrement" class="md:mr-4 mb-4 md:mb-0">
-        Back
-      </Button>
+    <div class="flex flex-col md:flex-row justify-center px-5 md:px-0">
+<!--      <Button variant="secondary" :disabled="index_page === 0" @click="decrement" class="md:mr-4 mb-4 md:mb-0">-->
+<!--        Back-->
+<!--      </Button>-->
       <Button type="submit">
         {{index_page == max_page ? 'Submit' : 'Next'}}
       </Button>

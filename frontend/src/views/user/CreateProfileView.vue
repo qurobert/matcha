@@ -6,6 +6,7 @@ import CreateProfileBiography from "@/components/createProfile/BiographyCreatePr
 import CreateProfilePicture from "@/components/createProfile/PictureCreateProfile.vue";
 import {useFormStore} from "@/stores/formStore";
 import { onBeforeMount } from "vue";
+import Loading from "@/components/icons/Loading.vue";
 
 const formStore = useFormStore();
 onBeforeMount(() => {
@@ -17,13 +18,14 @@ onBeforeMount(() => {
 <template>
   <CenterDiv>
     <h1 class="text-center text-3xl">Create Profile</h1>
-      <CreateProfileInfo
-          v-if="formStore.index_page == 0"
-      />
+      <CreateProfileInfo v-if="formStore.index_page == 0"/>
       <CreateProfileInterest v-else-if="formStore.index_page == 1" />
-<!--      <CreateProfileBiography v-else-if="index_page == 2" />-->
-<!--      <CreateProfilePicture v-else-if="index_page == 3" />-->
-
+      <CreateProfileBiography v-else-if="formStore.index_page == 2" />
+      <CreateProfilePicture v-else-if="formStore.index_page == 3" />
+      <div v-else class="flex flex-col justify-center items-center">
+        <p class="my-4 text-lg">Loading...</p>
+        <Loading />
+      </div>
       <!--  Footer Create profile and submission -->
   </CenterDiv>
 </template>
