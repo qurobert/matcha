@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import PrimaryButton from "@/components/button/PrimaryButton.vue";
+import {Button} from "@/components/ui/button";
 import {useRouter} from "vue-router";
 
 const router = useRouter();
@@ -11,7 +11,9 @@ const goToLogin = () => {
 </script>
 
 <template>
-  <PrimaryButton text="Login" :on-click="goToLogin" size="sm"/>
+  <Button @click="goToLogin" size="sm">
+    Login
+  </Button>
 </template>
 
 <style scoped>

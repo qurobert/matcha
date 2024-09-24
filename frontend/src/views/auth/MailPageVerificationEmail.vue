@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import CenterDiv from "@/components/_global/CenterDiv.vue";
+import CenterDiv from "@/components/utility/CenterDiv.vue";
 </script>
 
 <template>

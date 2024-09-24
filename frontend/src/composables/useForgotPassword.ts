@@ -3,12 +3,21 @@ import {useRouter} from "vue-router";
 import {fetchForgotPassword, fetchResetPassword} from "@/api/auth";
 import {useAuthStore} from "@/stores/userStore";
 import {ref} from 'vue'
+import {useYup} from "@/composables/useYup";
+import * as yup from "yup";
 
 export const useForgotPassword = () => {
 	const router = useRouter();
 	const authStore = useAuthStore();
-	const {handleSubmit} = useForm();
 
+	const {emailSchema} = useYup();
+	const forgotPasswordSchema = yup.object().shape({
+		email: emailSchema
+	})
+
+	const {handleSubmit} = useForm({
+		validationSchema: forgotPasswordSchema
+	});
 	const onSubmit = handleSubmit(values => {
 		const {email} = values;
 
@@ -28,9 +37,18 @@ export const useForgotPassword = () => {
 export const useResetPassword = () => {
 	const router = useRouter();
 	const authStore = useAuthStore();
-	const {handleSubmit} = useForm();
-	const globalError = ref('')
+	const errorOnSubmit = ref('')
 
+	const {codeSchema, passwordSchema, confirmPasswordSchema} = useYup();
+	const resetPasswordSchema = yup.object().shape({
+		code: codeSchema,
+		password: passwordSchema,
+		confirm_password: confirmPasswordSchema
+	})
+
+	const {handleSubmit} = useForm({
+		validationSchema: resetPasswordSchema
+	});
 	const onSubmit = handleSubmit(values => {
 		const {code, password} = values;
 		const email = authStore.tmpEmail;
@@ -44,12 +62,12 @@ export const useResetPassword = () => {
 			router.push('/login');
 		}).catch((err: any) => {
 			console.log(err);
-			globalError.value = err;
+			errorOnSubmit.value = err;
 		});
 	});
 
 	return {
 		onSubmit,
-		globalError
+		errorOnSubmit
 	}
 }

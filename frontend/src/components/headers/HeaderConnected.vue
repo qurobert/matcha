@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import DropdownUtility from "@/components/_global/DropdownUtility.vue";
+import DropdownUtility from "@/components/utility/DropdownUtility.vue";
 import IconAvatar from "@/components/icons/IconAvatar.vue";
 import {useAuthStore} from "@/stores/userStore";
 import {useRouter} from "vue-router";
