@@ -1,16 +1,25 @@
-import {useForm} from 'vee-validate';
-// import {useRouter} from "vue-router";
+import {useFormStore} from "@/stores/formStore";
+import {useForm, type YupSchema} from 'vee-validate';
 
-export const useLogin = () => {
-	// const router = useRouter();
-
-	const {handleSubmit} = useForm();
-
+export const useInfoCreateProfile = (schema: YupSchema, ) => {
+	const {handleSubmit, setFieldValue} = useForm({
+		validationSchema: schema
+	})
+	const formStore = useFormStore();
 	const onSubmit = handleSubmit(values => {
 		console.log(values);
+		const {first_name, last_name, date, location} = values;
+		formStore.setFormValues({
+			first_name,
+			last_name,
+			date,
+			location
+		});
+		formStore.incrementPageIndex();
+		// console.log(formStore.getForm())
 	});
-
 	return {
-		onSubmit,
+		setFieldValue,
+		onSubmit
 	}
 }
