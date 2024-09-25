@@ -1,49 +1,66 @@
 <script setup lang="ts">
-import InputForm from "@/components/forms/InputTextForm.vue";
 import {useSignup} from "@/composables/useSignup";
-import PrimaryButton from "@/components/button/PrimaryButton.vue";
-import CenterDiv from "@/components/_global/CenterDiv.vue";
-import {useYup} from "@/composables/useYup";
+import {Button} from "@/components/ui/button";
+import CenterDiv from "@/components/utility/CenterDiv.vue";
+import {Input} from "@/components/ui/input";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
+} from '@/components/ui/form'
+
 const {
   onSubmit,
-  globalError
+  errorOnSubmit
 } = useSignup();
 
-const {emailSchema, usernameSchema, passwordSchema} = useYup();
+
 </script>
 
 <template>
   <CenterDiv>
-    <h1 class="text-3xl text-center mt-4">Create account</h1>
-    <form class="flex flex-col items-center" @submit.prevent="onSubmit">
-      <InputForm
-          mandatory
-          type="email"
-          name="email"
-          label="Email"
-          placeholder="Enter your email"
-          :yup-schema="emailSchema"
-      />
-      <InputForm
-          mandatory
-          type="text"
-          name="username"
-          label="Username"
-          placeholder="Enter your username"
-          :yup-schema="usernameSchema"
-      />
-      <InputForm
-          mandatory
-          type="password"
-          name="password"
-          label="Password"
-          placeholder="Enter your password"
-          :yup-schema="passwordSchema"
-      />
-      <p class="text-primary-100 mt-2" v-if="globalError">
-        {{globalError}}
+    <form @submit.prevent="onSubmit">
+      <h1 class="text-3xl text-center">Create account</h1>
+      <FormField v-slot="{ componentField }" name="email">
+        <FormItem>
+          <FormLabel>Email</FormLabel>
+          <FormControl>
+            <Input placeholder="Enter your username" v-bind="componentField" type="email"/>
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      </FormField>
+
+      <FormField v-slot="{ componentField }" name="username">
+        <FormItem>
+          <FormLabel>Username</FormLabel>
+          <FormControl>
+            <Input placeholder="Enter your username" v-bind="componentField" />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      </FormField>
+
+      <FormField v-slot="{ componentField }" name="password">
+        <FormItem>
+          <FormLabel>Enter your password</FormLabel>
+          <FormControl>
+            <Input placeholder="Enter your password" v-bind="componentField" type="password" />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      </FormField>
+
+      <div class="flex justify-center mt-8">
+        <Button type="submit" size="sm" class="px-20">
+          Create account
+        </Button>
+      </div>
+      <p class="text-destructive mt-2" v-if="errorOnSubmit">
+        {{errorOnSubmit}}
       </p>
-      <PrimaryButton text="Create account" is-submit class="mt-6"/>
     </form>
   </CenterDiv>
 </template>

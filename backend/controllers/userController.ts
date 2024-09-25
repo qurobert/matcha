@@ -3,21 +3,11 @@ import ErrorMiddleware from "../middlewares/errorMiddleware.ts";
 import {sendMail} from "../mail/sendMail.ts";
 import {generateVerificationCode} from "../helpers/generateVerificationCode.ts";
 import type {NextFunction, Request, Response} from "express";
-import {verifyAuth} from "../middlewares/authMiddleware.ts";
 import {JWTAccessToken} from "../helpers/jwt.ts";
 
-export interface RequestWithUser extends Request {
-	user: {
-		id: number;
-		email: string;
-		username: string;
-		verify_email: boolean;
-		create_profile: boolean;
-	}
-}
-
 export default class UserController {
-	static async getUserConnected (req: RequestWithUser, res: Response) {
+	static async getUserConnected (req: Request, res: Response) {
+		if (!req.user) throw new ErrorMiddleware(404, "User not found");
 		const {email} = req.user;
 		const user = await UserModel.findOneByEmail(email);
 		if (!user) throw new ErrorMiddleware(404, "User not found");
@@ -29,7 +19,7 @@ export default class UserController {
 		});
 	}
 
-	static async verifyTokenAsync(token: string) {
+	static async verifyTokenAsync(token: string): Promise<PayloadAccessToken> {
 		return new Promise((resolve, reject) => {
 			JWTAccessToken.verify(token, (err, decoded) => {
 				if (err) {
@@ -52,7 +42,6 @@ export default class UserController {
 		try {
 			const user = await UserController.verifyTokenAsync(token);
 
-			// @ts-ignore
 			const userDb = await UserModel.findOneByEmail(user.email);
 			return res.json({
 				connected: true,
@@ -93,7 +82,6 @@ export default class UserController {
 	static async resetPassword(req: Request, res: Response) {
 		const {email, code, password} = req.body;
 		const user = await UserModel.findOneByEmail(email);
-		console.log(user);
 		if (user.code_password_reset !== code) throw new ErrorMiddleware(400, "Code verification is not valid");
 		await UserModel.updatePassword(email, password);
 		res.json({
@@ -103,15 +91,12 @@ export default class UserController {
 	}
 
 	static async updateUser(req: Request, res: Response) {
+		if (!req.user) throw new ErrorMiddleware(404, "User not found");
 		const { email, username, password, confirm_password, notification } = req.body;
-		// @ts-ignore
 		await UserModel.updateEmail(req.user.id, email);
-		// @ts-ignore
 		await UserModel.updateUsername(req.user.id, username);
-		// @ts-ignore
 		await UserModel.updateNotification(req.user.id, notification);
 		if (password !== confirm_password) throw new ErrorMiddleware(400, "Passwords do not match");
-		// @ts-ignore
 			await UserModel.updatePassword(req.user.email, password);
 		res.json({
 			status: 200,
@@ -119,13 +104,24 @@ export default class UserController {
 		});
 	}
 
-	static _responseUser(user: any) {
+	static _responseUser(user: User) {
 		return {
 			id: user.id,
 			email: user.email,
 			username: user.username,
 			verify_email: user.verify_email,
 			create_profile: false,
+			notification: user.notification,
+			first_name: user.first_name,
+			last_name: user.last_name,
+			date_of_birth: user.date_of_birth,
+			gender: user.gender,
+			interested_in: user.interested_in,
+			biography: user.biography,
+			location_lat: user.location_lat,
+			location_lng: user.location_lng,
+			interests: user.interests,
+			pictures: user.pictures,
 		};
 	}
 }

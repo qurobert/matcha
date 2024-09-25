@@ -1,40 +1,54 @@
 <script setup lang="ts">
-import InputForm from "@/components/forms/InputTextForm.vue";
-import PrimaryButton from "@/components/button/PrimaryButton.vue";
+import {Button} from "@/components/ui/button";
 import {useLogin} from "@/composables/useLogin"
-import CenterDiv from "@/components/_global/CenterDiv.vue";
-import {useYup} from "@/composables/useYup";
+import CenterDiv from "@/components/utility/CenterDiv.vue";
+import {Input} from "@/components/ui/input";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
+} from '@/components/ui/form'
 
-const {onSubmit, globalError} = useLogin()
-const {usernameSchema, passwordSchema} = useYup();
+const {onSubmit, errorOnSubmit} = useLogin()
+
 
 </script>
 
 <template>
   <CenterDiv>
-    <form @submit.prevent="onSubmit" class="">
-      <h1 class="text-3xl text-center mt-4">Log in</h1>
-      <InputForm
-          mandatory
-          type="text"
-          name="username"
-          label="Username"
-          placeholder="Enter your username"
-          :yup-schema="usernameSchema"
-      />
-      <InputForm
-          mandatory
-          type="password"
-          name="password"
-          label="Password"
-          placeholder="Enter your password"
-          :yup-schema="passwordSchema"
-      />
-      <div class="flex justify-center">
-        <PrimaryButton text="Log in" is-submit class="mt-6"/>
+    <form @submit.prevent="onSubmit">
+      <h1 class="text-3xl text-center">Log in</h1>
+
+      <FormField v-slot="{ componentField }" name="username">
+        <FormItem>
+          <FormLabel>Username</FormLabel>
+          <FormControl>
+            <Input placeholder="Enter your username" v-bind="componentField" />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      </FormField>
+
+      <FormField v-slot="{ componentField }" name="password">
+        <FormItem>
+          <FormLabel>Password</FormLabel>
+          <FormControl>
+            <Input placeholder="Enter your password" v-bind="componentField" type="password"/>
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      </FormField>
+
+      <div class="flex justify-center mt-8">
+        <Button type="submit" size="sm" class="px-20">
+          Log in
+        </Button>
       </div>
-      <p class="text-primary-100 mt-2" v-if="globalError">
-        {{globalError}}
+
+      <p class="text-destructive mt-2" v-if="errorOnSubmit">
+        {{errorOnSubmit}}
       </p>
       <p class="text-gray-100 mt-6 text-center">
         <span class="whitespace-pre">Forgot password ? </span>

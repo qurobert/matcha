@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import DropdownUtility from "@/components/_global/DropdownUtility.vue";
+import DropdownUtility from "@/components/utility/DropdownUtility.vue";
 import IconAvatar from "@/components/icons/IconAvatar.vue";
 import {useAuthStore} from "@/stores/userStore";
 import {useRouter} from "vue-router";
@@ -17,10 +17,8 @@ const logout = () => {
 <template>
   <div class="flex">
     <font-awesome-icon icon="fa-regular fa-bell" class="mr-4 w-6 h-6"/>
-    <!--        <font-awesome-icon icon="fa-solid fa-bell" class="mr-4 w-6 h-6"/>-->
     <div class="relative w-6 h-6 mr-4">
       <font-awesome-icon icon="comments" class="w-6 h-6"/>
-      <!--          <div class="absolute top-0.5 right-1 background-gradient-primary text-white rounded-full w-2.5 h-2.5 flex justify-center items-center border border-light"></div>-->
     </div>
 
     <DropdownUtility>

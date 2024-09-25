@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {useVerifyEmail} from "@/composables/useVerifyEmail";
-import CenterDiv from "@/components/_global/CenterDiv.vue";
+import CenterDiv from "@/components/utility/CenterDiv.vue";
 
 const {resendMail} = useVerifyEmail();
 </script>

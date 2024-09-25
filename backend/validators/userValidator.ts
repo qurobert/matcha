@@ -1,4 +1,4 @@
-import {body} from "express-validator";
+import {body, type ValidationChain} from "express-validator";
 import {globalHandleValidationResult} from "./handleValidationResult.js";
 
 export const registerValidator = () => [
@@ -29,5 +29,18 @@ export const resetPassValidator = () => [
 	body('email').isEmail().withMessage('Email is not valid'),
 	body('code').isString().withMessage('Code must be a non-empty string'),
 	body('password').isLength({min: 6}).withMessage('Password must be at least 6 characters'),
+	globalHandleValidationResult
+]
+
+export const userProfileValidator = () => [
+	body('fist_name').optional().isString().withMessage('First name must be a string'),
+	body('last_name').optional().isString().withMessage('Last name must be a string'),
+	body('date_of_birth').optional().isDate().withMessage('Date of birth must be a date'),
+	body('gender').optional().isString().withMessage('Gender must be a string'),
+	body('interested_in').optional().isString().withMessage('Interested in must be a string'),
+	body('biography').optional().isString().withMessage('Biography must be a string'),
+	body('location_lat').optional().isFloat().withMessage('Location latitude must be a float'),
+	body('location_lng').optional().isFloat().withMessage('Location longitude must be a float'),
+	body('interests').optional().isArray().withMessage('Interests must be an array'),
 	globalHandleValidationResult
 ]

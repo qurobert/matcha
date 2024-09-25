@@ -1,61 +1,68 @@
 <script setup lang="ts">
-import PrimaryButton from "@/components/button/PrimaryButton.vue";
-import InputForm from "@/components/forms/InputTextForm.vue";
+import {Button} from "@/components/ui/button";
 import {useResetPassword} from "@/composables/useForgotPassword";
-import {useYup} from "@/composables/useYup";
+import {FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
+import {Input} from "@/components/ui/input";
+import CenterDiv from "@/components/utility/CenterDiv.vue";
 
-const {onSubmit, globalError} = useResetPassword();
-const {codeSchema, passwordSchema, confirmPasswordSchema} = useYup();
+const {onSubmit, errorOnSubmit} = useResetPassword();
+
 </script>
 
 <template>
-  <div class="relative">
-    <div class="absolute top-[50%] md:left-[50%] w-full md:translate-x-[-50%] translate-y-[-50%]">
-      <h1 class="text-3xl text-center mt-4">Forgot password</h1>
-      <form class="flex flex-col items-center" @click.prevent="onSubmit">
+    <CenterDiv>
+      <form @click.prevent="onSubmit">
+        <h1 class="text-3xl text-center">Forgot password</h1>
         <p class="text-gray-100 mt-6 text-center w-80">
           If this email address was used to create an account, instructions to reset your password will be sent to you. Please check your email.
         </p>
-        <InputForm
-            mandatory
-            type="text"
-            name="code"
-            label="Code"
-            placeholder="Enter the code sent to your email"
-            :yup-schema="codeSchema"
-        />
-        <InputForm
-            mandatory
-            type="password"
-            name="password"
-            label="Password"
-            placeholder="Enter your password"
-            :yup-schema="passwordSchema"
-        />
-        <InputForm
-            mandatory
-            type="password"
-            name="confirm_password"
-            label="Confirm Password"
-            placeholder="Enter again your password"
-            :yup-schema="confirmPasswordSchema"
-        />
-        <PrimaryButton text="Reset password" is-submit  class="mt-6" />
+        <FormField v-slot="{ componentField }" name="code">
+          <FormItem>
+            <FormLabel>Code</FormLabel>
+            <FormControl>
+              <Input placeholder="Enter the code sent by email" v-bind="componentField" />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        </FormField>
+
+        <FormField v-slot="{ componentField }" name="password">
+          <FormItem>
+            <FormLabel>Password</FormLabel>
+            <FormControl>
+              <Input placeholder="Enter your password" v-bind="componentField" type="password" />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        </FormField>
+
+        <FormField v-slot="{ componentField }" name="confirm_password">
+          <FormItem>
+            <FormLabel>Confirm Password</FormLabel>
+            <FormControl>
+              <Input placeholder="Enter again your password" v-bind="componentField" type="password" />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        </FormField>
+
+        <div class="flex justify-center mt-8">
+          <Button type="submit" size="sm" class="px-20">
+            Reset password
+          </Button>
+        </div>
       </form>
-      <p class="text-primary-100 mt-2" v-if="globalError">
-        {{globalError}}
+
+      <p class="text-destructive mt-2" v-if="errorOnSubmit">
+        {{errorOnSubmit}}
       </p>
+
       <p class="text-gray-100 mt-6 text-center">
         <span class="whitespace-pre">
           Remember your password ?
         </span>
         <RouterLink class="text-secondary underline" to="/login">Log in here</RouterLink>
       </p>
-    </div>
+    </CenterDiv>
 
-  </div>
 </template>
-
-<style scoped>
-
-</style>

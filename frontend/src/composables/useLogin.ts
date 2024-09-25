@@ -1,14 +1,23 @@
 import {useForm} from 'vee-validate';
-import * as yup from 'yup';
 import {login} from "@/services/auth";
 import {useRouter} from "vue-router";
 import {ref} from "vue";
+import {useYup} from "@/composables/useYup";
+import * as yup from "yup";
 
 export const useLogin = () => {
 	const router = useRouter();
+	const {usernameSchema, passwordSchema} = useYup();
 
-	const {handleSubmit} = useForm();
-	const globalError = ref("");
+	const loginSchema = yup.object().shape({
+		username: usernameSchema,
+		password: passwordSchema
+	})
+
+	const {handleSubmit} = useForm({
+		validationSchema: loginSchema
+	})
+	const errorOnSubmit = ref("");
 
 	const onSubmit = handleSubmit(values => {
 		const {username, password} = values;
@@ -16,13 +25,13 @@ export const useLogin = () => {
 		login(username, password).then(() => {
 			router.push({name: 'profile'});
 		}).catch(err => {
-			globalError.value = err;
+			errorOnSubmit.value = err;
 			console.log(err);
 		});
 	});
 
 	return {
 		onSubmit,
-		globalError,
+		errorOnSubmit,
 	}
 }

@@ -70,18 +70,20 @@ const router = createRouter({
       path: '/create-profile',
       name: 'create-profile',
       component: () => import('@/views/user/CreateProfileView.vue'),
-      meta: { requiresAuth: true },
+      // meta: { requiresAuth: true },
     }
   ]
 })
 
-router.beforeEach(async (to, from, next) => {
+router.beforeResolve(async (to, from, next) => {
   const authStore = useAuthStore();
   try {
-    const userInfo = await fetchStatus();
-    const {connected, user} = userInfo;
+    const { connected, user } = await fetchStatus();
 
     if (user) authStore.storeUserInfo(user);
+    if (to.name === 'create-profile' && user.first_name) {
+      return next({name: 'profile'})
+    }
     if (to.meta.requiresAuth) {
         if (!connected && to.name !== 'login') {
           return next({name: 'login'})
@@ -92,7 +94,7 @@ router.beforeEach(async (to, from, next) => {
           else
             return next();
         }
-        else if (!user.create_profile) {
+        else if (!user.first_name) {
           if (to.name !== 'create-profile')
             return next({name: 'create-profile'})
           else

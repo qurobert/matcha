@@ -17,7 +17,6 @@ export function verifyAuth(req: Request, res: Response, next: NextFunction) {
 				message: status === 401 ? 'Token expired' : 'Invalid token'
 			});
 		}
-		// @ts-ignore
 		req.user = user;
 		next();
 	})
