@@ -8,8 +8,9 @@ import UserController from "../controllers/userController.ts";
 import {verifyAuth} from "../middlewares/authMiddleware.ts";
 import multer from "multer";
 import * as path from "node:path";
-import {verify} from "jsonwebtoken";
-// Configurer Multer pour stocker les fichiers
+import ProfileController from "../controllers/profileController.ts";
+import ImageController from "../controllers/imageController.ts";
+
 const storage = multer.diskStorage({
 	destination: function (req, file, cb) {
 		cb(null, 'uploads/'); // Répertoire où les fichiers seront enregistrés
@@ -19,31 +20,23 @@ const storage = multer.diskStorage({
 		cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
 	}
 });
-
 const upload = multer({ storage: storage });
 
-// const upload = multer({ dest: 'uploads/', limits: { fileSize: 50 * 1024 * 1024 }});
 
 const userRouter = express.Router();
 
-// @ts-ignore
 userRouter.get('/me', verifyAuth, UserController.getUserConnected);
 userRouter.get('/status', UserController.userStatus);
-// @ts-ignore
-userRouter.get('/:id', verifyAuth, UserController.getUserById);
-// @ts-ignore
 userRouter.post('/forgot-password', emailValidator(), UserController.forgotPassword);
-// @ts-ignore
 userRouter.post('/reset-password', resetPassValidator(), UserController.resetPassword);
 userRouter.post('/update', verifyAuth, UserController.updateUser);
-// @ts-ignore
-userRouter.post('/update-user-profile', verifyAuth, userProfileValidator(), UserController.updateUserProfile);
-// @ts-ignore
+userRouter.post('/update-user-profile', verifyAuth, userProfileValidator(), ProfileController.updateUserProfile);
 userRouter.post('/update-user-image', verifyAuth, upload.fields([
 	{ name: 'pictures', maxCount: 6 },
-// @ts-ignore
-]), UserController.updateUserImage);
+]), ImageController.updateUserImage);
 
-userRouter.get('/images', verifyAuth, UserController.getUserImage);
-userRouter.post('/delete-user-image', verifyAuth, UserController.deleteUserImage);
+userRouter.get('/images', verifyAuth, ImageController.getUserImage);
+userRouter.delete('/delete-user-image', verifyAuth, ImageController.deleteUserImage);
+userRouter.get('/:id', verifyAuth, UserController.getUserById);
+
 export default userRouter

@@ -73,7 +73,6 @@ export default class AuthController {
             if (err) return res.sendStatus(403);
 
             const user = await UserModel.findById(refresh_token_info.id);
-            console.log(refresh_token_info);
             if (!user) return res.sendStatus(403);
             const access_token = JWTAccessToken.sign({email: user.email, id: user.id});
             const refresh_token = JWTRefreshToken.sign({id: user.id});
@@ -96,7 +95,7 @@ export default class AuthController {
         const user = await UserModel.findOneByEmail(email);
         if (!user)
             throw new ErrorMiddleware(404, "User not found");
-        const token = JWTAccessToken.sign({id: user.id});
+        const token = JWTAccessToken.sign({email: user.email, id: user.id});
         const verificationLink = `http://localhost:3000/auth/verify-email?token=${token}`;
         const emailContent = `<p>Please verify your email by clicking on the following <a href="${verificationLink}">link</a></p>`;
         await sendMail(email, "Verify your email - Matcha", emailContent);

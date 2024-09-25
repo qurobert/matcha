@@ -1,4 +1,4 @@
-import {body} from "express-validator";
+import {body, type ValidationChain} from "express-validator";
 import {globalHandleValidationResult} from "./handleValidationResult.js";
 
 export const registerValidator = () => [

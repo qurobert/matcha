@@ -143,4 +143,61 @@ export default class UserModel {
             client.release()
         }
     }
+
+    static async updateProfile(userId: string, profile: Profile) {
+        const client = await pool.connect()
+        try {
+            const setClauses: string[] = [];
+            const values: any[] = [];
+
+            const {first_name, last_name, date_of_birth, gender, interested_in, biography, location_lat, location_lng, interests, pictures} = profile;
+            if (first_name) {
+                setClauses.push(`first_name = $${setClauses.length + 1}`);
+                values.push(first_name);
+            }
+            if (last_name) {
+                setClauses.push(`last_name = $${setClauses.length + 1}`);
+                values.push(last_name);
+            }
+            if (date_of_birth) {
+                setClauses.push(`date_of_birth = $${setClauses.length + 1}`);
+                values.push(date_of_birth);
+            }
+            if (gender) {
+                setClauses.push(`gender = $${setClauses.length + 1}`);
+                values.push(gender)
+            }
+            if (interested_in) {
+                setClauses.push(`interested_in = $${setClauses.length + 1}`);
+                values.push(interested_in)
+            }
+            if (biography) {
+                setClauses.push(`biography = $${setClauses.length + 1}`);
+                values.push(biography)
+            }
+            if (location_lat) {
+                setClauses.push(`location_lat = $${setClauses.length + 1}`);
+                values.push(location_lat)
+            }
+            if (location_lng) {
+                setClauses.push(`location_lng = $${setClauses.length + 1}`);
+                values.push(location_lng)
+            }
+            if (interests) {
+                setClauses.push(`interests = $${setClauses.length + 1}`);
+                values.push(interests)
+            }
+            if (pictures) {
+                setClauses.push(`pictures = $${setClauses.length + 1}`);
+                values.push(pictures)
+            }
+            if (setClauses.length === 0) return;
+
+            const query = `UPDATE Users SET ${setClauses.join(', ')} WHERE id = $${values.length + 1}`;
+            values.push(userId);
+            await client.query(query, values);
+        } finally {
+            client.release()
+        }
+    }
 }
