@@ -81,6 +81,9 @@ router.beforeResolve(async (to, from, next) => {
     const { connected, user } = await fetchStatus();
 
     if (user) authStore.storeUserInfo(user);
+    if (to.name === 'create-profile' && user.first_name) {
+      return next({name: 'profile'})
+    }
     if (to.meta.requiresAuth) {
         if (!connected && to.name !== 'login') {
           return next({name: 'login'})
@@ -91,7 +94,7 @@ router.beforeResolve(async (to, from, next) => {
           else
             return next();
         }
-        else if (!user.create_profile) {
+        else if (!user.first_name) {
           if (to.name !== 'create-profile')
             return next({name: 'create-profile'})
           else

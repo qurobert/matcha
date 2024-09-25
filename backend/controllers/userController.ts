@@ -111,6 +111,17 @@ export default class UserController {
 			username: user.username,
 			verify_email: user.verify_email,
 			create_profile: false,
+			notification: user.notification,
+			first_name: user.first_name,
+			last_name: user.last_name,
+			date_of_birth: user.date_of_birth,
+			gender: user.gender,
+			interested_in: user.interested_in,
+			biography: user.biography,
+			location_lat: user.location_lat,
+			location_lng: user.location_lng,
+			interests: user.interests,
+			pictures: user.pictures,
 		};
 	}
 }

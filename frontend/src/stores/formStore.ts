@@ -2,7 +2,7 @@ import {defineStore} from "pinia";
 
 export const useFormStore = defineStore('form', {
 	state: () => ({
-		form: {} as Record<string, string>,
+		form: {} as Record<string, any>,
 		index_page: 0,
 		max_page: 0,
 	}),
@@ -17,7 +17,7 @@ export const useFormStore = defineStore('form', {
 		storeData(formName: string, formData: string) {
 			this.form[formName] = formData;
 		},
-		setFormValues(formDatas: Record<string, string>) {
+		setFormValues(formDatas: Record<string, any>) {
 			for (const [formName, formData] of Object.entries(formDatas)) {
 				this.form[formName] = formData;
 			}

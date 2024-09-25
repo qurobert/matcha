@@ -4,7 +4,6 @@ interface User extends Profile {
 	username: string;
 	verify_email: boolean;
 	create_profile: boolean;
-	notification: string;
 }
 
 interface Profile {
