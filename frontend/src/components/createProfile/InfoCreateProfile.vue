@@ -7,7 +7,7 @@ import CreateProfileFormPage from "@/components/createProfile/utility/FormPageCr
 import MapLocation from "@/components/createProfile/utility/MapLocation.vue";
 import {useInfoCreateProfile} from "@/composables/useCreateProfile";
 import {Badge} from "@/components/ui/badge";
-import {capitalize} from "@/lib/utils";
+import {capitalizeFirstLetter} from "@/lib/utils";
 
 const {usernameSchema, dateSchema} = useYup();
 const profileInfoSchema = yup.object().shape({
@@ -87,7 +87,7 @@ function onGenderClick(gender: string) {
               @click="() => onInterestedInClick(interestedIn)"
               class="cursor-pointer mr-2 text-sm px-6"
           >
-            {{capitalize(interestedIn)}}
+            {{ capitalizeFirstLetter(interestedIn) }}
           </Badge>
         </FormControl>
         <FormMessage />
@@ -105,7 +105,7 @@ function onGenderClick(gender: string) {
               @click="() => onGenderClick(gender)"
               class="cursor-pointer mr-2 text-sm px-6"
           >
-            {{capitalize(gender)}}
+            {{ capitalizeFirstLetter(gender) }}
           </Badge>
         </FormControl>
         <FormMessage />

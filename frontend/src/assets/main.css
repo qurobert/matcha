@@ -12,6 +12,11 @@
   .background-gradient-primary {
       @apply bg-gradient-to-r from-accent to-primary;
   }
+  .border-gradient {
+    @apply bg-gradient-to-r from-accent to-primary;
+    @apply border-2 border-transparent bg-clip-border;
+    background: linear-gradient(to right, var(--accent), var(--primary)); /* Votre dégradé */
+  }
   :root {
     /* SHADCN/UI */
     --background: 0 0% 100%;

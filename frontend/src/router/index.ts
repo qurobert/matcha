@@ -4,6 +4,7 @@ import LoginView from '@/views/auth/LoginView.vue'
 import SignupView from '@/views/auth/SignupView.vue'
 import {useAuthStore} from "@/stores/userStore";
 import {fetchStatus} from "@/api/auth";
+// import NotFoundView from "@/views/NotFoundView.vue";
 
 const redirectToProfile = async (to: any, from: any, next: any) => {
   const authStore = useAuthStore();
@@ -64,14 +65,50 @@ const router = createRouter({
       path: '/profile',
       name: 'profile',
       component: () => import('../views/user/ProfileView.vue'),
-      meta: { requiresAuth: true },
+      // meta: { requiresAuth: true },
+      // children: [
+        // {
+        //   path: 'edit-profile',
+        //   name: 'edit profile',
+        //   component: () => import('@/views/user/EditProfile.vue'),
+      ////     meta: { requiresAuth: true },
+      //   },
+        // {
+        //   path: 'preferences',
+        //   name: 'preferences',
+        //   component: () => import('@/views/user/Preferences.vue'),
+        //   // meta: { requiresAuth: true },
+        // },
+        // {
+        //   path: 'settings',
+        //   name: 'settings',
+        //   component: () => import('@/views/user/Settings.vue'),
+        //   // meta: { requiresAuth: true },
+        // },
+        // {
+        //   path: 'chat/:id',
+        //   name: 'chat',
+        //   component: () => import('@/views/user/ChatView.vue'),
+        //   // meta: { requiresAuth: true },
+        // },
+        // {
+        //   path: ':id',
+        //   name: 'user-profile',
+        //   component: () => import('@/views/user/UserProfileView.vue'),
+        // }
+      // ]
     },
     {
       path: '/create-profile',
       name: 'create-profile',
       component: () => import('@/views/user/CreateProfileView.vue'),
       // meta: { requiresAuth: true },
-    }
+    },
+    // {
+    //   path: '/:catchAll(.*)', // Capture toutes les routes non définies
+    //   name: 'NotFound',
+    //   component: NotFoundView,
+    // },
   ]
 })
 

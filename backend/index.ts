@@ -10,6 +10,7 @@ import UserRouter from "./routes/userRouter.ts";
 import AuthRouter from "./routes/authRouter.ts";
 import {error404, globalErrorLogger, globalErrorMiddleware} from "./middlewares/errorMiddleware.ts";
 import IndexRouter from "./routes";
+import path from "node:path";
 
 // Configuring the app
 app.use(cors({
@@ -26,6 +27,7 @@ app.options('*', cors());
 app.use('/', IndexRouter);
 app.use('/users', UserRouter);
 app.use('/auth', AuthRouter);
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use(
 	error404,

@@ -4,7 +4,7 @@ import {useInterestCreateProfile} from "@/composables/useCreateProfile";
 import * as yup from "yup";
 import {FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
 import {Badge} from "@/components/ui/badge";
-import {capitalize} from "../../lib/utils";
+import {capitalizeFirstLetter} from "../../lib/utils";
 const interestSchema = yup.object().shape({
   interests: yup.array().of(yup.string().required("You need to choose one of this field")).min(1, "You need to choose one of this field").required("You need to choose one of this field"),
 })
@@ -39,7 +39,7 @@ function onInterestClick(interest: string) {
         <FormControl >
           <div class="flex flex-wrap w-full">
           <Badge v-for="interest in interests" :key="interest" @click="onInterestClick(interest)" :variant="values?.interests?.includes(interest) ? 'default' : 'outline'" class="m-1 cursor-pointer">
-            {{ capitalize(interest) }}
+            {{ capitalizeFirstLetter(interest) }}
           </Badge>
           </div>
         </FormControl>

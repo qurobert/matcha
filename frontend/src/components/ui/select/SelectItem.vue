@@ -7,7 +7,6 @@ import {
   SelectItemText,
   useForwardProps,
 } from 'radix-vue'
-import { Check } from 'lucide-vue-next'
 import { cn } from '@/lib/utils'
 
 const props = defineProps<SelectItemProps & { class?: HTMLAttributes['class'] }>()
@@ -33,7 +32,7 @@ const forwardedProps = useForwardProps(delegatedProps)
   >
     <span class="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
       <SelectItemIndicator>
-        <Check class="h-4 w-4" />
+        <font-awesome-icon icon="check" class="h-4 w-4" />
       </SelectItemIndicator>
     </span>
 

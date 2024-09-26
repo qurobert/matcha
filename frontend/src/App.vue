@@ -6,9 +6,11 @@ import Footer from "@/components/MainFooter.vue";
 </script>
 
 <template>
-  <div class="h-screen flex flex-col">
+  <div class="h-screen flex flex-col ">
     <AppHeader />
-    <RouterView class="flex-1"/>
-    <Footer />
+    <main class="flex-1">
+      <RouterView class="flex-grow"/>
+    </main>
+    <Footer/>
   </div>
 </template>

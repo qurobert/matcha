@@ -1,10 +1,15 @@
 <script setup lang="ts">
-
-import DropdownUtility from "@/components/utility/DropdownUtility.vue";
-import IconAvatar from "@/components/icons/IconAvatar.vue";
 import {useAuthStore} from "@/stores/userStore";
 import {useRouter} from "vue-router";
-
+import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 const authStore = useAuthStore()
 const router = useRouter()
 
@@ -12,6 +17,8 @@ const logout = () => {
   authStore.logout()
   router.push("/")
 }
+const url = "http://localhost:3000/uploads/";
+const user = useAuthStore().user;
 </script>
 
 <template>
@@ -21,31 +28,35 @@ const logout = () => {
       <font-awesome-icon icon="comments" class="w-6 h-6"/>
     </div>
 
-    <DropdownUtility>
-      <template #default>
-        <IconAvatar class="w-6 h-6"/>
-      </template>
+    <DropdownMenu>
+      <DropdownMenuTrigger>
+        <Avatar class="w-6 h-6">
+          <AvatarImage :src="url + user.pictures[0]" alt="user profile" />
+          <AvatarFallback>User</AvatarFallback>
+        </Avatar>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuItem>
+          <RouterLink to="/settings">
+            <font-awesome-icon icon="sliders" class="mr-2"/>
+            <span>Preferences</span>
+          </RouterLink>
+        </DropdownMenuItem>
 
-      <template #dropdown-content>
-        <RouterLink to="/settings" class="text-gray-100 hover:text-dark px-4 py-1">
-          <font-awesome-icon icon="sliders" class="mr-2"/>
-          <span>Preferences</span>
-        </RouterLink>
+        <DropdownMenuItem>
+          <RouterLink to="/profile">
+            <font-awesome-icon icon="user" class="mr-2"/>
+            <span>Profile</span>
+          </RouterLink>
+        </DropdownMenuItem>
 
-        <RouterLink to="/profile" class="text-gray-100 hover:text-dark px-4 py-1">
-          <font-awesome-icon icon="user" class="mr-2"/>
-          <span>Profile</span>
-        </RouterLink>
-
-        <button @click="logout" to="/logout" class="text-gray-100 hover:text-dark px-4 py-1 w-full text-left">
-          <font-awesome-icon icon="sign-out-alt" class="mr-2"/>
-          <span>Logout</span>
-        </button>
-      </template>
-    </DropdownUtility>
+        <DropdownMenuItem>
+          <button @click="logout" to="/logout">
+            <font-awesome-icon icon="sign-out-alt" class="mr-2"/>
+            <span>Logout</span>
+          </button>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   </div>
 </template>
-
-<style scoped>
-
-</style>

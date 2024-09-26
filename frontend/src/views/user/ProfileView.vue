@@ -1,11 +1,11 @@
 <script setup lang="ts">
+import HeaderProfile from "@/components/profile/HeaderProfile.vue";
+import TabProfile from "@/components/profile/TabProfile.vue";
+
 
 </script>
 
 <template>
-  <h1>Profile coucou les loulous</h1>
+  <HeaderProfile />
+  <TabProfile />
 </template>
-
-<style scoped>
-
-</style>
