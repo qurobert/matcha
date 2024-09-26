@@ -6,16 +6,39 @@ export const useYup = () => {
 	.email()
 	.required("Email is required");
 
+	const usernameSchemaNotRequired = yup.string()
+		.notRequired()
+		.nullable()
+		.test('min-length-or-empty', 'The username should be between 6 and 15 characters', function(value) {
+			return value === null || value === '' || value === undefined || (value.length >= 6 && value.length <= 15)
+		})
+
 	const usernameSchema = yup.string()
 	.min(6, "Minimum 6 characters")
 	.max(15, "Maximum 15 characters")
 	.required("Username is required")
+
+	const passwordSchemaNotRequired =  yup.string()
+	.notRequired()
+	.nullable()
+	.test('uppercase-or-empty', 'The password need contain at least one uppercase letter', function(value) {
+		return value === null || value === '' || value === undefined || !!value.match(/[A-Z]/);
+	})
+	.test('special-char-or-empty', 'The password need contain at least one special character', function(value) {
+		return value === null || value === '' || value === undefined || !!value.match(/[!@#$%^&*(),.?":{}|<>]/);
+	})
+	.test('min-length-or-empty', 'The password need to have at least 8 characters.', function(value) {
+		return value === null || value === '' || value === undefined || value.length >= 8;
+	})
 
 	const passwordSchema = yup.string()
 	.min(8, "Minimum 8 characters")
 	.matches(/[A-Z]/, 'Minimum 1 uppercase letter')
 	.matches(/[!@#$%^&*(),.?":{}|<>]/, 'Minimum 1 special character')
 	.required("Password is required")
+
+	const confirmPasswordNotRequiredSchema = yup.string()
+	.oneOf([yup.ref('password')], 'Passwords must match')
 
 	const confirmPasswordSchema = yup.string()
 	.oneOf([yup.ref('password')], 'Passwords must match')
@@ -46,9 +69,12 @@ export const useYup = () => {
 
 	return {
 		emailSchema,
+		usernameSchemaNotRequired,
 		usernameSchema,
 		passwordSchema,
+		passwordSchemaNotRequired,
 		confirmPasswordSchema,
+		confirmPasswordNotRequiredSchema,
 		codeSchema,
 		dateSchema
 	}

@@ -4,13 +4,20 @@ import {globalHandleValidationResult} from "./handleValidationResult.js";
 export const registerValidator = () => [
 	body('email').isEmail().withMessage('Email is not valid'),
 	body('password')
-		.isLength({min: 6}).withMessage('Password must be at least 6 characters')
+		.isLength({min: 8}).withMessage('Password must be at least 8 characters')
 		.matches(/[A-Z]/).withMessage('Password must contain at least one uppercase letter')
 		.matches(/\W/).withMessage('Password must contain at least one special character'),
 	body('username').isLength({min: 6, }).withMessage('Username must be at least 6 characters'),
 	globalHandleValidationResult
 ]
 
+export const updateProfileValidator = () => [
+	body('email').optional().isEmail().withMessage('Email is not valid'),
+	body('password').optional().isLength({min: 8}).withMessage('Password must be at least 8 characters')
+	.matches(/[A-Z]/).withMessage('Password must contain at least one uppercase letter')
+	.matches(/\W/).withMessage('Password must contain at least one special character'),
+	globalHandleValidationResult
+]
 export const refreshTokenValidator = () => [
 	body('refresh_token').isString().withMessage('Refresh token must be a string'),
 	globalHandleValidationResult
@@ -28,7 +35,10 @@ export const emailValidator = () => [
 export const resetPassValidator = () => [
 	body('email').isEmail().withMessage('Email is not valid'),
 	body('code').isString().withMessage('Code must be a non-empty string'),
-	body('password').isLength({min: 6}).withMessage('Password must be at least 6 characters'),
+	body('password').isString()
+	.isLength({min: 8}).withMessage('Password must be at least 8 characters')
+	.matches(/[A-Z]/).withMessage('Password must contain at least one uppercase letter')
+	.matches(/\W/).withMessage('Password must contain at least one special character'),,
 	globalHandleValidationResult
 ]
 

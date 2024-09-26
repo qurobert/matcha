@@ -36,17 +36,25 @@ const user = useAuthStore().user;
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuItem>
-          <RouterLink to="/settings">
-            <font-awesome-icon icon="sliders" class="mr-2"/>
-            <span>Preferences</span>
-          </RouterLink>
-        </DropdownMenuItem>
 
         <DropdownMenuItem>
           <RouterLink to="/profile">
             <font-awesome-icon icon="user" class="mr-2"/>
             <span>Profile</span>
+          </RouterLink>
+        </DropdownMenuItem>
+
+        <DropdownMenuItem>
+          <RouterLink to="/profile/settings">
+            <font-awesome-icon icon="gear" class="mr-2"/>
+            <span>Settings</span>
+          </RouterLink>
+        </DropdownMenuItem>
+
+        <DropdownMenuItem>
+          <RouterLink to="/profile/preferences">
+            <font-awesome-icon icon="sliders" class="mr-2"/>
+            <span>Preferences</span>
           </RouterLink>
         </DropdownMenuItem>
 

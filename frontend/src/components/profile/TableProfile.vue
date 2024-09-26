@@ -62,16 +62,16 @@ const props = defineProps({
 })
 
 const url = "http://localhost:3000/uploads/";
-// <!--            name: props.type === TypeTableProfile.matches ? 'chat' : 'user-profile',-->
-// <!--            params: { id: user.id }-->
-
 </script>
 
 <template>
   <section class="w-full flex justify-center">
     <section class="flex flex-wrap justify-center gap-4 mt-2 w-full">
       <RouterLink
-          to="/profile"
+          :to="{
+          name: 'public-profile',
+          params: { id: user.id }
+      }"
           v-for="user in fakeUsers" :key="user.first_name" class="w-44 h-60 relative cursor-pointer"
       >
         <img :src="url + user.pictures[0]" alt="profile picture" class="rounded-md w-full h-full object-cover mix-blend-overlay	" />

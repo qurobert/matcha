@@ -28,3 +28,8 @@ export const fetchMe = async () => {
 	const response = await api.get('/users/me');
 	return response.data;
 }
+
+export const fetchUpdateUser = async (email: string, username: string, password: string) => {
+	const response = await api.post('/users/update', {email, username, password});
+	return response.data;
+}

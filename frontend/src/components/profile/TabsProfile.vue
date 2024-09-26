@@ -26,10 +26,10 @@ import {TypeTableProfile} from "@/types/table_profile";
         <TableProfile :type="TypeTableProfile.likes"/>
       </TabsContent>
       <TabsContent value="views">
-<!--        <TableProfile :type="TypeTableProfile.views"/>-->
+        <TableProfile :type="TypeTableProfile.views"/>
       </TabsContent>
       <TabsContent value="matches">
-<!--        <TableProfile :type="TypeTableProfile.matches"/>-->
+        <TableProfile :type="TypeTableProfile.matches"/>
       </TabsContent>
     </Tabs>
   </section>

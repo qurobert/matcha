@@ -1,14 +1,8 @@
 import {defineStore} from "pinia";
 
-type UserType = {
-	email: string;
-	username: string;
-	verify_email: boolean;
-}
-
 export const useAuthStore = defineStore('auth', {
 	state: () => ({
-		user: {} as UserType,
+		user: {} as User,
 		tmpEmail: null,
 		access_token: localStorage.getItem('access_token') || null,
 		refresh_token: localStorage.getItem('refresh_token') || null,
@@ -21,6 +15,13 @@ export const useAuthStore = defineStore('auth', {
 		is_connected: (state) => state.user?.email !== undefined,
 	},
 	actions: {
+		updateUsername(username: string) {
+			this.user.username = username;
+		},
+		updateEmail(email: string) {
+			this.user.email = email;
+			this.user.verify_email = false;
+		},
 		store_token(access_token: string, refresh_token: string) {
 			console.log('Access token stored');
 			localStorage.setItem('access_token', access_token);
@@ -31,7 +32,7 @@ export const useAuthStore = defineStore('auth', {
 			localStorage.removeItem('refresh_token');
 		},
 		logout() {
-			this.user = {} as UserType;
+			this.user = {} as User;
 			this.clear_token();
 		},
 		storeUserInfo(user: any) {

@@ -4,14 +4,15 @@ import LoginView from '@/views/auth/LoginView.vue'
 import SignupView from '@/views/auth/SignupView.vue'
 import {useAuthStore} from "@/stores/userStore";
 import {fetchStatus} from "@/api/auth";
-// import NotFoundView from "@/views/NotFoundView.vue";
+import NotFoundView from "@/views/NotFoundView.vue";
 
 const redirectToProfile = async (to: any, from: any, next: any) => {
   const authStore = useAuthStore();
 
-  if (authStore.email) {
+  console.log(authStore.verify_email);
+  if (authStore.email && authStore.verify_email) {
     console.log("redirect to profile");
-    return next({name: 'profile'})
+    return next({name: 'private-profile'})
   }
   return next();
 }
@@ -54,7 +55,7 @@ const router = createRouter({
       path: '/verify-email',
       name: 'verify-email',
       component: () => import('@/views/auth/VerifyEmailView.vue'),
-      meta: { requiresAuth: true },
+      // meta: { requiresAuth: true },
     },
     {
       path: '/mail-verify-email',
@@ -63,40 +64,49 @@ const router = createRouter({
     },
     {
       path: '/profile',
-      name: 'profile',
+      name: 'private-profile',
       component: () => import('../views/user/ProfileView.vue'),
       // meta: { requiresAuth: true },
-      // children: [
-        // {
-        //   path: 'edit-profile',
-        //   name: 'edit profile',
-        //   component: () => import('@/views/user/EditProfile.vue'),
-      ////     meta: { requiresAuth: true },
-      //   },
-        // {
-        //   path: 'preferences',
-        //   name: 'preferences',
-        //   component: () => import('@/views/user/Preferences.vue'),
-        //   // meta: { requiresAuth: true },
-        // },
-        // {
-        //   path: 'settings',
-        //   name: 'settings',
-        //   component: () => import('@/views/user/Settings.vue'),
-        //   // meta: { requiresAuth: true },
-        // },
-        // {
-        //   path: 'chat/:id',
-        //   name: 'chat',
-        //   component: () => import('@/views/user/ChatView.vue'),
-        //   // meta: { requiresAuth: true },
-        // },
-        // {
-        //   path: ':id',
-        //   name: 'user-profile',
-        //   component: () => import('@/views/user/UserProfileView.vue'),
-        // }
-      // ]
+    },
+    {
+      path: '/profile/edit',
+      name: 'edit-profile',
+      component: () => import('@/views/user/EditProfileView.vue'),
+    //     meta: { requiresAuth: true },
+    },
+    {
+      path: '/profile/preferences',
+      name: 'preferences',
+      component: () => import('@/views/user/PreferencesView.vue'),
+      // meta: { requiresAuth: true },
+    },
+    {
+      path: '/profile/settings',
+      name: 'settings',
+      component: () => import('@/views/user/SettingsView.vue'),
+      // meta: { requiresAuth: true },
+    },
+    {
+      path: '/chat/:id',
+      name: 'chat',
+      component: () => import('@/views/user/ChatView.vue'),
+      // meta: { requiresAuth: true },
+    },
+    {
+      path: '/profile/:id',
+      name: 'public-profile',
+      component: () => import('@/views/user/UserProfileView.vue'),
+    },
+    {
+      path: '/logout',
+      name: 'logout',
+      beforeEnter: (to, from, next) => {
+        const authStore = useAuthStore();
+        authStore.logout();
+      },
+      redirect(to) {
+        return {name: 'home'}
+      },
     },
     {
       path: '/create-profile',
@@ -104,24 +114,25 @@ const router = createRouter({
       component: () => import('@/views/user/CreateProfileView.vue'),
       // meta: { requiresAuth: true },
     },
-    // {
-    //   path: '/:catchAll(.*)', // Capture toutes les routes non définies
-    //   name: 'NotFound',
-    //   component: NotFoundView,
-    // },
+    {
+      path: '/:catchAll(.*)', // Capture toutes les routes non définies
+      name: 'NotFound',
+      component: NotFoundView,
+    },
   ]
 })
 
-router.beforeResolve(async (to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore();
   try {
     const { connected, user } = await fetchStatus();
 
     if (user) authStore.storeUserInfo(user);
     if (to.name === 'create-profile' && user.first_name) {
-      return next({name: 'profile'})
+      return next({name: 'private-profile'})
     }
     if (to.meta.requiresAuth) {
+      console.log("VERIFY EMAIL: ", authStore.verify_email);
         if (!connected && to.name !== 'login') {
           return next({name: 'login'})
         }

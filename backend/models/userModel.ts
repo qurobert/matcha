@@ -68,11 +68,11 @@ export default class UserModel {
         }
     }
 
-    static async updatePassword(email: string, password: string) {
+    static async updatePassword(id: string, password: string) {
         const client = await pool.connect()
         try {
             const passwordEncrypted = bcrypt.hashSync(password, bcrypt.genSaltSync(10))
-            await client.query('UPDATE Users SET password = $1 WHERE email = $2', [passwordEncrypted, email])
+            await client.query('UPDATE Users SET password = $1 WHERE id = $2', [passwordEncrypted, id])
         } finally {
             client.release()
         }
