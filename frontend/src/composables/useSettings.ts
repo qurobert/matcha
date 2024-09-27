@@ -1,11 +1,12 @@
 import * as yup from "yup";
 import {useYup} from "@/composables/useYup";
 import {useForm} from 'vee-validate';
-import {ref} from "vue";
+import {ref, watch} from "vue";
 import {useAuthStore} from "@/stores/userStore";
 import {fetchUpdateUser} from "@/api/user";
 import {useToast} from "@/components/ui/toast";
 import {useRouter} from "vue-router";
+import {useIsValidForm} from "@/composables/useIsValidForm";
 
 export const useSettings = () => {
 	const { usernameSchemaNotRequired, passwordSchemaNotRequired, confirmPasswordNotRequiredSchema} = useYup();
@@ -27,7 +28,6 @@ export const useSettings = () => {
 	const {handleSubmit, validate, values, errors} = useForm({
 		validationSchema: schema
 	})
-	const errorOnSubmit = ref("");
 
 	const router = useRouter();
 	const onSubmit = handleSubmit(async (values) => {
@@ -36,13 +36,11 @@ export const useSettings = () => {
 		const {email, password, username} = values;
 		const user = useAuthStore();
 		try {
-			console.log("TRY");
 			await fetchUpdateUser(email, username, password)
 			if (username) {
 				user.updateUsername(username);
 			}
 			if (email) {
-				console.log("EMAIL: ", email);
 				toast({
 					title: 'An email has been sent to verify your email (You need to verify your email before go back to the app)',
 				})
@@ -52,7 +50,6 @@ export const useSettings = () => {
 				toast({
 					title: 'Your settings have been updated',
 				})
-				console.log("redirect to profile");
 				router.push({name: 'private-profile'});
 			}
 		}
@@ -62,14 +59,14 @@ export const useSettings = () => {
 				variant: 'destructive',
 			})
 		}
-
 	});
+
+	const {isValid, hasWritten} = useIsValidForm(values, validate);
 
 	return {
 		onSubmit,
-		errorOnSubmit,
-		validate,
-		values,
-		errors
+		errors,
+		isValid,
+		hasWritten
 	}
 }

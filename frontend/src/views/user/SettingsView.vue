@@ -1,31 +1,13 @@
 <script setup lang="ts">
 import HeaderChildrenProfilePage from "@/components/headers/HeaderChildrenProfilePage.vue";
-import {useSettings} from "@/composables/useSubProfile";
+import {useSettings} from "@/composables/useSettings";
 import InputWithField from "@/components/utility/InputWithField.vue";
 import {useAuthStore} from "@/stores/userStore";
 import {Button} from "@/components/ui/button";
-import { watch, ref } from "vue";
 import { Separator } from '@/components/ui/separator'
 
-
-const {onSubmit, validate, values, errors} = useSettings();
+const {onSubmit, isValid, hasWritten, errors} = useSettings();
 const userStore = useAuthStore();
-const isValid = ref(false);
-const hasWritten = ref(false);
-
-watch(() => values, async () => {
-  if (!hasWritten.value && (values.password || values.confirm_password || values.email || values.username))
-    hasWritten.value = true;
-
-  const { valid } = await validate();
-  if (valid) {
-    isValid.value = true;
-  }
-  else if (isValid.value) {
-    isValid.value = false;
-  }
-
-}, { deep: true });
 </script>
 
 <template>

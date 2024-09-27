@@ -1,5 +1,6 @@
 import * as yup from 'yup';
 import moment from 'moment';
+import {useInterest} from "@/composables/useInterest";
 
 export const useYup = () => {
 	const emailSchema = yup.string()
@@ -48,6 +49,16 @@ export const useYup = () => {
 	.length(6, "Code must be 6 characters")
 	.required("Code is required")
 
+	const minNumbersOfPictures = 1;
+	const picturesSchema = yup.array().of(yup.string())
+	.min(minNumbersOfPictures, `You must upload at least ${minNumbersOfPictures} picture`)
+	.required("Pictures are required");
+
+	const interestsSchema = yup.array().of(yup.string()
+	.required("You need to choose one of this field"))
+	.min(1, "You need to choose one of this field")
+	.required("You need to choose one of this field")
+
 	// Schéma Yup pour valider une date avec moment.js
 	const dateSchema = yup
 	.date()
@@ -71,6 +82,8 @@ export const useYup = () => {
 		emailSchema,
 		usernameSchemaNotRequired,
 		usernameSchema,
+		interestsSchema,
+		picturesSchema,
 		passwordSchema,
 		passwordSchemaNotRequired,
 		confirmPasswordSchema,

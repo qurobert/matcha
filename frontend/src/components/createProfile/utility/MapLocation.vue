@@ -5,7 +5,7 @@ import {
   LMarker,
 } from "@vue-leaflet/vue-leaflet";
 import "leaflet/dist/leaflet.css";
-import {ref, defineEmits} from 'vue'
+import {ref} from 'vue'
 import {fetchReverseGeocoding} from "@/api/reverse_geocoding";
 import {
   Dialog,
@@ -23,18 +23,25 @@ const location = ref(null as string | null);
 const updateLocation = (value: string) => {
   location.value = value;
 }
-const emits = defineEmits(['location-selected']);
+const props = defineProps<{setFieldValue: Function}>();
 const markerPosition = ref(null as any);
+
+async function reverseGeoCode(lat: number, lng: number) {
+  const location = await fetchReverseGeocoding(lat, lng);
+  return [location?.address?.road, location?.address?.municipality, location?.address?.country, location?.address?.postcode]
+      .filter(Boolean)
+      .join(', ');
+}
+function onLocationSelected(location: { lat: string, lng: string }) {
+  props.setFieldValue('location', location);
+}
 
 async function onMapClicked(e: any) {
   markerPosition.value = e.latlng;
-  const location = await fetchReverseGeocoding(e.latlng.lat, e.latlng.lng);
-  updateLocation(
-      [location?.address?.road, location?.address?.municipality, location?.address?.country, location?.address?.postcode]
-      .filter(Boolean)
-      .join(', ')
-  );
-  emits('location-selected', { lat: e.latlng.lat, lng: e.latlng.lng });
+  const newLocation = await reverseGeoCode(e.latlng.lat, e.latlng.lng);
+
+  updateLocation(newLocation);
+  onLocationSelected({ lat: e.latlng.lat, lng: e.latlng.lng })
 }
 
 function resetLocation() {
@@ -42,18 +49,19 @@ function resetLocation() {
   location.value = null;
   updateLocation('');
 }
+// {{// await reverseGeoCode(componentField.modelValue.lat, componentField.modelValue.lng)}}
 </script>
 
 <template>
-  <FormField name="location">
+  <FormField name="location" v-slot="{ componentField }">
     <FormItem class="flex flex-col">
       <FormLabel>Location</FormLabel>
       <Dialog>
         <DialogTrigger as-child>
           <FormControl>
             <Button variant="outline" class="text-sm px-3 justify-start">
-              <p v-if="location" class="text-dark">
-                {{location}}
+              <p v-if="componentField.modelValue" class="text-dark">
+                {{ componentField.modelValue}}
               </p>
               <p v-else>
                     <span class="font-semibold">

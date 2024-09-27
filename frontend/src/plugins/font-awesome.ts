@@ -16,7 +16,8 @@ import {faPepperHot,
 	faCircle,
 	faGear,
 	faPencil,
-	faBolt
+	faBolt,
+	faPlus
 } from "@fortawesome/free-solid-svg-icons";
 import {faBell as faBellRegular} from "@fortawesome/free-regular-svg-icons";
 
@@ -39,7 +40,8 @@ library.add(
 	faCircle,
 	faGear,
 	faPencil,
-	faBolt
+	faBolt,
+	faPlus
 );
 
 export {FontAwesomeIcon};
