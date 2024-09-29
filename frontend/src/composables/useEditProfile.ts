@@ -1,9 +1,11 @@
 import * as yup from "yup";
 import {useYup} from "@/composables/useYup";
 import {useForm} from 'vee-validate';
-import {fetchMe} from "@/api/auth";
 import {useAuthStore} from "@/stores/userStore";
 import {useIsValidForm} from "@/composables/useIsValidForm";
+import _ from 'lodash'
+import {fetchUpdateUserImages, fetchUpdateUserProfile} from "@/api/user";
+import {submitProfile} from "@/composables/useCreateProfile";
 
 export const useEditProfile = () => {
 	const {picturesSchema, interestsSchema, usernameSchema, dateSchema} = useYup();
@@ -19,13 +21,12 @@ export const useEditProfile = () => {
 		}),
 		date: dateSchema,
 		gender: yup.string().required("You need to choose one of this field"),
-		interested_in: yup.string().required("You need to choose one of this field"),
+		interestedIn: yup.string().required("You need to choose one of this field"),
 	})
 
 	const userStore = useAuthStore();
-
 	const initialValues = {
-		pictures: userStore.user.pictures,
+		pictures: userStore.user.pictures?.map(picture => ({url: picture, file: null})),
 		biography: userStore.user.biography,
 		interests: userStore.user.interests,
 		first_name: userStore.user.first_name,
@@ -35,27 +36,40 @@ export const useEditProfile = () => {
 			lng: userStore.user.location_lng,
 		},
 		date: userStore.user.date_of_birth,
+		gender: userStore.user.gender,
+		interestedIn: userStore.user.interested_in
 	}
 
-	const {handleSubmit, validate, values, errors, setFieldValue} = useForm({
+	const {handleSubmit, validate, values, errors} = useForm({
 		validationSchema: schema,
 		initialValues
 	})
 
 	const {isValid, hasWritten} = useIsValidForm(values, validate);
 
+	const getModifiedFields = (initialValues: any, formValues: any) => {
+		const modifiedFields: Record<string, any> = {};
+		for (const key in formValues)
+			if (!_.isEqual(formValues[key], initialValues[key]))
+				modifiedFields[key] = formValues[key];
+		return modifiedFields;
+	};
+
 	const onSubmit = handleSubmit(async (values) => {
-			console.log("on_submit")
+		const modifiedValues = getModifiedFields(initialValues, values);
+		if (_.isEmpty(modifiedValues))
+			return ;
+
+		// @ts-ignore
+		submitProfile(modifiedValues);
 	})
 
 	return {
 		isValid,
 		initialValues,
 		hasWritten,
-		setFieldValue,
 		onSubmit,
 		validate,
-		values,
 		errors
 	}
 }

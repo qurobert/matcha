@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import {capitalizeFirstLetter} from "@/lib/utils";
+import {FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
+import {Badge} from "@/components/ui/badge";
+
 const genderOptions = ['man', 'woman'];
+import { useField } from 'vee-validate';
 
-const props = defineProps<{values: any, setFieldValue: Function}>();
-
+const { value, setValue } = useField('gender');
 function onGenderClick(gender: string) {
-  props.setFieldValue('gender', gender);
+  setValue(gender);
 }
 </script>
 
@@ -17,7 +20,7 @@ function onGenderClick(gender: string) {
         <br/>
         <Badge
             v-for="gender in genderOptions"
-            :variant="values.gender === gender ? 'default' : 'outline'"
+            :variant="value === gender ? 'default' : 'outline'"
             @click="() => onGenderClick(gender)"
             class="cursor-pointer mr-2 text-sm px-6"
         >

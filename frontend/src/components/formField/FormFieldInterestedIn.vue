@@ -1,10 +1,14 @@
 <script setup lang="ts">
 import {capitalizeFirstLetter} from "@/lib/utils";
-const interestedInOptions = ['men', 'women', 'both'];
+import {FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
+import {Badge} from "@/components/ui/badge";
+import { useField } from 'vee-validate';
 
-const props = defineProps<{values: any, setFieldValue: Function}>();
+
+const interestedInOptions = ['men', 'women', 'both'];
+const { value, setValue } = useField('interestedIn');
 function onInterestedInClick(interestedIn: string) {
-  props.setFieldValue('interestedIn', interestedIn);
+  setValue(interestedIn);
 }
 </script>
 
@@ -16,7 +20,7 @@ function onInterestedInClick(interestedIn: string) {
         <br/>
         <Badge
             v-for="interestedIn in interestedInOptions"
-            :variant="values.interestedIn === interestedIn ? 'default' : 'outline'"
+            :variant="value === interestedIn ? 'default' : 'outline'"
             @click="() => onInterestedInClick(interestedIn)"
             class="cursor-pointer mr-2 text-sm px-6"
         >

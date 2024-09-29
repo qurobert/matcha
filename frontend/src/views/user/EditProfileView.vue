@@ -18,22 +18,23 @@ import {
   DialogTrigger
 } from "@/components/ui/dialog";
 import FormFieldInterests from "@/components/formField/FormFieldInterests.vue";
-const {onSubmit, hasWritten, initialValues, values, isValid, setFieldValue} = useEditProfile();
+import FormFieldGender from "@/components/formField/FormFieldGender.vue";
+import FormFieldInterestedIn from "@/components/formField/FormFieldInterestedIn.vue";
+const {onSubmit, hasWritten, initialValues, isValid} = useEditProfile();
 
-console.log(initialValues);
 </script>
 
 <template>
   <HeaderChildrenProfilePage :on-submit="onSubmit" :is-valid="isValid" text="Edit info" />
   <div class="flex justify-center">
     <form @submit.prevent="onSubmit" class="w-full lg:w-1/2">
-      <!--    Add autocomplete for formFieldPicture -->
-      <FormFieldPictures :set-field-value="setFieldValue" :values="values" />
+
+      <FormFieldPictures />
       <div class="m-4">
         <FormFieldBiography size="w-full" />
 
 
-        <FormField v-slot="{ componentField }" name="interests">
+        <FormField name="interests">
           <FormItem>
             <FormLabel>Interests *</FormLabel>
             <br />
@@ -64,12 +65,16 @@ console.log(initialValues);
 
         <FormFieldFullName />
 
-        <MapLocation :set-field-value="setFieldValue"/>
+        <MapLocation />
 
         <FormFieldBirthDate />
 
+        <FormFieldGender />
+
+        <FormFieldInterestedIn  />
+
         <div class="flex justify-center mb-4">
-          <Button type="submit" :disabled="!hasWritten" :variant="hasWritten ? 'default' : 'secondary'" size="lg">
+          <Button type="submit" size="lg" :disabled="!hasWritten" :variant="hasWritten ? 'default' : 'secondary'">
             Save
           </Button>
         </div>

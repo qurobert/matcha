@@ -125,6 +125,7 @@ export default class UserModel {
             client.release()
         }
     }
+
     static async updatePictures(userId: string, pictures: string[] | null) {
         const client = await pool.connect()
         try {

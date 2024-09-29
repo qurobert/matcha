@@ -32,7 +32,7 @@ const {onSubmit, setFieldValue, values} = useInfoCreateProfile(profileInfoSchema
 
     <FormFieldBirthDate />
 
-    <MapLocation :set-field-value="setFieldValue" />
+    <MapLocation />
 
     <FormFieldInterestedIn :values="values" :set-field-value="setFieldValue" />
 

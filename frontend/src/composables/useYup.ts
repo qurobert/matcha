@@ -50,7 +50,10 @@ export const useYup = () => {
 	.required("Code is required")
 
 	const minNumbersOfPictures = 1;
-	const picturesSchema = yup.array().of(yup.string())
+	const picturesSchema = yup.array().of(yup.object().shape({
+		url: yup.string().nullable().notRequired(),
+		file: yup.string().nullable().notRequired()
+	}))
 	.min(minNumbersOfPictures, `You must upload at least ${minNumbersOfPictures} picture`)
 	.required("Pictures are required");
 
