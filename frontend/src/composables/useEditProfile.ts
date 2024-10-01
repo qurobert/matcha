@@ -4,9 +4,8 @@ import {useForm} from 'vee-validate';
 import {useAuthStore} from "@/stores/userStore";
 import {useIsValidForm} from "@/composables/useIsValidForm";
 import _ from 'lodash'
-import {fetchUpdateUserImages, fetchUpdateUserProfile} from "@/api/user";
 import {submitProfile} from "@/composables/useCreateProfile";
-
+import {useToast} from "@/components/ui/toast";
 export const useEditProfile = () => {
 	const {picturesSchema, interestsSchema, usernameSchema, dateSchema} = useYup();
 	const schema = yup.object({
@@ -19,7 +18,7 @@ export const useEditProfile = () => {
 			lat: yup.number(),
 			lng: yup.number(),
 		}),
-		date: dateSchema,
+		date_of_birth: dateSchema,
 		gender: yup.string().required("You need to choose one of this field"),
 		interestedIn: yup.string().required("You need to choose one of this field"),
 	})
@@ -35,7 +34,7 @@ export const useEditProfile = () => {
 			lat: userStore.user.location_lat,
 			lng: userStore.user.location_lng,
 		},
-		date: userStore.user.date_of_birth,
+		date_of_birth: userStore.user.date_of_birth,
 		gender: userStore.user.gender,
 		interestedIn: userStore.user.interested_in
 	}
@@ -45,7 +44,7 @@ export const useEditProfile = () => {
 		initialValues
 	})
 
-	const {isValid, hasWritten} = useIsValidForm(values, validate);
+	const {isValid, hasWritten } = useIsValidForm(values, validate);
 
 	const getModifiedFields = (initialValues: any, formValues: any) => {
 		const modifiedFields: Record<string, any> = {};
@@ -56,12 +55,26 @@ export const useEditProfile = () => {
 	};
 
 	const onSubmit = handleSubmit(async (values) => {
-		const modifiedValues = getModifiedFields(initialValues, values);
-		if (_.isEmpty(modifiedValues))
-			return ;
+		const {toast} = useToast();
+		try {
+			const modifiedValues = getModifiedFields(initialValues, values);
+			if (_.isEmpty(modifiedValues))
+				return;
 
-		// @ts-ignore
-		submitProfile(modifiedValues);
+			// @ts-ignore
+			await submitProfile(modifiedValues);
+
+			hasWritten.value = false;
+			toast({
+				title: 'Your profile has been updated',
+			})
+
+		} catch (e) {
+			toast({
+				title: 'An error occurred',
+				variant: 'destructive',
+			})
+		}
 	})
 
 	return {

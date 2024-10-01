@@ -34,7 +34,7 @@ export const fetchMe = async () => {
 	return response.data;
 }
 
-export const fetchUpdateUser = async (user: User) => {
+export const fetchUpdateUser = async (user: { email: string, password: string, username: string }) => {
 	const response = await api.post('/users/update', user);
 	return response.data;
 }

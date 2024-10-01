@@ -19,7 +19,11 @@ const props = withDefaults(defineProps<{
     <FormItem>
       <FormLabel :display-error="displayError">{{label}}</FormLabel>
       <FormControl>
-        <Input :placeholder="placeholder" v-bind="componentField" :type="type"/>
+        <Input :placeholder="placeholder"
+               v-bind="componentField"
+               :type="type"
+               :autocomplete="type === 'password' ? 'new-password' : 'on'"
+        />
       </FormControl>
       <FormMessage v-if="displayError"/>
     </FormItem>

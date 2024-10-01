@@ -5,7 +5,7 @@ import FormFieldPictures from "@/components/formField/FormFieldPictures.vue";
 import FormFieldBiography from "@/components/formField/FormFieldBiography.vue";
 import {Button} from "@/components/ui/button";
 import {capitalizeFirstLetter} from "../../lib/utils";
-import {FormControl, FormField, FormItem, FormLabel} from "@/components/ui/form";
+import {FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
 import FormFieldFullName from "@/components/formField/FormFieldFullName.vue";
 import MapLocation from "@/components/createProfile/utility/MapLocation.vue";
 import FormFieldBirthDate from "@/components/formField/FormFieldBirthDate.vue";
@@ -20,12 +20,14 @@ import {
 import FormFieldInterests from "@/components/formField/FormFieldInterests.vue";
 import FormFieldGender from "@/components/formField/FormFieldGender.vue";
 import FormFieldInterestedIn from "@/components/formField/FormFieldInterestedIn.vue";
-const {onSubmit, hasWritten, initialValues, isValid} = useEditProfile();
+import { useFieldArray } from "vee-validate";
+const {onSubmit, hasWritten, isValid} = useEditProfile();
 
+const {fields} = useFieldArray('interests');
 </script>
 
 <template>
-  <HeaderChildrenProfilePage :on-submit="onSubmit" :is-valid="isValid" text="Edit info" />
+  <HeaderChildrenProfilePage :on-submit="onSubmit" :is-valid="isValid" :has-written="hasWritten" text="Edit info" />
   <div class="flex justify-center">
     <form @submit.prevent="onSubmit" class="w-full lg:w-1/2">
 
@@ -41,10 +43,16 @@ const {onSubmit, hasWritten, initialValues, isValid} = useEditProfile();
             <Dialog>
               <DialogTrigger as-child>
             <FormControl>
-              <Button size="sm" class="text-md">
-                <span class="max-w-lg truncate">{{initialValues?.interests?.map(capitalizeFirstLetter).join(', ')}}</span>
+              <Button size="sm" class="text-md" >
+                <span class="max-w-lg truncate" v-if="fields.length">
+                  {{fields.slice(0, 3).map((element) => capitalizeFirstLetter(element.value as string)).join(', ')}}
+                  {{fields.length > 3 ? '...' : ''}}
+                </span>
+                <span v-else>Add interests</span>
                 <font-awesome-icon icon="plus" class="w-4 h-4 ml-4"/>
               </Button>
+              <FormMessage />
+
             </FormControl>
               </DialogTrigger>
               <DialogContent class="p-4 mr-4 max-w-4xl">

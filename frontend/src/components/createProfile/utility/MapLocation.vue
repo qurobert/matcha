@@ -36,19 +36,25 @@ async function reverseGeoCode(lat: number, lng: number) {
 
 // OnMounted
 onMounted(async () => {
+  console.log(value.value);
+
   if (!value.value?.lat || !value.value?.lng) {
     isLoading.value = false;
     return ;
   }
   formattedLocation.value = await reverseGeoCode(value.value.lat, value.value.lng);
   isLoading.value = false;
+  markerPosition.value = value.value;
 });
 
 // Reactive
 async function onMapClicked(e: any) {
-  setValue(location);
+  formattedLocation.value = await reverseGeoCode(e.latlng.lat, e.latlng.lng);
+  setValue({
+    lat: e.latlng.lat,
+    lng: e.latlng.lng
+  });
   markerPosition.value = e.latlng;
-  formattedLocation.value = await reverseGeoCode(location.lat, location.lng);
 }
 
 function resetLocation() {

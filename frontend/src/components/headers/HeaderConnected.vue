@@ -6,8 +6,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 const authStore = useAuthStore()
@@ -31,7 +29,7 @@ const user = useAuthStore().user;
     <DropdownMenu>
       <DropdownMenuTrigger>
         <Avatar class="w-6 h-6">
-          <AvatarImage :src="url + user.pictures[0]" alt="user profile" />
+          <AvatarImage :src="url + user?.pictures?.[0]" alt="user profile" />
           <AvatarFallback>User</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>

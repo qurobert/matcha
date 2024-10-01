@@ -11,7 +11,7 @@ const userStore = useAuthStore();
 </script>
 
 <template>
-  <HeaderChildrenProfilePage text="Settings" :is-valid="isValid" :on-submit="onSubmit"/>
+  <HeaderChildrenProfilePage text="Settings" :is-valid="isValid" :on-submit="onSubmit" :has-written="hasWritten"/>
   <div class="flex justify-center">
     <form @submit.prevent="onSubmit" class="m-4 w-full md:w-1/2 lg:w-1/3">
       <InputWithField name="username" label="Username" :placeholder="userStore.username" type="text" />
@@ -20,11 +20,11 @@ const userStore = useAuthStore();
       <Separator class="mt-6 mb-4" label="And / Or" />
       <InputWithField name="password" label="Password" placeholder="*******" type="password" />
       <InputWithField name="confirm_password" label="Confirm password" placeholder="*******" type="password" />
-      <p v-if="errors[''] && hasWritten" class="text-destructive">
+      <p v-if="hasWritten" class="text-destructive">
          {{errors['']}}
       </p>
       <div class="flex justify-center">
-          <Button type="submit" size="sm" class="px-20 mt-4">
+          <Button type="submit" size="sm" class="px-20 mt-4" :disabled="!hasWritten" :variant="hasWritten ? 'default' : 'secondary'">
             Save
           </Button>
       </div>

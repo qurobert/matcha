@@ -1,6 +1,7 @@
 <script setup lang="ts">
 const props = defineProps<{
   text: String;
+  hasWritten: boolean;
   isValid: boolean;
   onSubmit: any;
 }>();
@@ -17,7 +18,11 @@ const props = defineProps<{
     </p>
       <p
           class="text-lg cursor-pointer"
-          :class="isValid ? 'text-gradient-primary' : 'text-gray-light'"
+          :class="{
+             'text-gradient-primary' : isValid && hasWritten,
+             'text-gray-light' : !isValid || !hasWritten,
+          }"
+
           @click="onSubmit"
       >
         Done

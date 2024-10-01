@@ -1,23 +1,35 @@
 <script setup lang="ts">
 import {capitalizeFirstLetter} from "@/lib/utils";
-import {useInterest} from "@/composables/useInterest";
 import {FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
 import {Badge} from "@/components/ui/badge";
-const {interests, onInterestClick, values} = useInterest();
+import { useFieldArray } from "vee-validate";
+import {useFields} from "@/composables/useInterest";
+import {computed} from 'vue'
+
+const allFields = useFields();
+const {fields, insert, remove} = useFieldArray('interests');
+
+console.log(fields.value);
+function isInterestSelected(interest: string) {
+  return computed(() => fields.value.some((element) => element.value === interest));
+}
+
+function onInterestClick(interest: string) {
+  const index = fields.value.findIndex((element) => element.value === interest);
+
+  index !== -1 ?
+      remove(index) :
+      insert(fields.value.length, interest);
+}
+
 </script>
 
 <template>
-  <FormField name="interests">
-    <FormItem>
       <FormLabel>Interests *</FormLabel>
-      <FormControl >
         <div class="flex flex-wrap w-full">
-          <Badge v-for="interest in interests" :key="interest" @click="onInterestClick(interest)" :variant="values?.interests?.includes(interest) ? 'default' : 'outline'" class="m-1 cursor-pointer">
+          <Badge v-for="interest in allFields" :key="interest" @click.prevent="onInterestClick(interest)" :variant="isInterestSelected(interest).value ? 'default' : 'outline'" class="m-1 cursor-pointer">
             {{ capitalizeFirstLetter(interest) }}
           </Badge>
         </div>
-      </FormControl>
       <FormMessage />
-    </FormItem>
-  </FormField>
 </template>

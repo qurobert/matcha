@@ -25,7 +25,7 @@ export const useSettings = () => {
 	});
 
 
-	const {handleSubmit, validate, values, errors} = useForm({
+	const {handleSubmit, validate, values, errors, resetForm} = useForm({
 		validationSchema: schema
 	})
 
@@ -36,7 +36,7 @@ export const useSettings = () => {
 		const {email, password, username} = values;
 		const user = useAuthStore();
 		try {
-			await fetchUpdateUser(email, username, password)
+			await fetchUpdateUser({email, username, password})
 			if (username) {
 				user.updateUsername(username);
 			}
@@ -50,7 +50,6 @@ export const useSettings = () => {
 				toast({
 					title: 'Your settings have been updated',
 				})
-				router.push({name: 'private-profile'});
 			}
 		}
 		catch (e) {
@@ -59,6 +58,8 @@ export const useSettings = () => {
 				variant: 'destructive',
 			})
 		}
+		hasWritten.value = false;
+		resetForm();
 	});
 
 	const {isValid, hasWritten} = useIsValidForm(values, validate);

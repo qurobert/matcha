@@ -54,7 +54,12 @@ export const useYup = () => {
 		url: yup.string().nullable().notRequired(),
 		file: yup.string().nullable().notRequired()
 	}))
-	.min(minNumbersOfPictures, `You must upload at least ${minNumbersOfPictures} picture`)
+	.test(
+		'at-least-one-url-or-file',
+		'You must upload at least one picture',
+		function (value:any[] | undefined) {
+			return value && value.some(item => !!(item.url || item.file));
+	})
 	.required("Pictures are required");
 
 	const interestsSchema = yup.array().of(yup.string()

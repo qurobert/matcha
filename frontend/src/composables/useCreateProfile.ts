@@ -49,12 +49,17 @@ async function urlToFile(url: string, filename : string) {
 }
 
 export const submitProfile = async (form: Record<string, any>) => {
-	// const profile = Object.fromEntries(
-	// 	Object.entries(form).filter(([key]) => key !== 'pictures')
-	// );
+	const formattedLocation = form.location ? {
+		location_lat: form.location.lat,
+		location_lng: form.location.lng
+	} : {};
+	const profile = {
+		...Object.fromEntries(Object.entries(form).filter(([key]) => key !== 'pictures' && key !== 'location')),
+		...formattedLocation
+	};
 	const images = form.pictures as PicturesTypes[];
-	// if (profile)
-	// 	await fetchUpdateUserProfile(profile);
+	if (profile)
+		await fetchUpdateUserProfile(profile);
 	if (images) {
 		const filesImages: File[] = []
 		for (const image of images) {
@@ -63,7 +68,6 @@ export const submitProfile = async (form: Record<string, any>) => {
 			else if (image.url)
 				filesImages.push(await urlToFile('http://localhost:3000/uploads/' + image.url, image.url));
 		}
-		console.log(filesImages);
 		await fetchUpdateUserImages(filesImages);
 	}
 }

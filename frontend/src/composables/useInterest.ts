@@ -2,6 +2,14 @@ import {useYup} from "@/composables/useYup";
 import {useInterestCreateProfile} from "@/composables/useCreateProfile";
 import * as yup from 'yup';
 
+
+export const useFields = () => {
+	return [
+		'rock', 'electro', 'cooking', 'video games', 'science fiction',
+		'book', 'drawing', 'yoga', 'jazz', 'comedy', 'gardening', 'politic',
+		'museum', 'humor', 'history', 'mode', 'trip', 'action movie', 'boards games', 'horror', 'pop', 'painting', 'documentary'
+	]
+}
 export const useInterest = () => {
 	const {interestsSchema} = useYup();
 	const interestSchema = yup.object().shape({
@@ -10,11 +18,7 @@ export const useInterest = () => {
 
 	const {onSubmit, values, setFieldValue} = useInterestCreateProfile(interestSchema);
 
-	const interests = [
-		'rock', 'electro', 'cooking', 'video games', 'science fiction',
-		'book', 'drawing', 'yoga', 'jazz', 'comedy', 'gardening', 'politic',
-		'museum', 'humor', 'history', 'mode', 'trip', 'action movie', 'boards games', 'horror', 'pop', 'painting', 'documentary'
-	]
+	const allFields = useFields();
 
 	function onInterestClick(interest: string) {
 		if (!values.interests) {
@@ -30,7 +34,7 @@ export const useInterest = () => {
 	}
 	return {
 		onSubmit,
-		interests,
+		allFields,
 		onInterestClick,
 		values
 	}

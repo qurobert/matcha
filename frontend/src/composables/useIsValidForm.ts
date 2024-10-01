@@ -5,7 +5,7 @@ export const useIsValidForm = (values: any, validate: () => any ) => {
 	const isValid = ref(false);
 	const hasWritten = ref(false);
 	watch(() => values, async () => {
-		if (!hasWritten.value && Object.values(values).some(value => value !== null && value !== ''))//(values.password || values.confirm_password || values.email || values.username))
+		if (!hasWritten.value && Object.values(values).some(value => value && value !== ''))
 			hasWritten.value = true;
 
 		const { valid } = await validate();
