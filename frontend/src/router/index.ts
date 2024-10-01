@@ -9,7 +9,9 @@ import NotFoundView from "@/views/NotFoundView.vue";
 const redirectToProfile = async (to: any, from: any, next: any) => {
   const authStore = useAuthStore();
 
-  console.log(authStore.verify_email);
+  if (authStore?.user?.create_profile === false) {
+    return next({name: 'create-profile'})
+  }
   if (authStore.email && authStore.verify_email) {
     console.log("redirect to profile");
     return next({name: 'private-profile'})
@@ -132,13 +134,18 @@ router.beforeEach(async (to, from, next) => {
       return next({name: 'private-profile'})
     }
     if (to.meta.requiresAuth) {
-      console.log("VERIFY EMAIL: ", authStore.verify_email);
         if (!connected && to.name !== 'login') {
           return next({name: 'login'})
         }
         else if (!user.verify_email) {
           if (to.name !== 'verify-email')
             return next({name: 'verify-email'})
+          else
+            return next();
+        }
+        else if (!user.create_profile) {
+          if (to.name !== 'create-profile')
+            return next({name: 'create-profile'})
           else
             return next();
         }

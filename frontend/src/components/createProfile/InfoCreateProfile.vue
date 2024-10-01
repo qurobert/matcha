@@ -13,7 +13,7 @@ const {usernameSchema, dateSchema} = useYup();
 const profileInfoSchema = yup.object().shape({
   first_name: usernameSchema,
   last_name: usernameSchema,
-  date: dateSchema,
+  date_of_birth: dateSchema,
   location: yup.object().shape({
     lat: yup.number(),
     lng: yup.number(),

@@ -5,7 +5,7 @@ import {ref} from 'vue'
 import {useFieldArray} from 'vee-validate'
 
 const MAX_PICTURES_FIELDS = 5;
-const {fields, update, insert} = useFieldArray('pictures')
+const {fields, update, insert, push} = useFieldArray('pictures')
 type FormFile = {
   url?: string
   file?: string
@@ -27,7 +27,9 @@ function previewImage(event: Event, index: any) {
     return ;
 
   src.value[index] = URL.createObjectURL(file);
-  if (fields.value.length <= index)
+  if (fields.value.length === 0)
+    push({file})
+  else if (fields.value.length <= index)
     insert(index, {file})
   else
     update(index, {file});

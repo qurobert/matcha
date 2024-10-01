@@ -2,7 +2,6 @@ import {useFormStore} from "@/stores/formStore";
 import {useForm, type YupSchema} from 'vee-validate';
 import {fetchUpdateUserImages, fetchUpdateUserProfile} from "@/api/user";
 import router from "@/router";
-import _ from 'lodash'
 
 const useGeneralCreateProfile = (schema: YupSchema, ) => {
 	const {handleSubmit, setFieldValue, values} = useForm({
@@ -10,7 +9,6 @@ const useGeneralCreateProfile = (schema: YupSchema, ) => {
 	})
 	const formStore = useFormStore();
 	const onSubmit = handleSubmit(values => {
-		console.log(values);
 		formStore.setFormValues(values);
 		formStore.incrementPageIndex();
 
@@ -18,7 +16,6 @@ const useGeneralCreateProfile = (schema: YupSchema, ) => {
 		const index = formStore.getPageIndex();
 		const maxPage = formStore.getMaxPage();
 		if (index > maxPage) {
-			console.log('submit');
 			const form = formStore.getForm();
 			submitProfile(form)
 			formStore.clearAllData();

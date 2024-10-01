@@ -36,7 +36,6 @@ async function reverseGeoCode(lat: number, lng: number) {
 
 // OnMounted
 onMounted(async () => {
-  console.log(value.value);
 
   if (!value.value?.lat || !value.value?.lng) {
     isLoading.value = false;

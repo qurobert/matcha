@@ -1,6 +1,5 @@
 import * as yup from 'yup';
 import moment from 'moment';
-import {useInterest} from "@/composables/useInterest";
 
 export const useYup = () => {
 	const emailSchema = yup.string()

@@ -64,7 +64,9 @@ const {fields} = useFieldArray('interests');
                     Select your new interests
                   </DialogDescription>
                 </DialogHeader>
+                <FormLabel>Interests *</FormLabel>
                 <FormFieldInterests />
+                <FormMessage />
               </DialogContent>
             </Dialog>
 

@@ -3,7 +3,7 @@ import {FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/compon
 import {Textarea} from "@/components/ui/textarea";
 
 withDefaults(defineProps<{
-  size: string,
+  size?: string,
 }>(), {
   size: "w-96"
 })
