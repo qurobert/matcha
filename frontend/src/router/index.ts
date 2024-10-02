@@ -57,7 +57,7 @@ const router = createRouter({
       path: '/verify-email',
       name: 'verify-email',
       component: () => import('@/views/auth/VerifyEmailView.vue'),
-      // meta: { requiresAuth: true },
+      meta: { requiresAuth: true },
     },
     {
       path: '/mail-verify-email',
@@ -68,31 +68,31 @@ const router = createRouter({
       path: '/profile',
       name: 'private-profile',
       component: () => import('../views/user/ProfileView.vue'),
-      // meta: { requiresAuth: true },
+      meta: { requiresAuth: true },
     },
     {
       path: '/profile/edit',
       name: 'edit-profile',
       component: () => import('@/views/user/EditProfileView.vue'),
-    //     meta: { requiresAuth: true },
+        meta: { requiresAuth: true },
     },
     {
       path: '/profile/preferences',
       name: 'preferences',
       component: () => import('@/views/user/PreferencesView.vue'),
-      // meta: { requiresAuth: true },
+      meta: { requiresAuth: true },
     },
     {
       path: '/profile/settings',
       name: 'settings',
       component: () => import('@/views/user/SettingsView.vue'),
-      // meta: { requiresAuth: true },
+      meta: { requiresAuth: true },
     },
     {
       path: '/chat/:id',
       name: 'chat',
       component: () => import('@/views/user/ChatView.vue'),
-      // meta: { requiresAuth: true },
+      meta: { requiresAuth: true },
     },
     {
       path: '/profile/:id',
@@ -114,7 +114,7 @@ const router = createRouter({
       path: '/create-profile',
       name: 'create-profile',
       component: () => import('@/views/user/CreateProfileView.vue'),
-      // meta: { requiresAuth: true },
+      meta: { requiresAuth: true },
     },
     {
       path: '/:catchAll(.*)', // Capture toutes les routes non définies
