@@ -124,10 +124,20 @@ const router = createRouter({
   ]
 })
 
+async function tryToFetch() {
+  try {
+    const status = await fetchStatus();
+    if (status.token_expired)
+      return await fetchStatus();
+    return status;
+  } catch (error) {
+    return {connected: false, user: null};
+  }
+}
+
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore();
-  try {
-    const { connected, user } = await fetchStatus();
+    const {connected, user} = await tryToFetch();
 
     if (user) authStore.storeUserInfo(user);
     if (to.name === 'create-profile' && user.first_name) {
@@ -157,9 +167,6 @@ router.beforeEach(async (to, from, next) => {
         }
         return next();
     }
-  } catch (error) {
-    return next()
-  }
   return next()
 })
 export default router
