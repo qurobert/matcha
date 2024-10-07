@@ -1,11 +1,18 @@
 <script setup lang="ts">
 
 import {FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
-import {ref} from 'vue'
+import {ref, defineProps} from 'vue'
 import {useFieldArray} from 'vee-validate'
 
 const MAX_PICTURES_FIELDS = 5;
 const {fields, update, insert, push} = useFieldArray('pictures')
+
+defineProps({
+  maxHeight: {
+    type: Boolean,
+    required: false
+  }
+})
 type FormFile = {
   url?: string
   file?: string
@@ -51,7 +58,7 @@ function clearPicture(event: Event, index: any) {
   <FormField name="pictures">
     <FormItem>
       <FormLabel class="m-4">Photos *</FormLabel>
-      <div class="flex flex-wrap justify-center lg:justify-start max-h-96 overflow-y-scroll lg:overflow-y-visible">
+      <div class="flex flex-wrap justify-center lg:justify-start" :class="maxHeight ? 'max-h-96 overflow-y-scroll lg:overflow-y-visible' : ''">
         <div v-for="(_, index) in Array(MAX_PICTURES_FIELDS).fill(null)" :key="index">
           <div class="relative w-32 h-48 border m-4 rounded-sm border-dashed border-2">
             <img

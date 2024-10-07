@@ -10,7 +10,6 @@ const useGeneralCreateProfile = (schema: YupSchema, ) => {
 	const formStore = useFormStore();
 	const router = useRouter();
 	const onSubmit = handleSubmit(async values => {
-		console.log("VALUES", values);
 		formStore.setFormValues(values);
 		formStore.incrementPageIndex();
 
@@ -18,7 +17,6 @@ const useGeneralCreateProfile = (schema: YupSchema, ) => {
 		const maxPage = formStore.getMaxPage();
 		if (index > maxPage) {
 			const form = formStore.getForm();
-			console.log("FORM FINAL", form);
 			await submitProfile(form)
 			formStore.clearAllData();
 			router.push({name: 'private-profile'});

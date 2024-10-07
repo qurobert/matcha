@@ -18,6 +18,6 @@ const {onSubmit} = usePictureCreateProfile(schema);
     Upload 1 photo to start. Add 4 more to make your profile stand out
   </p>
   <CreateProfileFormPage :onsubmit="onSubmit">
-    <FormFieldPictures />
+    <FormFieldPictures max-height/>
   </CreateProfileFormPage>
 </template>
