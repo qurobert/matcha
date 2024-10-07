@@ -26,7 +26,6 @@ export const useLogin = () => {
 			router.push({name: 'private-profile'});
 		}).catch(err => {
 			errorOnSubmit.value = err;
-			console.log(err);
 		});
 	});
 

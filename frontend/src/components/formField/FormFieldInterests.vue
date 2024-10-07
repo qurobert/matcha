@@ -11,13 +11,11 @@ const allFields = [
 ];
 const {fields, push, remove} = useFieldArray('interests');
 
-console.log(fields.value);
 function isInterestSelected(interest: string) {
   return computed(() => fields.value.some((element) => element.value === interest));
 }
 
 function onInterestClick(interest: string) {
-  console.log(interest);
   const index = fields.value.findIndex((element) => element.value === interest);
 
   index !== -1 ?

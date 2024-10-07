@@ -114,8 +114,8 @@ function resetLocation() {
           <p v-if="value">
             Location : {{formattedLocation}}
           </p>
-          <div class="flex justify-evenly my-2" v-if="value">
-            <Button class="px-12" variant="secondary" @click="resetLocation">
+          <div class="flex flex-col md:flex-row justify-evenly my-2" v-if="value">
+            <Button class="px-12 mb-4 md:mb-0" variant="secondary" @click="resetLocation">
               Reset location
             </Button>
             <DialogClose as-child>

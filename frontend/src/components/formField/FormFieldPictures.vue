@@ -51,7 +51,7 @@ function clearPicture(event: Event, index: any) {
   <FormField name="pictures">
     <FormItem>
       <FormLabel class="m-4">Photos *</FormLabel>
-      <div class="flex flex-wrap justify-center lg:justify-start">
+      <div class="flex flex-wrap justify-center lg:justify-start max-h-96 overflow-y-scroll lg:overflow-y-visible">
         <div v-for="(_, index) in Array(MAX_PICTURES_FIELDS).fill(null)" :key="index">
           <div class="relative w-32 h-48 border m-4 rounded-sm border-dashed border-2">
             <img

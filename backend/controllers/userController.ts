@@ -83,7 +83,7 @@ export default class UserController {
 		const {email, code, password} = req.body;
 		const user = await UserModel.findOneByEmail(email);
 		if (user.code_password_reset !== code) throw new ErrorMiddleware(400, "Code verification is not valid");
-		await UserModel.updatePassword(email, password);
+		await UserModel.updatePassword(user.id, password);
 		res.json({
 			status: 200,
 			message: "Password reset",
@@ -118,7 +118,7 @@ export default class UserController {
 			last_name: user.last_name,
 			date_of_birth: user.date_of_birth,
 			gender: user.gender,
-			interested_in: user.interested_in,
+			interestedIn: user.interestedin,
 			biography: user.biography,
 			location_lat: user.location_lat,
 			location_lng: user.location_lng,

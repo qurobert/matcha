@@ -11,7 +11,7 @@ interface Profile {
 	last_name?: string;
 	date_of_birth?: Date
 	gender?: string;
-	interested_in?: string;
+	interestedIn?: string;
 	biography?: string;
 	location_lat?: number;
 	location_lng?: number;

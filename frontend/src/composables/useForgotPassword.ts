@@ -5,6 +5,7 @@ import {useAuthStore} from "@/stores/userStore";
 import {ref} from 'vue'
 import {useYup} from "@/composables/useYup";
 import * as yup from "yup";
+import {useToast} from "@/components/ui/toast";
 
 export const useForgotPassword = () => {
 	const router = useRouter();
@@ -58,10 +59,13 @@ export const useResetPassword = () => {
 			return;
 		}
 		fetchResetPassword(code, email, password).then(() => {
+			const {toast} = useToast();
 			authStore.tmpEmail = null;
+			toast({
+				title: 'Your password has been reset. You can now login with your new password',
+			})
 			router.push('/login');
 		}).catch((err: any) => {
-			console.log(err);
 			errorOnSubmit.value = err;
 		});
 	});

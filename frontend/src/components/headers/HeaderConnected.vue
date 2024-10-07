@@ -27,9 +27,9 @@ const user = useAuthStore().user;
     </div>
 
     <DropdownMenu>
-      <DropdownMenuTrigger>
-        <Avatar class="w-6 h-6">
-          <AvatarImage :src="url + user?.pictures?.[0]" alt="user profile" />
+      <DropdownMenuTrigger class="h-6">
+        <Avatar class="w-6 h-6 flex justify-start">
+          <AvatarImage v-if="user?.pictures?.[0]" :src="url + user?.pictures?.[0]" alt="user profile" />
           <AvatarFallback>User</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>

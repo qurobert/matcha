@@ -1,25 +1,27 @@
 import {useFormStore} from "@/stores/formStore";
 import {useForm, type YupSchema} from 'vee-validate';
 import {fetchUpdateUserImages, fetchUpdateUserProfile} from "@/api/user";
-import router from "@/router";
+import {useRouter} from "vue-router";
 
 const useGeneralCreateProfile = (schema: YupSchema, ) => {
 	const {handleSubmit, setFieldValue, values} = useForm({
 		validationSchema: schema
 	})
 	const formStore = useFormStore();
-	const onSubmit = handleSubmit(values => {
+	const router = useRouter();
+	const onSubmit = handleSubmit(async values => {
+		console.log("VALUES", values);
 		formStore.setFormValues(values);
 		formStore.incrementPageIndex();
 
-		// Try to submit
 		const index = formStore.getPageIndex();
 		const maxPage = formStore.getMaxPage();
 		if (index > maxPage) {
 			const form = formStore.getForm();
-			submitProfile(form)
+			console.log("FORM FINAL", form);
+			await submitProfile(form)
 			formStore.clearAllData();
-			router.push('/profile');
+			router.push({name: 'private-profile'});
 		}
 	});
 	return {

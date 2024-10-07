@@ -38,7 +38,7 @@ export const resetPassValidator = () => [
 	body('password').isString()
 	.isLength({min: 8}).withMessage('Password must be at least 8 characters')
 	.matches(/[A-Z]/).withMessage('Password must contain at least one uppercase letter')
-	.matches(/\W/).withMessage('Password must contain at least one special character'),,
+	.matches(/\W/).withMessage('Password must contain at least one special character'),
 	globalHandleValidationResult
 ]
 

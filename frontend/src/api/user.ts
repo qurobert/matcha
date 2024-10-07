@@ -8,7 +8,6 @@ export const fetchUpdateUserProfile = async (userProfile: Profile) => {
 export const fetchUpdateUserImages = async (images: File[]) => {
 	const formData = new FormData();
 	images.forEach((file) => {
-		console.log(file);
 		formData.append('pictures', file);  // Même clé pour tous les fichiers
 	});
 	const response = await api.put('/users/images', formData, {

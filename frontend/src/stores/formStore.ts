@@ -27,6 +27,7 @@ export const useFormStore = defineStore('form', {
 		},
 		clearAllData() {
 			this.form = {};
+			this.index_page = 0;
 		},
 
 		// Page index

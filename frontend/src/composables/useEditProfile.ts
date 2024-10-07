@@ -36,7 +36,7 @@ export const useEditProfile = () => {
 		},
 		date_of_birth: userStore.user.date_of_birth,
 		gender: userStore.user.gender,
-		interestedIn: userStore.user.interested_in
+		interestedIn: userStore.user.interestedIn
 	}
 
 	const {handleSubmit, validate, values, errors} = useForm({

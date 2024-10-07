@@ -14,10 +14,10 @@ const {onSubmit} = usePictureCreateProfile(schema);
 </script>
 
 <template>
-  <p class="text-gray my-4">
+  <p class="text-gray my-4 text-center">
     Upload 1 photo to start. Add 4 more to make your profile stand out
   </p>
-  <CreateProfileFormPage :onsubmit="onSubmit" class="w-1/3">
+  <CreateProfileFormPage :onsubmit="onSubmit">
     <FormFieldPictures />
   </CreateProfileFormPage>
 </template>

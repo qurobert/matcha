@@ -10,7 +10,7 @@ CREATE TABLE Users (
     last_name VARCHAR(100),
     date_of_birth DATE,
     gender VARCHAR(50),
-    interested_in VARCHAR(50),
+    interestedIn VARCHAR(50),
     biography TEXT,
     location_lat FLOAT,
     location_lng FLOAT,

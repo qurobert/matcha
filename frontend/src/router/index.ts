@@ -5,19 +5,7 @@ import SignupView from '@/views/auth/SignupView.vue'
 import {useAuthStore} from "@/stores/userStore";
 import {fetchStatus} from "@/api/auth";
 import NotFoundView from "@/views/NotFoundView.vue";
-
-const redirectToProfile = async (to: any, from: any, next: any) => {
-  const authStore = useAuthStore();
-
-  if (authStore?.user?.create_profile === false) {
-    return next({name: 'create-profile'})
-  }
-  if (authStore.email && authStore.verify_email) {
-    console.log("redirect to profile");
-    return next({name: 'private-profile'})
-  }
-  return next();
-}
+import _ from 'lodash';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -31,15 +19,19 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: LoginView,
-      meta: {hideHeaderInfo: true},
-      beforeEnter: redirectToProfile
+      meta: {
+        hideHeaderInfo: true,
+        redirectProfileIfConnected: true
+      },
     },
     {
       path: '/signup',
       name: 'signup',
       component: SignupView,
-      meta: {hideHeaderInfo: true},
-      beforeEnter: redirectToProfile
+      meta: {
+        hideHeaderInfo: true,
+        redirectProfileIfConnected: true
+      },
     },
     {
       path: '/forgot-password',
@@ -114,7 +106,9 @@ const router = createRouter({
       path: '/create-profile',
       name: 'create-profile',
       component: () => import('@/views/user/CreateProfileView.vue'),
-      meta: { requiresAuth: true },
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: '/:catchAll(.*)', // Capture toutes les routes non définies
@@ -123,6 +117,26 @@ const router = createRouter({
     },
   ]
 })
+
+
+// Before each
+router.beforeEach(async (to, from, next) => {
+
+  await storeUserInfoIfEmpty()
+  if (to.meta.redirectProfileIfConnected)
+    return redirectProfileIfConnected(to, from, next)
+  else if (to.meta.requiresAuth)
+    return redirectionModeAuth(to, from, next)
+  return next();
+})
+
+async function storeUserInfoIfEmpty() {
+  const authStore = useAuthStore();
+  if (_.isEmpty(authStore.user)) {
+    const {user} = await tryToFetch();
+    if (user) authStore.storeUserInfo(user);
+  }
+}
 
 async function tryToFetch() {
   try {
@@ -134,39 +148,27 @@ async function tryToFetch() {
     return {connected: false, user: null};
   }
 }
-
-router.beforeEach(async (to, from, next) => {
+function redirectionModeAuth(to: any, from: any, next: any) {
   const authStore = useAuthStore();
-    const {connected, user} = await tryToFetch();
 
-    if (user) authStore.storeUserInfo(user);
-    if (to.name === 'create-profile' && user.first_name) {
-      return next({name: 'private-profile'})
-    }
-    if (to.meta.requiresAuth) {
-        if (!connected && to.name !== 'login') {
-          return next({name: 'login'})
-        }
-        else if (!user.verify_email) {
-          if (to.name !== 'verify-email')
-            return next({name: 'verify-email'})
-          else
-            return next();
-        }
-        else if (!user.create_profile) {
-          if (to.name !== 'create-profile')
-            return next({name: 'create-profile'})
-          else
-            return next();
-        }
-        else if (!user.first_name) {
-          if (to.name !== 'create-profile')
-            return next({name: 'create-profile'})
-          else
-            return next();
-        }
-        return next();
-    }
-  return next()
-})
+  if (!authStore.is_connected)
+    return nextWithInfiniteLoopProtection('login', next, to)
+  else if (!authStore.user.verify_email)
+    return nextWithInfiniteLoopProtection('verify-email', next, to)
+  else if (!authStore.user.first_name)
+    return nextWithInfiniteLoopProtection('create-profile', next, to)
+  return next();
+}
+
+function nextWithInfiniteLoopProtection(path: string, next: any, to: any) {
+  if (to.name === path) return next();
+  return next({name: path})
+}
+
+// Utility functions
+
+function redirectProfileIfConnected(to: any, from: any, next: any) {
+
+  return next();
+}
 export default router

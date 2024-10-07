@@ -161,6 +161,7 @@ export default class UserModel {
                 values.push(last_name);
             }
             if (date_of_birth) {
+                console.log(date_of_birth);
                 setClauses.push(`date_of_birth = $${setClauses.length + 1}`);
                 values.push(date_of_birth);
             }
@@ -169,7 +170,8 @@ export default class UserModel {
                 values.push(gender)
             }
             if (interestedIn) {
-                setClauses.push(`interested_in = $${setClauses.length + 1}`);
+                console.log(interestedIn);
+                setClauses.push(`interestedIn = $${setClauses.length + 1}`);
                 values.push(interestedIn)
             }
             if (biography) {
