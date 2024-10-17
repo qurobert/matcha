@@ -20,7 +20,7 @@ export const useEditProfile = () => {
 		}),
 		date_of_birth: dateSchema,
 		gender: yup.string().required("You need to choose one of this field"),
-		interestedIn: yup.string().required("You need to choose one of this field"),
+		interested_in: yup.string().required("You need to choose one of this field"),
 	})
 
 	const userStore = useAuthStore();
@@ -36,7 +36,7 @@ export const useEditProfile = () => {
 		},
 		date_of_birth: userStore.user.date_of_birth,
 		gender: userStore.user.gender,
-		interestedIn: userStore.user.interestedIn
+		interested_in: userStore.user.interested_in
 	}
 
 	const {handleSubmit, validate, values, errors} = useForm({

@@ -18,7 +18,7 @@ const profileInfoSchema = yup.object().shape({
     lat: yup.number(),
     lng: yup.number(),
   }),
-  interestedIn: yup.string().required("You need to choose one of this field"),
+  interested_in: yup.string().required("You need to choose one of this field"),
   gender: yup.string().required("You need to choose one of this field"),
 })
 

@@ -151,7 +151,7 @@ export default class UserModel {
             const setClauses: string[] = [];
             const values: any[] = [];
 
-            const {first_name, last_name, date_of_birth, gender, interestedIn, biography, location_lng ,location_lat, interests, pictures} = profile;
+            const {first_name, last_name, date_of_birth, gender, interested_in, biography, location_lng ,location_lat, interests, pictures} = profile;
             if (first_name) {
                 setClauses.push(`first_name = $${setClauses.length + 1}`);
                 values.push(first_name);
@@ -169,10 +169,10 @@ export default class UserModel {
                 setClauses.push(`gender = $${setClauses.length + 1}`);
                 values.push(gender)
             }
-            if (interestedIn) {
-                console.log(interestedIn);
-                setClauses.push(`interestedIn = $${setClauses.length + 1}`);
-                values.push(interestedIn)
+            if (interested_in) {
+                console.log(interested_in);
+                setClauses.push(`interested_in = $${setClauses.length + 1}`);
+                values.push(interested_in)
             }
             if (biography) {
                 setClauses.push(`biography = $${setClauses.length + 1}`);

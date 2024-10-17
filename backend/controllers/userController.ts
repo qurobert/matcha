@@ -118,7 +118,7 @@ export default class UserController {
 			last_name: user.last_name,
 			date_of_birth: user.date_of_birth,
 			gender: user.gender,
-			interestedIn: user.interestedin,
+			interested_in: user.interested_in,
 			biography: user.biography,
 			location_lat: user.location_lat,
 			location_lng: user.location_lng,

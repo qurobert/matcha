@@ -11,7 +11,7 @@ export const usePreferences = () => {
 		age: yup.number().required(),
 		fame_rating: yup.number().required(),
 		distance: yup.number().required(),
-		interestsTags: interestsSchema
+		interestsPreferences: interestsSchema
 	})
 
 	const initialValues = {

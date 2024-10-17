@@ -47,7 +47,7 @@ export const userProfileValidator = () => [
 	body('last_name').optional().isString().withMessage('Last name must be a string'),
 	body('date_of_birth').optional().isISO8601().toDate().withMessage('Date of birth must be a date'),
 	body('gender').optional().isString().withMessage('Gender must be a string'),
-	body('interestedIn').optional().isString().withMessage('Interested in must be a string'),
+	body('interested_in').optional().isString().withMessage('Interested in must be a string'),
 	body('biography').optional().isString().withMessage('Biography must be a string'),
 	body('location_lat').optional().isFloat().withMessage('Location latitude must be a float'),
 	body('location_lng').optional().isFloat().withMessage('Location longitude must be a float'),

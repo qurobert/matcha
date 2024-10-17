@@ -6,14 +6,14 @@ import { useField } from 'vee-validate';
 
 
 const interestedInOptions = ['men', 'women', 'both'];
-const { value, setValue } = useField('interestedIn');
+const { value, setValue } = useField('interested_in');
 function onInterestedInClick(interestedIn: string) {
   setValue(interestedIn);
 }
 </script>
 
 <template>
-  <FormField name="interestedIn">
+  <FormField name="interested_in">
     <FormItem>
       <FormLabel>Interested in *</FormLabel>
       <FormControl>
