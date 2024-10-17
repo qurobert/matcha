@@ -32,7 +32,6 @@ api.interceptors.response.use(
 	async (error) => {
 		const originalRequest = error.config;
 
-		console.log(error.response);
 		if ((error.response.status === 401 || error.response.data.token_expired) && !originalRequest._retry) {
 			originalRequest._retry = true;
 			await refreshToken();

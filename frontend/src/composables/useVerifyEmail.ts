@@ -15,7 +15,7 @@ export const useVerifyEmail = () => {
 				if (isVerify) {
 					authStore.hasVerifiedEmail();
 					intervalId ? clearInterval(intervalId) : null;
-					router.push({name: 'profile'});
+					router.push({name: 'private-profile'});
 				}
 			}).catch((err: any) => {
 				console.error(err);

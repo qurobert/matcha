@@ -35,7 +35,9 @@ const {onSubmit, errorOnSubmit} = useLogin()
         <FormItem>
           <FormLabel>Password</FormLabel>
           <FormControl>
-            <Input placeholder="Enter your password" v-bind="componentField" type="password"/>
+            <Input placeholder="Enter your password" v-bind="componentField" type="password"
+                   autocomplete="new-password"
+            />
           </FormControl>
           <FormMessage />
         </FormItem>

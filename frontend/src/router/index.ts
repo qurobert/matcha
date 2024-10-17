@@ -4,16 +4,8 @@ import LoginView from '@/views/auth/LoginView.vue'
 import SignupView from '@/views/auth/SignupView.vue'
 import {useAuthStore} from "@/stores/userStore";
 import {fetchStatus} from "@/api/auth";
-
-const redirectToProfile = async (to: any, from: any, next: any) => {
-  const authStore = useAuthStore();
-
-  if (authStore.email) {
-    console.log("redirect to profile");
-    return next({name: 'profile'})
-  }
-  return next();
-}
+import NotFoundView from "@/views/NotFoundView.vue";
+import _ from 'lodash';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -27,15 +19,19 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: LoginView,
-      meta: {hideHeaderInfo: true},
-      beforeEnter: redirectToProfile
+      meta: {
+        hideHeaderInfo: true,
+        redirectProfileIfConnected: true
+      },
     },
     {
       path: '/signup',
       name: 'signup',
       component: SignupView,
-      meta: {hideHeaderInfo: true},
-      beforeEnter: redirectToProfile
+      meta: {
+        hideHeaderInfo: true,
+        redirectProfileIfConnected: true
+      },
     },
     {
       path: '/forgot-password',
@@ -62,49 +58,117 @@ const router = createRouter({
     },
     {
       path: '/profile',
-      name: 'profile',
+      name: 'private-profile',
       component: () => import('../views/user/ProfileView.vue'),
       meta: { requiresAuth: true },
+    },
+    {
+      path: '/profile/edit',
+      name: 'edit-profile',
+      component: () => import('@/views/user/EditProfileView.vue'),
+        meta: { requiresAuth: true },
+    },
+    {
+      path: '/profile/preferences',
+      name: 'preferences',
+      component: () => import('@/views/user/PreferencesView.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/profile/settings',
+      name: 'settings',
+      component: () => import('@/views/user/SettingsView.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/chat/:id',
+      name: 'chat',
+      component: () => import('@/views/user/ChatView.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/profile/:id',
+      name: 'public-profile',
+      component: () => import('@/views/user/UserProfileView.vue'),
+    },
+    {
+      path: '/logout',
+      name: 'logout',
+      beforeEnter: (to, from, next) => {
+        const authStore = useAuthStore();
+        authStore.logout();
+      },
+      redirect(to) {
+        return {name: 'home'}
+      },
     },
     {
       path: '/create-profile',
       name: 'create-profile',
       component: () => import('@/views/user/CreateProfileView.vue'),
-      // meta: { requiresAuth: true },
-    }
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/:catchAll(.*)', // Capture toutes les routes non définies
+      name: 'NotFound',
+      component: NotFoundView,
+    },
   ]
 })
 
-router.beforeResolve(async (to, from, next) => {
-  const authStore = useAuthStore();
-  try {
-    const { connected, user } = await fetchStatus();
 
-    if (user) authStore.storeUserInfo(user);
-    if (to.name === 'create-profile' && user.first_name) {
-      return next({name: 'profile'})
-    }
-    if (to.meta.requiresAuth) {
-        if (!connected && to.name !== 'login') {
-          return next({name: 'login'})
-        }
-        else if (!user.verify_email) {
-          if (to.name !== 'verify-email')
-            return next({name: 'verify-email'})
-          else
-            return next();
-        }
-        else if (!user.first_name) {
-          if (to.name !== 'create-profile')
-            return next({name: 'create-profile'})
-          else
-            return next();
-        }
-        return next();
-    }
-  } catch (error) {
-    return next()
-  }
-  return next()
+// Before each
+router.beforeEach(async (to, from, next) => {
+
+  await storeUserInfoIfEmpty()
+  if (to.meta.redirectProfileIfConnected)
+    return redirectProfileIfConnected(to, from, next)
+  else if (to.meta.requiresAuth)
+    return redirectionModeAuth(to, from, next)
+  return next();
 })
+
+async function storeUserInfoIfEmpty() {
+  const authStore = useAuthStore();
+  if (_.isEmpty(authStore.user)) {
+    const {user} = await tryToFetch();
+    if (user) authStore.storeUserInfo(user);
+  }
+}
+
+async function tryToFetch() {
+  try {
+    const status = await fetchStatus();
+    if (status.token_expired)
+      return await fetchStatus();
+    return status;
+  } catch (error) {
+    return {connected: false, user: null};
+  }
+}
+function redirectionModeAuth(to: any, from: any, next: any) {
+  const authStore = useAuthStore();
+
+  if (!authStore.is_connected)
+    return nextWithInfiniteLoopProtection('login', next, to)
+  else if (!authStore.user.verify_email)
+    return nextWithInfiniteLoopProtection('verify-email', next, to)
+  else if (!authStore.user.first_name)
+    return nextWithInfiniteLoopProtection('create-profile', next, to)
+  return next();
+}
+
+function nextWithInfiniteLoopProtection(path: string, next: any, to: any) {
+  if (to.name === path) return next();
+  return next({name: path})
+}
+
+// Utility functions
+
+function redirectProfileIfConnected(to: any, from: any, next: any) {
+
+  return next();
+}
 export default router

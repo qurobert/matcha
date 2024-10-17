@@ -12,7 +12,6 @@ const route = useRoute();
 const hideHeaderChildren = computed(() => {
   return route.meta.hideHeaderInfo || false;
 })
-
 </script>
 
 <template>

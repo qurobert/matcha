@@ -10,7 +10,7 @@ defineProps({
 </script>
 
 <template>
-  <nav class="flex p-4 sticky top-0 bg-light" :class="classForNav">
+  <nav class="flex p-4 sticky top-0 bg-light z-50" :class="classForNav">
     <RouterLink to="/" class="flex justify-center">
       <IconLogo :size="30" class="mr-2"/>
       <span class="text-gradient-primary text-3xl">Matcha</span>

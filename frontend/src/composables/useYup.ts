@@ -6,16 +6,39 @@ export const useYup = () => {
 	.email()
 	.required("Email is required");
 
+	const usernameSchemaNotRequired = yup.string()
+		.notRequired()
+		.nullable()
+		.test('min-length-or-empty', 'The username should be between 6 and 15 characters', function(value) {
+			return value === null || value === '' || value === undefined || (value.length >= 6 && value.length <= 15)
+		})
+
 	const usernameSchema = yup.string()
 	.min(6, "Minimum 6 characters")
 	.max(15, "Maximum 15 characters")
 	.required("Username is required")
+
+	const passwordSchemaNotRequired =  yup.string()
+	.notRequired()
+	.nullable()
+	.test('uppercase-or-empty', 'The password need contain at least one uppercase letter', function(value) {
+		return value === null || value === '' || value === undefined || !!value.match(/[A-Z]/);
+	})
+	.test('special-char-or-empty', 'The password need contain at least one special character', function(value) {
+		return value === null || value === '' || value === undefined || !!value.match(/[!@#$%^&*(),.?":{}|<>]/);
+	})
+	.test('min-length-or-empty', 'The password need to have at least 8 characters.', function(value) {
+		return value === null || value === '' || value === undefined || value.length >= 8;
+	})
 
 	const passwordSchema = yup.string()
 	.min(8, "Minimum 8 characters")
 	.matches(/[A-Z]/, 'Minimum 1 uppercase letter')
 	.matches(/[!@#$%^&*(),.?":{}|<>]/, 'Minimum 1 special character')
 	.required("Password is required")
+
+	const confirmPasswordNotRequiredSchema = yup.string()
+	.oneOf([yup.ref('password')], 'Passwords must match')
 
 	const confirmPasswordSchema = yup.string()
 	.oneOf([yup.ref('password')], 'Passwords must match')
@@ -24,6 +47,24 @@ export const useYup = () => {
 	const codeSchema = yup.string()
 	.length(6, "Code must be 6 characters")
 	.required("Code is required")
+
+	const minNumbersOfPictures = 1;
+	const picturesSchema = yup.array().of(yup.object().shape({
+		url: yup.string().nullable().notRequired(),
+		file: yup.string().nullable().notRequired()
+	}))
+	.test(
+		'at-least-one-url-or-file',
+		'You must upload at least one picture',
+		function (value:any[] | undefined) {
+			return value && value.some(item => !!(item.url || item.file));
+	})
+	.required("Pictures are required");
+
+	const interestsSchema = yup.array().of(yup.string()
+	.required("You need to choose one of this field"))
+	.min(1, "You need to choose one of this field")
+	.required("You need to choose one of this field")
 
 	// Schéma Yup pour valider une date avec moment.js
 	const dateSchema = yup
@@ -46,9 +87,14 @@ export const useYup = () => {
 
 	return {
 		emailSchema,
+		usernameSchemaNotRequired,
 		usernameSchema,
+		interestsSchema,
+		picturesSchema,
 		passwordSchema,
+		passwordSchemaNotRequired,
 		confirmPasswordSchema,
+		confirmPasswordNotRequiredSchema,
 		codeSchema,
 		dateSchema
 	}

@@ -5,7 +5,11 @@ export const fetchUpdateUserProfile = async (userProfile: Profile) => {
 	return response.data;
 }
 
-export const fetchUpdateUserImages = async (formData: FormData) => {
+export const fetchUpdateUserImages = async (images: File[]) => {
+	const formData = new FormData();
+	images.forEach((file) => {
+		formData.append('pictures', file);  // Même clé pour tous les fichiers
+	});
 	const response = await api.put('/users/images', formData, {
 		headers: {
 			'Content-Type': 'multipart/form-data'
@@ -26,5 +30,10 @@ export const fetchDeleteUserImages = async () => {
 
 export const fetchMe = async () => {
 	const response = await api.get('/users/me');
+	return response.data;
+}
+
+export const fetchUpdateUser = async (user: { email: string, password: string, username: string }) => {
+	const response = await api.post('/users/update', user);
 	return response.data;
 }

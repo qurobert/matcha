@@ -23,10 +23,9 @@ export const useLogin = () => {
 		const {username, password} = values;
 
 		login(username, password).then(() => {
-			router.push({name: 'profile'});
+			router.push({name: 'private-profile'});
 		}).catch(err => {
 			errorOnSubmit.value = err;
-			console.log(err);
 		});
 	});
 

@@ -2,7 +2,8 @@ import express from "express";
 import {
 	emailValidator,
 	resetPassValidator,
-	userProfileValidator
+	userProfileValidator,
+	updateProfileValidator
 } from "../validators/userValidator.ts";
 import UserController from "../controllers/userController.ts";
 import {verifyAuth} from "../middlewares/authMiddleware.ts";
@@ -29,7 +30,7 @@ userRouter.get('/me', verifyAuth, UserController.getUserConnected);
 userRouter.get('/status', UserController.userStatus);
 userRouter.post('/forgot-password', emailValidator(), UserController.forgotPassword);
 userRouter.post('/reset-password', resetPassValidator(), UserController.resetPassword);
-userRouter.post('/update', verifyAuth, UserController.updateUser);
+userRouter.post('/update', verifyAuth, updateProfileValidator(), UserController.updateUser);
 userRouter.put('/profile', verifyAuth, userProfileValidator(), ProfileController.updateUserProfile);
 userRouter.put('/images', verifyAuth, upload.fields([
 	{ name: 'pictures', maxCount: 6 },

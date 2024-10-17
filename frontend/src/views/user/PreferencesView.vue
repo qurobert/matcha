@@ -1,0 +1,27 @@
+<script setup lang="ts">
+
+import {usePreferences} from "@/composables/usePreferences";
+import FormFieldInterestsWithPopup from "@/components/formField/FormFieldInterestsWithPopup.vue";
+import HeaderChildrenProfilePage from "@/components/headers/HeaderChildrenProfilePage.vue";
+import FormFieldSlider from "@/components/formField/FormFieldSlider.vue";
+import {Button} from "@/components/ui/button";
+const {onSubmit, isValid, hasWritten} = usePreferences();
+</script>
+
+<template>
+  <div class="flex justify-center">
+    <form @submit="onSubmit" class="m-4 w-full md:w-1/2 lg:w-1/3">
+      <HeaderChildrenProfilePage :on-submit="onSubmit" :is-valid="isValid" :has-written="hasWritten" text="Preferences" />
+
+      <FormFieldSlider :min="18" :max="75" name="age" :step="1" label="Age" :default-value="[18, 30]" />
+      <FormFieldSlider :min="0" :max="100" name="fame-rating" :step="1" label="Fame rating" :default-value="[0, 100]" prefix-value="%" />
+      <FormFieldSlider :min="0" :max="200" name="distance" :step="1" label="Distance preference" :default-value="[80]" prefix-value="km" />
+      <FormFieldInterestsWithPopup name="interestsPreferences" />
+      <div class="flex justify-center">
+        <Button type="submit" size="sm" class="px-20 mt-4" :disabled="!hasWritten" :variant="hasWritten ? 'default' : 'secondary'">
+          Save
+        </Button>
+      </div>
+    </form>
+  </div>
+</template>

@@ -83,7 +83,7 @@ export default class UserController {
 		const {email, code, password} = req.body;
 		const user = await UserModel.findOneByEmail(email);
 		if (user.code_password_reset !== code) throw new ErrorMiddleware(400, "Code verification is not valid");
-		await UserModel.updatePassword(email, password);
+		await UserModel.updatePassword(user.id, password);
 		res.json({
 			status: 200,
 			message: "Password reset",
@@ -92,12 +92,14 @@ export default class UserController {
 
 	static async updateUser(req: Request, res: Response) {
 		if (!req.user) throw new ErrorMiddleware(404, "User not found");
-		const { email, username, password, confirm_password, notification } = req.body;
-		await UserModel.updateEmail(req.user.id, email);
-		await UserModel.updateUsername(req.user.id, username);
-		await UserModel.updateNotification(req.user.id, notification);
-		if (password !== confirm_password) throw new ErrorMiddleware(400, "Passwords do not match");
-			await UserModel.updatePassword(req.user.email, password);
+		const { email, username, password } = req.body;
+		const {id} = req.user;
+		if (email)
+			await UserModel.updateEmail(id, email);
+		if (username)
+			await UserModel.updateUsername(id, username);
+		if (password)
+			await UserModel.updatePassword(id, password);
 		res.json({
 			status: 200,
 			message: "User updated",

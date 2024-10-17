@@ -68,11 +68,11 @@ export default class UserModel {
         }
     }
 
-    static async updatePassword(email: string, password: string) {
+    static async updatePassword(id: string, password: string) {
         const client = await pool.connect()
         try {
             const passwordEncrypted = bcrypt.hashSync(password, bcrypt.genSaltSync(10))
-            await client.query('UPDATE Users SET password = $1 WHERE email = $2', [passwordEncrypted, email])
+            await client.query('UPDATE Users SET password = $1 WHERE id = $2', [passwordEncrypted, id])
         } finally {
             client.release()
         }
@@ -125,6 +125,7 @@ export default class UserModel {
             client.release()
         }
     }
+
     static async updatePictures(userId: string, pictures: string[] | null) {
         const client = await pool.connect()
         try {
@@ -150,7 +151,7 @@ export default class UserModel {
             const setClauses: string[] = [];
             const values: any[] = [];
 
-            const {first_name, last_name, date_of_birth, gender, interested_in, biography, location_lat, location_lng, interests, pictures} = profile;
+            const {first_name, last_name, date_of_birth, gender, interested_in, biography, location_lng ,location_lat, interests, pictures} = profile;
             if (first_name) {
                 setClauses.push(`first_name = $${setClauses.length + 1}`);
                 values.push(first_name);
@@ -160,6 +161,7 @@ export default class UserModel {
                 values.push(last_name);
             }
             if (date_of_birth) {
+                console.log(date_of_birth);
                 setClauses.push(`date_of_birth = $${setClauses.length + 1}`);
                 values.push(date_of_birth);
             }
@@ -168,6 +170,7 @@ export default class UserModel {
                 values.push(gender)
             }
             if (interested_in) {
+                console.log(interested_in);
                 setClauses.push(`interested_in = $${setClauses.length + 1}`);
                 values.push(interested_in)
             }
