@@ -1,4 +1,4 @@
-interface User extends Profile {
+interface User extends Profile, Preferences {
 	id: string;
 	email: string;
 	username: string;
@@ -18,4 +18,13 @@ interface Profile {
 	location_lng?: number;
 	interests?: string[];
 	pictures?: string[];
+}
+
+interface Preferences {
+	age_preference_min: number;
+	age_preference_max: number;
+	fame_rating_preference_min: number;
+	fame_rating_preference_max: number;
+	distance_preference: number;
+	interests_preference: string[];
 }

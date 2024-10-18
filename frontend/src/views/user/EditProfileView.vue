@@ -23,7 +23,7 @@ const {onSubmit, hasWritten, isValid} = useEditProfile();
       <div class="m-4">
         <FormFieldBiography size="w-full" />
 
-        <FormFieldInterestsWithPopup />
+        <FormFieldInterestsWithPopup name="interests" />
 
         <FormFieldFullName />
 

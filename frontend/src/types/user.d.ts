@@ -4,6 +4,7 @@ interface User extends Profile {
 	username: string;
 	verify_email: boolean;
 	create_profile: boolean;
+	preferences: Preferences;
 }
 
 interface Profile {
@@ -17,4 +18,11 @@ interface Profile {
 	location_lng?: number;
 	interests?: string[];
 	pictures?: string[];
+}
+
+interface Preferences {
+	age: number;
+	fame_rating: number;
+	distance: number;
+	interests: InterestsPreferences;
 }

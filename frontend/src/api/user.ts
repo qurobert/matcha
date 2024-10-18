@@ -5,6 +5,11 @@ export const fetchUpdateUserProfile = async (userProfile: Profile) => {
 	return response.data;
 }
 
+export const fetchUpdateUserPreferences = async (userPreferences: Preferences) => {
+	const response = await api.put('/users/preferences', userPreferences);
+	return response.data;
+}
+
 export const fetchUpdateUserImages = async (images: File[]) => {
 	const formData = new FormData();
 	images.forEach((file) => {

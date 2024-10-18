@@ -12,25 +12,31 @@ import {
 import {FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
 import FormFieldInterests from "@/components/formField/FormFieldInterests.vue";
 import {Button} from "@/components/ui/button";
+import {watch} from "vue";
 
-const propsWithDefault = withDefaults(defineProps<{
+const props = defineProps<{
   name: string;
-}>(), {
-  name: 'interests'
-});
-const {fields} = useFieldArray(propsWithDefault.name);
+}>();
+
+const {fields} = useFieldArray(props.name);
+console.log(fields.value);
+console.log(props.name);
+
+watch(() => fields.value, () => {
+  console.log(fields.value);
+}, {deep: true});
 
 </script>
 
 <template>
-  <FormField :name='name'>
+  <FormField :name=name>
     <FormItem>
       <FormLabel>Interests</FormLabel>
       <br />
       <Dialog>
         <DialogTrigger as-child>
           <FormControl>
-            <Button size="sm" class="text-md" variant="secondary" >
+            <Button size="sm" class="text-md" :variant="fields.length > 0 ? 'default' : 'secondary'" >
                 <span class="max-w-lg truncate" v-if="fields.length">
                   {{fields.slice(0, 3).map((element) => capitalizeFirstLetter(element.value as string)).join(', ')}}
                   {{fields.length > 3 ? '...' : ''}}
@@ -52,7 +58,7 @@ const {fields} = useFieldArray(propsWithDefault.name);
             </DialogDescription>
           </DialogHeader>
           <FormLabel>Interests</FormLabel>
-          <FormFieldInterests />
+          <FormFieldInterests :name="name" />
           <FormMessage />
         </DialogContent>
       </Dialog>

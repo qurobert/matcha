@@ -54,3 +54,11 @@ export const userProfileValidator = () => [
 	body('interests').optional().isArray().withMessage('Interests must be an array'),
 	globalHandleValidationResult
 ]
+
+export const userPreferenceValidator = () => [
+	body('age').optional().isArray().withMessage('Age must be an array'),
+	body('fame_rating').optional().isArray().withMessage('Fame rating must be an array'),
+	body('distance').optional().isArray().withMessage('Distance must be a float'),
+	body('interests_preferences').optional().isArray().withMessage('Interests preferences must be an array'),
+	globalHandleValidationResult
+]

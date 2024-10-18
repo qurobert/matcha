@@ -124,6 +124,12 @@ export default class UserController {
 			location_lng: user.location_lng,
 			interests: user.interests,
 			pictures: user.pictures,
+			preferences: {
+				age: [user.age_preference_min, user.age_preference_max],
+				fame_rating: [user.fame_rating_preference_min, user.fame_rating_preference_max],
+				distance: user.distance_preference,
+				interests: user.interests_preference,
+			},
 		};
 	}
 }
