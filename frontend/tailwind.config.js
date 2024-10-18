@@ -107,6 +107,9 @@ module.exports = {
       },
       fontFamily: {
         sans: ['Nunito', 'sans-serif']
+      },
+      backgroundImage: {
+        "home": "url('./public/background.png')",
       }
     },
   },

@@ -23,7 +23,7 @@ watch(() => route.path, (newPath) => {
 </script>
 
 <template>
-  <footer class="flex justify-center py-3 text-gray-100">
+  <footer class="flex justify-center py-3 text-gray-100 bg-white">
 
     <!-- Login footer -->
     <span class="whitespace-pre" v-if="path === Path.LOGIN">Need an account ? </span>
