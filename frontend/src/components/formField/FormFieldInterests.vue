@@ -9,7 +9,11 @@ const allFields = [
   'book', 'drawing', 'yoga', 'jazz', 'comedy', 'gardening', 'politic',
   'museum', 'humor', 'history', 'mode', 'trip', 'action movie', 'boards games', 'horror', 'pop', 'painting', 'documentary'
 ];
-const {fields, push, remove} = useFieldArray('interests');
+const props = defineProps<{
+  name: string;
+}>();
+
+const {fields, push, remove} = useFieldArray(props.name);
 
 function isInterestSelected(interest: string) {
   return computed(() => fields.value.some((element) => element.value === interest));

@@ -15,5 +15,11 @@ CREATE TABLE Users (
     location_lat FLOAT,
     location_lng FLOAT,
     interests TEXT[],
-    pictures TEXT[]
+    pictures TEXT[],
+    age_preference_min INT DEFAULT 18,
+    age_preference_max INT DEFAULT 30,
+    fame_rating_preference_min INT DEFAULT 0,
+    fame_rating_preference_max INT DEFAULT 100,
+    distance_preference INT DEFAULT 80,
+    interests_preference TEXT[]
 );

@@ -4,17 +4,37 @@ import {useForm} from 'vee-validate';
 import {useIsValidForm} from "@/composables/useIsValidForm";
 import _ from 'lodash'
 import {useToast} from "@/components/ui/toast";
+import {useAuthStore} from "@/stores/userStore";
+import {fetchUpdateUserPreferences} from "@/api/user";
 
 export const usePreferences = () => {
-	const {interestsSchema } = useYup();
+	const {interestsSchemaNotRequired } = useYup();
+	const userStore = useAuthStore();
+	const tupleNumberSchema = yup.array()
+	.of(
+		yup.mixed().test((value, context) => {
+			const index = context.path.split('[')[1]?.split(']')[0];
+			if (index === '0') {
+				return yup.number().isValidSync(value);
+			} else if (index === '1') {
+				return yup.number().isValidSync(value);
+			}
+			return false;
+		})
+	)
+	.length(2);
 	const schema = yup.object({
-		age: yup.number().required(),
-		fame_rating: yup.number().required(),
+		age: tupleNumberSchema,
+		fame_rating: tupleNumberSchema,
 		distance: yup.number().required(),
-		interestsPreferences: interestsSchema
+		interests_preferences: interestsSchemaNotRequired
 	})
 
 	const initialValues = {
+		age: userStore.user?.preferences?.age,
+		fame_rating: userStore.user?.preferences?.fame_rating,
+		distance: [userStore.user?.preferences?.distance],
+		interests_preferences: userStore.user?.preferences?.interests
 	}
 
 	const {handleSubmit, validate, values, errors} = useForm({
@@ -35,13 +55,16 @@ export const usePreferences = () => {
 	const onSubmit = handleSubmit(async (values) => {
 		const {toast} = useToast();
 		try {
+			console.log('Values', values);
 			const modifiedValues = getModifiedFields(initialValues, values);
 			if (_.isEmpty(modifiedValues))
 				return;
 
 			// @ts-ignore
 			console.log("submit Preferences");
+			console.log('Modified Values', modifiedValues);
 
+			await fetchUpdateUserPreferences(modifiedValues as Preferences);
 			hasWritten.value = false;
 			toast({
 				title: 'Your preferences has been updated',

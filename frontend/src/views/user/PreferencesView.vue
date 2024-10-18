@@ -13,10 +13,10 @@ const {onSubmit, isValid, hasWritten} = usePreferences();
     <form @submit="onSubmit" class="m-4 w-full md:w-1/2 lg:w-1/3">
       <HeaderChildrenProfilePage :on-submit="onSubmit" :is-valid="isValid" :has-written="hasWritten" text="Preferences" />
 
-      <FormFieldSlider :min="18" :max="75" name="age" :step="1" label="Age" :default-value="[18, 30]" />
-      <FormFieldSlider :min="0" :max="100" name="fame-rating" :step="1" label="Fame rating" :default-value="[0, 100]" prefix-value="%" />
-      <FormFieldSlider :min="0" :max="200" name="distance" :step="1" label="Distance preference" :default-value="[80]" prefix-value="km" />
-      <FormFieldInterestsWithPopup name="interestsPreferences" />
+      <FormFieldSlider :min="18" :max="75" name="age" :step="1" label="Age" />
+      <FormFieldSlider :min="0" :max="100" name="fame_rating" :step="1" label="Fame rating" prefix-value="%" />
+      <FormFieldSlider :min="0" :max="200" name="distance" :step="1" label="Distance preference" prefix-value="km" />
+      <FormFieldInterestsWithPopup name="interests_preferences" />
       <div class="flex justify-center">
         <Button type="submit" size="sm" class="px-20 mt-4" :disabled="!hasWritten" :variant="hasWritten ? 'default' : 'secondary'">
           Save

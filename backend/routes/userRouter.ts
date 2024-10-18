@@ -3,7 +3,7 @@ import {
 	emailValidator,
 	resetPassValidator,
 	userProfileValidator,
-	updateProfileValidator
+	updateProfileValidator, userPreferenceValidator
 } from "../validators/userValidator.ts";
 import UserController from "../controllers/userController.ts";
 import {verifyAuth} from "../middlewares/authMiddleware.ts";
@@ -32,6 +32,7 @@ userRouter.post('/forgot-password', emailValidator(), UserController.forgotPassw
 userRouter.post('/reset-password', resetPassValidator(), UserController.resetPassword);
 userRouter.post('/update', verifyAuth, updateProfileValidator(), UserController.updateUser);
 userRouter.put('/profile', verifyAuth, userProfileValidator(), ProfileController.updateUserProfile);
+userRouter.put('/preferences', verifyAuth, userPreferenceValidator(), ProfileController.updateUserPreferences);
 userRouter.put('/images', verifyAuth, upload.fields([
 	{ name: 'pictures', maxCount: 6 },
 ]), ImageController.updateUserImage);
