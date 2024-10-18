@@ -103,7 +103,7 @@ const router = createRouter({
       },
     },
     {
-      path: '/create-profile',
+      path: '/profile/edit',
       name: 'create-profile',
       component: () => import('@/views/user/CreateProfileView.vue'),
       meta: {
@@ -132,10 +132,10 @@ router.beforeEach(async (to, from, next) => {
 
 async function storeUserInfoIfEmpty() {
   const authStore = useAuthStore();
-  if (_.isEmpty(authStore.user)) {
-    const {user} = await tryToFetch();
-    if (user) authStore.storeUserInfo(user);
-  }
+  // if (_.isEmpty(authStore.user)) {
+  const {user} = await tryToFetch();
+  if (user) authStore.storeUserInfo(user);
+  // }
 }
 
 async function tryToFetch() {
