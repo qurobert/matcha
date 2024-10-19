@@ -10,14 +10,15 @@ import FormFieldBirthDate from "@/components/formField/FormFieldBirthDate.vue";
 import FormFieldGender from "@/components/formField/FormFieldGender.vue";
 import FormFieldInterestedIn from "@/components/formField/FormFieldInterestedIn.vue";
 import FormFieldInterestsWithPopup from "@/components/formField/FormFieldInterestsWithPopup.vue";
+import MyContainer from "@/components/utility/MyContainer.vue";
 const {onSubmit, hasWritten, isValid} = useEditProfile();
 
 </script>
 
 <template>
   <HeaderChildrenProfilePage :on-submit="onSubmit" :is-valid="isValid" :has-written="hasWritten" text="Edit info" />
-  <div class="flex justify-center">
-    <form @submit.prevent="onSubmit" class="w-full lg:w-1/2">
+  <MyContainer>
+    <form @submit.prevent="onSubmit">
 
       <FormFieldPictures />
       <div class="m-4">
@@ -43,6 +44,6 @@ const {onSubmit, hasWritten, isValid} = useEditProfile();
       </div>
 
     </form>
-  </div>
+  </MyContainer>
 
 </template>

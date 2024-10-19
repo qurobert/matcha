@@ -5,6 +5,7 @@ import InputWithField from "@/components/utility/InputWithField.vue";
 import {useAuthStore} from "@/stores/userStore";
 import {Button} from "@/components/ui/button";
 import { Separator } from '@/components/ui/separator'
+import MyContainer from "@/components/utility/MyContainer.vue";
 
 const {onSubmit, isValid, hasWritten, errors} = useSettings();
 const userStore = useAuthStore();
@@ -12,8 +13,8 @@ const userStore = useAuthStore();
 
 <template>
   <HeaderChildrenProfilePage text="Settings" :is-valid="isValid" :on-submit="onSubmit" :has-written="hasWritten"/>
-  <div class="flex justify-center">
-    <form @submit.prevent="onSubmit" class="m-4 w-full md:w-1/2 lg:w-1/3">
+  <MyContainer>
+    <form @submit.prevent="onSubmit">
       <InputWithField name="username" label="Username" :placeholder="userStore.username" type="text" />
       <Separator class="mt-6 mb-4" label="And / Or" />
       <InputWithField name="email" label="Email" :placeholder="userStore.email" type="email" />
@@ -29,5 +30,5 @@ const userStore = useAuthStore();
           </Button>
       </div>
     </form>
-  </div>
+  </MyContainer>
 </template>
