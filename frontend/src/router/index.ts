@@ -5,7 +5,6 @@ import SignupView from '@/views/auth/SignupView.vue'
 import {useAuthStore} from "@/stores/userStore";
 import {fetchStatus} from "@/api/auth";
 import NotFoundView from "@/views/NotFoundView.vue";
-import _ from 'lodash';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -20,7 +19,6 @@ const router = createRouter({
       name: 'login',
       component: LoginView,
       meta: {
-        hideHeaderInfo: true,
         redirectProfileIfConnected: true
       },
     },
@@ -29,21 +27,18 @@ const router = createRouter({
       name: 'signup',
       component: SignupView,
       meta: {
-        hideHeaderInfo: true,
         redirectProfileIfConnected: true
       },
     },
     {
       path: '/forgot-password',
       name: 'forgot-password',
-      meta: {hideHeaderInfo: true},
       component: () => import('@/views/auth/forgot-password/ForgotPasswordView.vue'),
     },
     {
       path: '/reset-password',
       name: 'reset-password',
       component: () => import('@/views/auth/forgot-password/ResetPassword.vue'),
-      meta: {hideHeaderInfo: true}
     },
     {
       path: '/verify-email',
