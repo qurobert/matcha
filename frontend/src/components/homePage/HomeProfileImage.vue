@@ -35,7 +35,7 @@ const props = defineProps({
 </script>
 
 <template>
-  <div class="bg-no-repeat bg-cover md:w-2/3 lg:w-6/12 xl:w-1/3 w-full bg-top relative h-full"
+  <div class="bg-no-repeat bg-cover md:w-2/3 lg:w-6/12 xl:w-1/3 w-full bg-top relative"
        :style="'background-image: url(\'' + images[imageIndex] + '\')'"
        @click.prevent="handleClick">
 

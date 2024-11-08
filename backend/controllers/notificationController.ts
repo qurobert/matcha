@@ -1,16 +1,25 @@
 import type {Request, Response} from "express";
 import NotificationModel from "../models/notificationModel.ts";
 import {NotificationType} from "../types/enumNotificationType.ts";
+import UserModel from "../models/userModel.ts";
 
 export default class NotificationController {
 	static async getNotifications(req: Request, res: Response) {
 		const user = req.user;
 		if (!user) throw new Error("User not connected");
 		const notifications = await NotificationModel.getNotifications(user.id)
+		const notificationsWithUser = await Promise.all(notifications.map(async (notification) => {
+			const id = notification.target_user_id;
+			const target_user = await UserModel.findById(id);
+			return {
+				target_user,
+				...notification
+			}
+		}))
 		return res.json({
 			status: 200,
 			message: "Get notifications successful",
-			notifications
+			notifications: notificationsWithUser
 		})
 	}
 	static async viewedTargetProfile(req: Request, res: Response) {

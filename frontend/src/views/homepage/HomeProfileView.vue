@@ -87,7 +87,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="flex items-center flex-col min-h-full">
+  <div class="flex items-center flex-col h-full">
     <HomeProfileImage :images="user.pictures" class="h-[48rem]">
       <button class="absolute -bottom-6 right-6 background-gradient-primary rounded-full p-4 w-12 h-12 flex items-center justify-center" @click="goBack">
         <font-awesome-icon icon="arrow-down" class="text-white text-xl"/>
