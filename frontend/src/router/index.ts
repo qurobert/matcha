@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import HomeView from '../views/homepage/HomeView.vue'
 import LoginView from '@/views/auth/LoginView.vue'
 import SignupView from '@/views/auth/SignupView.vue'
-import {useAuthStore} from "@/stores/userStore";
+import {useAuthStore} from "@/stores/authStore";
 import {fetchStatus} from "@/api/auth";
 import NotFoundView from "@/views/NotFoundView.vue";
 
@@ -84,16 +84,17 @@ const router = createRouter({
     {
       path: '/profile/:id',
       name: 'public-profile',
-      component: () => import('@/views/user/UserProfileView.vue'),
+      component: () => import('@/views/homepage/HomeProfileView.vue'),
+      meta: { hideHeader: true },
     },
     {
       path: '/logout',
       name: 'logout',
-      beforeEnter: (to, from, next) => {
+      beforeEnter: () => {
         const authStore = useAuthStore();
         authStore.logout();
       },
-      redirect(to) {
+      redirect() {
         return {name: 'home'}
       },
     },

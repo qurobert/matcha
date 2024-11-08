@@ -2,7 +2,7 @@ import * as yup from "yup";
 import {useYup} from "@/composables/useYup";
 import {useForm} from 'vee-validate';
 import {ref, watch} from "vue";
-import {useAuthStore} from "@/stores/userStore";
+import {useAuthStore} from "@/stores/authStore";
 import {fetchUpdateUser} from "@/api/user";
 import {useToast} from "@/components/ui/toast";
 import {useRouter} from "vue-router";

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {useAuthStore} from "@/stores/userStore";
+import {useAuthStore} from "@/stores/authStore";
 import {useRouter} from "vue-router";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {
@@ -32,7 +32,7 @@ const user = useAuthStore().user;
       <DropdownMenuTrigger class="h-6">
         <Avatar class="w-6 h-6 flex justify-start">
           <AvatarImage v-if="user?.pictures?.[0]" :src="url + user?.pictures?.[0]" alt="user profile" />
-          <AvatarFallback>User</AvatarFallback>
+          <AvatarFallback>Auth</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent>

@@ -5,15 +5,15 @@ import ErrorMiddleware from "../middlewares/errorMiddleware.ts";
 export default class ProfileController {
 
 	static async updateUserProfile(req: Request, res: Response) {
-		if (!req.user) throw new ErrorMiddleware(404, "User not found");
+		if (!req.user) throw new ErrorMiddleware(404, "Auth not found");
 
 		console.log(req.body);
 		await UserModel.updateProfileOrPreferences(req.user.id, req.body);
-		res.status(200).json({ message: 'User profile updated', user: req.body });
+		res.status(200).json({ message: 'Auth profile updated', user: req.body });
 	}
 
 	static async updateUserPreferences(req: Request, res: Response) {
-		if (!req.user) throw new ErrorMiddleware(404, "User not found");
+		if (!req.user) throw new ErrorMiddleware(404, "Auth not found");
 
 		const {
 			age,
@@ -31,6 +31,6 @@ export default class ProfileController {
 			interests_preference: interests_preferences
 		}
 		await UserModel.updateProfileOrPreferences(req.user.id, preferences);
-		res.status(200).json({ message: 'User preferences updated', user: req.body });
+		res.status(200).json({ message: 'Auth preferences updated', user: req.body });
 	}
 }

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import HomeDisconnected from "@/components/homePage/HomeDisconnected.vue";
 import HomeConnected from "@/components/homePage/HomeConnected.vue";
-import {useAuthStore} from "@/stores/userStore";
+import {useAuthStore} from "@/stores/authStore";
 
 const authStore = useAuthStore();
 

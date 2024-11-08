@@ -83,7 +83,7 @@ export default class UserModel {
         try {
             const {rows} = await client.query('SELECT * FROM Users WHERE username = $1', [username])
             const user = rows[0]
-            if (!user) throw new ErrorMiddleware(404, "User not found")
+            if (!user) throw new ErrorMiddleware(404, "Auth not found")
             if (!bcrypt.compareSync(password, user.password)) throw new ErrorMiddleware(401, "Invalid password")
             return user
         } finally {
