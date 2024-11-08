@@ -23,3 +23,23 @@ CREATE TABLE Users (
     distance_preference INT DEFAULT 80,
     interests_preference TEXT[]
 );
+
+CREATE TABLE UserActions (
+    id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL,
+    target_user_id INT NOT NULL,
+    action_type VARCHAR(10) CHECK (action_type IN ('like', 'dislike', 'block', 'report')) NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(user_id, target_user_id, action_type),
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE,
+    FOREIGN KEY (target_user_id) REFERENCES Users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE NOTIFICATIONS (
+    id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES Users(id) ON DELETE CASCADE NOT NULL,
+    target_user_id INT REFERENCES Users(id) ON DELETE CASCADE NOT NULL,
+    notification_type VARCHAR(10) CHECK(notification_type IN ('like', 'unlike', 'viewed', 'message', 'match')) NOT NULL,
+    is_read BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+)

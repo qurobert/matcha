@@ -2,7 +2,7 @@
 
 import {usePreferences} from "@/composables/usePreferences";
 import FormFieldInterestsWithPopup from "@/components/formField/FormFieldInterestsWithPopup.vue";
-import HeaderChildrenProfilePage from "@/components/headers/HeaderChildrenProfilePage.vue";
+import HeaderChildrenProfilePage from "@/components/headers/HeaderSettingsPages.vue";
 import FormFieldSlider from "@/components/formField/FormFieldSlider.vue";
 import {Button} from "@/components/ui/button";
 const {onSubmit, isValid, hasWritten} = usePreferences();

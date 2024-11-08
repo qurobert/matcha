@@ -3,8 +3,11 @@ import { Button } from "@/components/ui/button";
 import {type Ref, ref} from "vue";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 import {Badge} from "@/components/ui/badge";
+import {fetchDislikeUser, fetchLikeUser} from "@/api/actions";
+import {useToast} from "@/components/ui/toast";
 
 const fakeUser = {
+  id: "1",
   name: "John Doe",
   age: 25,
   images: ["bgé.jpg", "cagoulé.png", "mocheté.png", "prisonnié.png"],
@@ -36,6 +39,21 @@ function handleClick(event: any) {
     }
 }
 
+function dislikeUser() {
+  fetchDislikeUser(fakeUser.id)
+  const {toast} = useToast();
+  toast({
+    title: 'Dislike User',
+  })
+}
+
+function likeUser() {
+  fetchLikeUser(fakeUser.id)
+  const {toast} = useToast();
+  toast({
+    title: 'Like User',
+  })
+}
 </script>
 
 <template>
@@ -73,10 +91,10 @@ function handleClick(event: any) {
 
     <div class="flex justify-center items-center w-full m-2 h-[10%]">
       <button class="w-16 h-16 rounded-full shadow-xl flex justify-center items-center mr-12 bg-white">
-        <font-awesome-icon icon="xmark" class="w-8 h-8 text-accent" />
+        <font-awesome-icon icon="xmark" class="w-8 h-8 text-accent" @click="dislikeUser"/>
       </button>
       <button class="w-16 h-16 rounded-full shadow-xl flex justify-center items-center ml-12 bg-white">
-        <font-awesome-icon icon="heart" class="text-success w-8 h-8" />
+        <font-awesome-icon icon="heart" class="text-success w-8 h-8" @click="likeUser" />
       </button>
     </div>
   </div>

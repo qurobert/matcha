@@ -5,9 +5,13 @@ import morgan from "morgan"
 import cors from 'cors'
 const app = express();
 const port = process.env.PORT || 3000;
+const socketIo = require('socket.io');
 import http from "http";
+
 import UserRouter from "./routes/userRouter.ts";
+import NotificationRouter from "./routes/notificationRouter.ts";
 import AuthRouter from "./routes/authRouter.ts";
+import UserActionRouter from "./routes/actionsRouter.ts";
 import {error404, globalErrorLogger, globalErrorMiddleware} from "./middlewares/errorMiddleware.ts";
 import IndexRouter from "./routes";
 import path from "node:path";
@@ -27,6 +31,8 @@ app.options('*', cors());
 app.use('/', IndexRouter);
 app.use('/users', UserRouter);
 app.use('/auth', AuthRouter);
+app.use('/actions', UserActionRouter);
+app.use('/notifications', NotificationRouter);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use(
@@ -36,6 +42,7 @@ app.use(
 )
 
 const server = http.createServer(app);
+export const io = socketIo(server);
 
 server.listen(port, () => {
 	console.log(`Server is listening on port ${port}`);

@@ -8,6 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import HeaderNotifications from "@/components/headers/HeaderNotifications.vue";
 const authStore = useAuthStore()
 const router = useRouter()
 
@@ -21,7 +22,8 @@ const user = useAuthStore().user;
 
 <template>
   <div class="flex">
-    <font-awesome-icon icon="fa-regular fa-bell" class="mr-4 w-6 h-6"/>
+    <HeaderNotifications />
+
     <div class="relative w-6 h-6 mr-4">
       <font-awesome-icon icon="comments" class="w-6 h-6"/>
     </div>
