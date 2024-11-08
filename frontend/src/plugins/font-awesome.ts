@@ -20,7 +20,12 @@ import {faPepperHot,
 	faPlus,
 	faHeart,
 	faLocationDot,
-	faCircleInfo
+	faCircleInfo,
+	faArrowDown,
+	faQuoteRight,
+	faVenusMars,
+	faEye,
+	faShapes
 } from "@fortawesome/free-solid-svg-icons";
 import {faBell as faBellRegular} from "@fortawesome/free-regular-svg-icons";
 
@@ -47,7 +52,12 @@ library.add(
 	faPlus,
 	faHeart,
 	faLocationDot,
-	faCircleInfo
+	faCircleInfo,
+	faArrowDown,
+	faQuoteRight,
+	faVenusMars,
+	faEye,
+	faShapes
 );
 
 export {FontAwesomeIcon};

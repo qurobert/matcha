@@ -4,7 +4,7 @@ import AppHeader from "@/components/MainHeader.vue";
 import Footer from "@/components/MainFooter.vue";
 import {Toaster, ToastProvider} from "@/components/ui/toast";
 import {useRoute} from "vue-router";
-import {useAuthStore} from "@/stores/userStore";
+import {useAuthStore} from "@/stores/authStore";
 
 const route = useRoute();
 const authStore = useAuthStore();

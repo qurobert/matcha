@@ -7,14 +7,14 @@ import {JWTAccessToken} from "../helpers/jwt.ts";
 
 export default class UserController {
 	static async getUserConnected (req: Request, res: Response) {
-		if (!req.user) throw new ErrorMiddleware(404, "User not found");
+		if (!req.user) throw new ErrorMiddleware(404, "Auth not found");
 		const {email} = req.user;
 		const user = await UserModel.findOneByEmail(email);
-		if (!user) throw new ErrorMiddleware(404, "User not found");
+		if (!user) throw new ErrorMiddleware(404, "Auth not found");
 
 		return res.json({
 			status: 200,
-			message: "User connected",
+			message: "Auth connected",
 			user: UserController._responseUser(user),
 		});
 	}
@@ -59,11 +59,11 @@ export default class UserController {
 	static async getUserById (req: Request, res: Response) {
 		const {id} = req.params;
 		const user = await UserModel.findById(id);
-		if (!user) throw new ErrorMiddleware(404, "User not found");
+		if (!user) throw new ErrorMiddleware(404, "Auth not found");
 
 		return res.status(200).json({
 			status: 200,
-			message: "User found",
+			message: "Auth found",
 			user: UserController._responseUser(user),
 		});
 	}
@@ -91,7 +91,7 @@ export default class UserController {
 	}
 
 	static async updateUser(req: Request, res: Response) {
-		if (!req.user) throw new ErrorMiddleware(404, "User not found");
+		if (!req.user) throw new ErrorMiddleware(404, "Auth not found");
 		const { email, username, password } = req.body;
 		const {id} = req.user;
 		if (email)
@@ -102,7 +102,7 @@ export default class UserController {
 			await UserModel.updatePassword(id, password);
 		res.json({
 			status: 200,
-			message: "User updated",
+			message: "Auth updated",
 		});
 	}
 

@@ -1,7 +1,7 @@
 import * as yup from "yup";
 import {useYup} from "@/composables/useYup";
 import {useForm} from 'vee-validate';
-import {useAuthStore} from "@/stores/userStore";
+import {useAuthStore} from "@/stores/authStore";
 import {useIsValidForm} from "@/composables/useIsValidForm";
 import _ from 'lodash'
 import {submitProfile} from "@/composables/useCreateProfile";
