@@ -45,8 +45,3 @@ export const fetchInteractions = async () => {
 	const response = await api.post('/actions/me');
 	return response.data;
 }
-
-export const fetchTargetInteractions = async (target_user_id: string) => {
-	const response = await api.get('/actions/' + target_user_id);
-	return response.data;
-}

@@ -1,6 +1,6 @@
 export enum NotificationType {
 	like = 'like',
-	unlik = 'unlike',
+	unlike = 'unlike',
 	viewed = 'viewed',
 	message = 'message',
 	match = 'match'

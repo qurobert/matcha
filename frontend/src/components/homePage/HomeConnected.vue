@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { Button } from "@/components/ui/button";
-import {type Ref, ref} from "vue";
+import {onMounted, type Ref, ref} from "vue";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 import {Badge} from "@/components/ui/badge";
 import {fetchDislikeUser, fetchLikeUser} from "@/api/actions";
 import {useToast} from "@/components/ui/toast";
+import {fetchViewedProfile} from "@/api/notifications";
 
 const fakeUser = {
-  id: "1",
+  id: "2",
   name: "John Doe",
   age: 25,
   images: ["bgé.jpg", "cagoulé.png", "mocheté.png", "prisonnié.png"],
@@ -54,6 +55,9 @@ function likeUser() {
     title: 'Like User',
   })
 }
+onMounted(() => {
+  fetchViewedProfile(fakeUser.id);
+})
 </script>
 
 <template>

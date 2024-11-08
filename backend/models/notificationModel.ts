@@ -12,6 +12,7 @@ export default class NotificationModel {
 		const queryText = `INSERT INTO Notifications (user_id, target_user_id, notification_type)
             VALUES ($1, $2, $3) RETURNING *;`
 		return await NotificationModel.executeQuery(queryText, [user_id, target_user_id, notification_type])
+		// TODO: NOTIFIED SOCKET IO
 	}
 
 	static async markAllAsRead(user_id: string) {
