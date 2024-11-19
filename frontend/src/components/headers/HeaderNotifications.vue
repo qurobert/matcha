@@ -5,23 +5,34 @@ import {fetchMarkAsReadNotifications, fetchNotifications} from "@/api/notificati
 import {type Notification} from "@/types/notification";
 import ElementNotification from "@/components/headers/ElementNotification.vue";
 import {ref, computed} from 'vue'
+import {useSocket} from "@/plugins/socket";
+import {useAuthStore} from "@/stores/authStore";
 
+const authStore = useAuthStore();
 const notifications = ref<Notification[]>([]);
 const unreadNotifications = computed(() => notifications.value.filter((notif) => !notif.is_read));
 const readNotifications = computed(() => notifications.value.filter((notif) => notif.is_read));
-
+const hasUnreadNotifications = ref(false);
 async function isOpen(open: boolean) {
   if (open) {
+    hasUnreadNotifications.value = false
     notifications.value = (await fetchNotifications())?.notifications
     await fetchMarkAsReadNotifications()
   }
 }
+
+const socket = useSocket();
+socket.on(`notification_${authStore.user.id}`, (...args: any[]) => {
+  hasUnreadNotifications.value = true
+})
+
 </script>
 
 <template>
   <DropdownMenu @update:open="isOpen">
-    <DropdownMenuTrigger class="h-6">
-      <font-awesome-icon icon="fa-regular fa-bell" class="mr-4 w-6 h-6"/>
+    <DropdownMenuTrigger class="h-6 relative">
+      <font-awesome-icon icon="bell" class="mr-4 w-6 h-6" />
+      <div class="w-3.5 h-3.5 rounded-full bg-accent absolute -bottom-1 right-3.5 border-2 border-white" v-if="hasUnreadNotifications"/>
     </DropdownMenuTrigger>
     <DropdownMenuContent class="min-w-96">
       <Tabs default-value="Unread" class="w-full">

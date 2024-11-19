@@ -27,7 +27,7 @@ function redirectToHomeProfile() {
         </div>
         <div class="flex items-center mb-2">
           <font-awesome-icon icon="location-dot" class="text-white mr-2"/>
-          <p class="text-lg">{{user.location}}</p>
+          <p class="text-lg">{{user.location.split(",")?.[0]}}</p>
         </div>
         <div>
           <Badge v-for="interest in user.interests.slice(0, 6)" :key="interest" variant="gray" class="m-0.5">

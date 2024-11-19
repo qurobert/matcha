@@ -18,7 +18,7 @@ export default class AuthController {
         return res.json({
             status: 200,
             message: "Auth created successfully",
-            user: UserController._responseUser(user),
+            user: await UserController._responseUser(user),
             access_token: JWTAccessToken.sign({
                 email,
                 id: user.id,
@@ -37,7 +37,7 @@ export default class AuthController {
         return res.json({
             status: 200,
             message: "Auth logged in successfully",
-            user: UserController._responseUser(user),
+            user: await UserController._responseUser(user),
             access_token: JWTAccessToken.sign({email: user.email, id: user.id}),
             refresh_token: JWTRefreshToken.sign({id: user.id}),
         });

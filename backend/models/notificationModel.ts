@@ -1,6 +1,7 @@
 // @ts-ignore
 import pool from "./db.ts";
 import type {NotificationType} from "../types/enumNotificationType.ts";
+import {io} from "../index.ts";
 
 export default class NotificationModel {
 	static async getNotifications(user_id: string) {
@@ -11,8 +12,10 @@ export default class NotificationModel {
 	static async createNotification(user_id: string, target_user_id: string, notification_type: NotificationType) {
 		const queryText = `INSERT INTO Notifications (user_id, target_user_id, notification_type)
             VALUES ($1, $2, $3) RETURNING *;`
-		return await NotificationModel.executeQuery(queryText, [user_id, target_user_id, notification_type])
-		// TODO: NOTIFIED SOCKET IO
+		const res =  await NotificationModel.executeQuery(queryText, [user_id, target_user_id, notification_type])
+		console.log("EMITTING NOTIFICATION", `notification_${user_id}`, {user_id, notification_type})
+		io.emit(`notification_${user_id}`, {user_id, notification_type})
+		return res;
 	}
 
 	static async markAllAsRead(user_id: string) {

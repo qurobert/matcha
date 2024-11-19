@@ -15,6 +15,7 @@ import UserActionRouter from "./routes/actionsRouter.ts";
 import {error404, globalErrorLogger, globalErrorMiddleware} from "./middlewares/errorMiddleware.ts";
 import IndexRouter from "./routes";
 import path from "node:path";
+import UserModel from "./models/userModel.ts";
 
 // Configuring the app
 app.use(cors({
@@ -42,8 +43,46 @@ app.use(
 )
 
 const server = http.createServer(app);
-export const io = socketIo(server);
 
+const activeUsers = new Map();
+export const io = socketIo(server, {
+	cors: {
+		origin: "http://localhost",
+		methods: ["GET", "POST"],
+		credentials: true,
+	},
+});
+
+io.on("connection", (socket: any) => {
+	const user_id = socket.handshake.query.user_id;
+	if (!user_id) return;
+
+	console.log("New client connected", user_id);
+	activeUsers.set(user_id, Date.now());
+	UserModel.setStatusConnection(user_id, true);
+
+	socket.on('client-ping', () => {
+		activeUsers.set(user_id, Date.now()); // Met à jour le dernier ping reçu
+	});
+
+	socket.on("disconnect", () => {
+		UserModel.setStatusConnection(user_id, false);
+		activeUsers.delete(user_id);
+		console.log("New client disconnected", user_id);
+	});
+})
+
+setInterval(() => {
+	const now = Date.now();
+
+	for (const [userId, lastPing] of activeUsers.entries()) {
+		if (now - lastPing > 30000) {
+			console.log(`User ${userId} is offline (ping timeout)`);
+			activeUsers.delete(userId);
+			UserModel.setStatusConnection(userId, false);
+		}
+	}
+}, 10000); // Vérifie toutes les 10 secondes
 server.listen(port, () => {
 	console.log(`Server is listening on port ${port}`);
 });

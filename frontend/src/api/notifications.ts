@@ -10,7 +10,7 @@ export const fetchMarkAsReadNotifications = async () => {
 	return response.data;
 }
 
-export const fetchViewedProfile = async (profile_user_id: number) => {
+export const fetchViewedProfile = async (profile_user_id: string) => {
 	const response = await api.post('/notifications/viewed_profile', {target_user_id: profile_user_id});
 	return response.data;
 }

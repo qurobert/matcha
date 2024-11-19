@@ -11,12 +11,13 @@ import {
 import HeaderNotifications from "@/components/headers/HeaderNotifications.vue";
 const authStore = useAuthStore()
 const router = useRouter()
+import URL from "@/helpers/URL";
 
 const logout = () => {
   authStore.logout()
   router.push("/")
 }
-const url = "http://localhost:3000/uploads/";
+const url = URL + "/uploads/";
 const user = useAuthStore().user;
 </script>
 

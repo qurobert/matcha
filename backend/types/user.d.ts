@@ -5,6 +5,8 @@ interface User extends Profile, Preferences {
 	verify_email: boolean;
 	create_profile: boolean;
 	notification: string;
+	is_online: boolean;
+	last_connection: Date;
 }
 
 interface Profile {

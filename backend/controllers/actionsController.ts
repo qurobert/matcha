@@ -40,8 +40,12 @@ export default class ActionsController {
 		const {target_user_id} = req.body;
 		if (!user) throw new Error("Not connected")
 		if (user.id == target_user_id) throw new Error("Can't have same user_id and target_user_id")
+		const matches = await ActionsModel.getMatches(user.id);
+		const is_match = matches.findIndex((match) => match.target_user_id == target_user_id);
+		if (is_match !== -1) {
+			await NotificationModel.createNotification(target_user_id, user.id, NotificationType.unmatch);
+		}
 		await ActionsModel.deleteInteractionIfExist(user.id, target_user_id, ActionType.like)
-		await NotificationModel.createNotification(target_user_id, user.id, NotificationType.unlike);
 		res.json({
 			status: 200,
 			message: "Unlike user"
@@ -121,4 +125,36 @@ export default class ActionsController {
 		})
 	}
 
+	static async infoTargetUser(req: Request, res: Response) {
+		const user = req.user;
+		const {target_user_id} = req.params;
+		if (!user) throw new Error("Not connected")
+		if (user.id == target_user_id) throw new Error("Can't have same user_id and target_user_id")
+		const interactions = await ActionsModel.getInteractions(user.id);
+		const notifications = await NotificationModel.getNotifications(target_user_id);
+
+		const likeYou = interactions.findIndex((interaction) => interaction.user_id == target_user_id && interaction.action_type == ActionType.like);
+		const youLike = interactions.findIndex((interaction) => interaction.user_id == user.id && interaction.action_type == ActionType.like);
+		const viewYou = notifications.findIndex((notification) => notification.target_user_id == user.id && notification.notification_type == NotificationType.viewed);
+		const youView = notifications.findIndex((notification) => notification.target_user_id == target_user_id && notification.notification_type == NotificationType.viewed);
+		res.json({
+			status: 200,
+			message: "Check info target user",
+			is_match: likeYou !== -1 && youLike !== -1,
+			like_you: likeYou !== -1,
+			you_like: youLike !== -1,
+			view_you: viewYou !== -1,
+			you_view: youView !== -1,
+			is_block: ActionsController._hasActionType(interactions, user.id, target_user_id, ActionType.block),
+			is_report: ActionsController._hasActionType(interactions, user.id, target_user_id, ActionType.report),
+		})
+	}
+
+	static _hasActionType(interactions: any[], user_id: string, target_user_id: string, action_type: ActionType) {
+		return interactions.findIndex((interaction) =>
+				interaction.user_id == user_id
+			&& interaction.target_user_id == target_user_id
+			&& interaction.action_type == action_type)
+			!== -1;
+	}
 }

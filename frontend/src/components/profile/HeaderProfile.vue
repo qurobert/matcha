@@ -4,11 +4,13 @@ import {capitalizeFirstLetter} from "@/lib/utils";
 import {useAuthStore} from "@/stores/authStore";
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import moment from "moment";
+import URL from "@/helpers/URL";
 
 const useUserStore = useAuthStore();
 const user = useUserStore.user;
 const age = moment().diff(user.date_of_birth, 'years', false);
-const url = "http://localhost:3000/uploads/";
+const url = URL + "/uploads/";
+
 
 </script>
 

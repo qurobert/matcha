@@ -15,7 +15,7 @@ export default class UserController {
 		return res.json({
 			status: 200,
 			message: "Auth connected",
-			user: UserController._responseUser(user),
+			user: await UserController._responseUser(user),
 		});
 	}
 
@@ -45,7 +45,7 @@ export default class UserController {
 			const userDb = await UserModel.findOneByEmail(user.email);
 			return res.json({
 				connected: true,
-				user: UserController._responseUser(userDb),
+				user: await UserController._responseUser(userDb),
 			});
 
 		} catch(err) {
@@ -64,7 +64,7 @@ export default class UserController {
 		return res.status(200).json({
 			status: 200,
 			message: "Auth found",
-			user: UserController._responseUser(user),
+			user: await UserController._responseUser(user),
 		});
 	}
 
@@ -106,7 +106,8 @@ export default class UserController {
 		});
 	}
 
-	static _responseUser(user: User) {
+	static async _responseUser(user: User) {
+		const url = (lat: number, lng: number) => `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&zoom=10&format=jsonv2`
 		return {
 			id: user.id,
 			email: user.email,
@@ -122,8 +123,11 @@ export default class UserController {
 			biography: user.biography,
 			location_lat: user.location_lat,
 			location_lng: user.location_lng,
+			location: user.location_lat && user.location_lng ? await fetch(url(user.location_lat, user.location_lng)).then(res => res.json()).then(data => data.display_name) : null,
 			interests: user.interests,
 			pictures: user.pictures,
+			is_online: user.is_online,
+			last_connection: user.last_connection,
 			preferences: {
 				age: [user.age_preference_min, user.age_preference_max],
 				fame_rating: [user.fame_rating_preference_min, user.fame_rating_preference_max],

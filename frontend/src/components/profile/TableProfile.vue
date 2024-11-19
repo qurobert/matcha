@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import moment from "moment";
 import {TypeTableProfile} from "@/types/table_profile";
+import URL from "@/helpers/URL";
 
 // TMP
 function createFakeUser(firstName: string, lastName: string, dateOfBirth: string, pictures: string) {
@@ -54,14 +55,15 @@ const fakeUsers = [
 shuffle(fakeUsers);
 // TMP
 
-const props = defineProps({
+defineProps({
   type: {
     type: String as () => TypeTableProfile,
     required: true
   }
 })
 
-const url = "http://localhost:3000/uploads/";
+const url = URL + "/uploads/";
+
 </script>
 
 <template>

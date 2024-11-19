@@ -42,6 +42,11 @@ export const fetchUnBlockUser = async (target_user_id: string) => {
 }
 
 export const fetchInteractions = async () => {
-	const response = await api.post('/actions/me');
+	const response = await api.get('/actions/me');
+	return response.data;
+}
+
+export const fetchInfoTargetUser = async(target_user_id: string) => {
+	const response = await api.get(`/actions/${target_user_id}`);
 	return response.data;
 }

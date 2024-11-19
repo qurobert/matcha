@@ -166,4 +166,18 @@ export default class UserModel {
             client.release()
         }
     }
+
+    static async setStatusConnection(userId: string, online: boolean) {
+        const client = await pool.connect()
+        try {
+            if (online)
+                await client.query('UPDATE Users SET is_online = $1, last_connection = NOW() WHERE id = $2', [online, userId])
+            else
+            {
+                await client.query('UPDATE Users SET is_online = $1, last_connection = NOW() WHERE id = $2', [online, userId])
+            }
+        } finally {
+            client.release()
+        }
+    }
 }
