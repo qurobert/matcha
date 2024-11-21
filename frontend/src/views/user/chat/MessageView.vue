@@ -3,5 +3,5 @@
 </script>
 
 <template>
-ChatView
+  <h1>Messages....</h1>
 </template>

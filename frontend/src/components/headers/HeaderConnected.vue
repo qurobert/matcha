@@ -22,9 +22,11 @@ const user = useAuthStore().user;
 <template>
   <div class="flex">
     <font-awesome-icon icon="fa-regular fa-bell" class="mr-4 w-6 h-6"/>
-    <div class="relative w-6 h-6 mr-4">
+    <RouterLink :to="{
+      name: 'chat'
+    }" class="relative w-6 h-6 mr-4">
       <font-awesome-icon icon="comments" class="w-6 h-6"/>
-    </div>
+    </RouterLink>
 
     <DropdownMenu>
       <DropdownMenuTrigger class="h-6">

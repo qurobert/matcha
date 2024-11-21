@@ -5,7 +5,7 @@
   <div class="not-found">
     <h1>404 - Page non trouvée</h1>
     <p>La page que vous recherchez n'existe pas.</p>
-    <RouterLink to="/">Retour à l'accueil</RouterLink>
+    <RouterLink to="/" class="text-gray-light hover:text-black">Retour à l'accueil</RouterLink>
   </div>
 </template>
 
