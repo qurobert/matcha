@@ -5,12 +5,13 @@ import FormFieldInterestsWithPopup from "@/components/formField/FormFieldInteres
 import HeaderChildrenProfilePage from "@/components/headers/HeaderSettingsPages.vue";
 import FormFieldSlider from "@/components/formField/FormFieldSlider.vue";
 import {Button} from "@/components/ui/button";
+import MyContainer from "@/components/utility/MyContainer.vue";
 const {onSubmit, isValid, hasWritten} = usePreferences();
 </script>
 
 <template>
-  <div class="flex justify-center">
-    <form @submit="onSubmit" class="m-4 w-full md:w-1/2 lg:w-1/3">
+  <MyContainer>
+    <form @submit="onSubmit">
       <HeaderChildrenProfilePage :on-submit="onSubmit" :is-valid="isValid" :has-written="hasWritten" text="Preferences" />
 
       <FormFieldSlider :min="18" :max="75" name="age" :step="1" label="Age" />
@@ -23,5 +24,5 @@ const {onSubmit, isValid, hasWritten} = usePreferences();
         </Button>
       </div>
     </form>
-  </div>
+  </MyContainer>
 </template>

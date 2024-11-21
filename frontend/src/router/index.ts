@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/homepage/HomeView.vue'
-import LoginView from '@/views/auth/LoginView.vue'
-import SignupView from '@/views/auth/SignupView.vue'
+import LoginView from '@/views/auth/loginSignup/LoginView.vue'
+import SignupView from '@/views/auth/loginSignup/SignupView.vue'
 import {useAuthStore} from "@/stores/authStore";
 import {fetchStatus} from "@/api/auth";
 import NotFoundView from "@/views/NotFoundView.vue";
@@ -43,42 +43,42 @@ const router = createRouter({
     {
       path: '/verify-email',
       name: 'verify-email',
-      component: () => import('@/views/auth/VerifyEmailView.vue'),
+      component: () => import('@/views/auth/mail/VerifyEmailView.vue'),
       meta: { requiresAuth: true },
     },
     {
       path: '/mail-verify-email',
       name: 'mail-verify-email',
-      component: () => import('@/views/auth/MailPageVerificationEmail.vue')
+      component: () => import('@/views/auth/mail/MailPageVerificationEmail.vue')
     },
     {
       path: '/profile',
       name: 'private-profile',
-      component: () => import('../views/user/ProfileView.vue'),
+      component: () => import('../views/user/profile/ProfileView.vue'),
       meta: { requiresAuth: true },
     },
     {
       path: '/profile/edit',
       name: 'edit-profile',
-      component: () => import('@/views/user/EditProfileView.vue'),
+      component: () => import('@/views/user/settings/EditProfileView.vue'),
         meta: { requiresAuth: true },
     },
     {
       path: '/profile/preferences',
       name: 'preferences',
-      component: () => import('@/views/user/PreferencesView.vue'),
+      component: () => import('@/views/user/settings/PreferencesView.vue'),
       meta: { requiresAuth: true },
     },
     {
       path: '/profile/settings',
       name: 'settings',
-      component: () => import('@/views/user/SettingsView.vue'),
+      component: () => import('@/views/user/settings/SettingsView.vue'),
       meta: { requiresAuth: true },
     },
     {
       path: '/chat/:id',
       name: 'chat',
-      component: () => import('@/views/user/ChatView.vue'),
+      component: () => import('@/views/user/chat/ChatView.vue'),
       meta: { requiresAuth: true },
     },
     {
@@ -101,7 +101,7 @@ const router = createRouter({
     {
       path: '/profile/edit',
       name: 'create-profile',
-      component: () => import('@/views/user/CreateProfileView.vue'),
+      component: () => import('@/views/auth/createProfile/CreateProfileView.vue'),
       meta: {
         requiresAuth: true
       }
