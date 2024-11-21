@@ -1,14 +1,16 @@
 <script setup lang="ts">
 
 import {capitalizeFirstLetter} from "@/lib/utils";
-import {useAuthStore} from "@/stores/userStore";
+import {useAuthStore} from "@/stores/authStore";
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import moment from "moment";
+import URL from "@/helpers/URL";
 
 const useUserStore = useAuthStore();
 const user = useUserStore.user;
 const age = moment().diff(user.date_of_birth, 'years', false);
-const url = "http://localhost:3000/uploads/";
+const url = URL + "/uploads/";
+
 
 </script>
 
@@ -19,7 +21,7 @@ const url = "http://localhost:3000/uploads/";
 
     <Avatar class="w-24 h-24 my-8">
       <AvatarImage v-if="user.pictures?.[0]" :src="url + user.pictures?.[0]" alt="user profile" />
-      <AvatarFallback>User</AvatarFallback>
+      <AvatarFallback>Auth</AvatarFallback>
     </Avatar>
     <p class="text-lg">{{ capitalizeFirstLetter(user.username) }}, {{ age }}</p>
     <div class="lg:w-1/2 md:w-2/3 sm:w-full flex justify-between p-4 w-full">

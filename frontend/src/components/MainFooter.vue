@@ -23,7 +23,7 @@ watch(() => route.path, (newPath) => {
 </script>
 
 <template>
-  <footer class="flex justify-center py-3 text-gray-100">
+  <footer class="flex justify-center py-3 text-gray-100 bg-white" v-if="path !== Path.GLOBAL">
 
     <!-- Login footer -->
     <span class="whitespace-pre" v-if="path === Path.LOGIN">Need an account ? </span>
@@ -34,7 +34,7 @@ watch(() => route.path, (newPath) => {
     <RouterLink class="text-secondary underline" v-if="path === Path.SIGNUP" to="/login"> Log in here</RouterLink>
 
     <!-- Global footer -->
-    <span class="whitespace-pre" v-if="path === Path.GLOBAL">© Matcha - Ecole 42, 2024</span>
+<!--    <span class="whitespace-pre" v-if="path === Path.GLOBAL">© Matcha - Ecole 42, 2024</span>-->
   </footer>
 </template>
 

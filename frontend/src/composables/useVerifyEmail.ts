@@ -1,6 +1,6 @@
 import { onMounted, onUnmounted, ref } from 'vue';
 import {useRouter} from 'vue-router';
-import {useAuthStore} from "@/stores/userStore";
+import {useAuthStore} from "@/stores/authStore";
 import {emailIsVerify} from "@/services/auth";
 import {fetchResendEmail} from "@/api/auth";
 

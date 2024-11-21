@@ -21,5 +21,27 @@ CREATE TABLE Users (
     fame_rating_preference_min INT DEFAULT 0,
     fame_rating_preference_max INT DEFAULT 100,
     distance_preference INT DEFAULT 80,
-    interests_preference TEXT[]
+    interests_preference TEXT[],
+    is_online BOOLEAN DEFAULT FALSE,
+    last_connection TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE UserActions (
+    id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL,
+    target_user_id INT NOT NULL,
+    action_type VARCHAR(100) NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(user_id, target_user_id, action_type),
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE,
+    FOREIGN KEY (target_user_id) REFERENCES Users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE NOTIFICATIONS (
+    id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES Users(id) ON DELETE CASCADE NOT NULL,
+    target_user_id INT REFERENCES Users(id) ON DELETE CASCADE NOT NULL,
+    notification_type VARCHAR(100) NOT NULL,
+    is_read BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+)

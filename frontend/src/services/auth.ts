@@ -1,5 +1,5 @@
 import {fetchLogin, fetchMe, fetchSignup} from "@/api/auth";
-import { useAuthStore } from "@/stores/userStore";
+import { useAuthStore } from "@/stores/authStore";
 
 export const signup = async (email: string, username: string, password: string) => {
 		try {
@@ -13,7 +13,7 @@ export const signup = async (email: string, username: string, password: string) 
 		} catch (error: any) {
 			console.log(error);
 			if (error?.response?.data?.message?.includes("exists"))
-				throw new Error("User with this email or username already exists");
+				throw new Error("Auth with this email or username already exists");
 			else
 				throw new Error("An error occurred");
 		}

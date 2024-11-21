@@ -83,7 +83,7 @@ export default class UserModel {
         try {
             const {rows} = await client.query('SELECT * FROM Users WHERE username = $1', [username])
             const user = rows[0]
-            if (!user) throw new ErrorMiddleware(404, "User not found")
+            if (!user) throw new ErrorMiddleware(404, "Auth not found")
             if (!bcrypt.compareSync(password, user.password)) throw new ErrorMiddleware(401, "Invalid password")
             return user
         } finally {
@@ -162,6 +162,20 @@ export default class UserModel {
             const query = `UPDATE Users SET ${setClauses.join(', ')} WHERE id = $${values.length + 1}`;
             values.push(userId);
             await client.query(query, values);
+        } finally {
+            client.release()
+        }
+    }
+
+    static async setStatusConnection(userId: string, online: boolean) {
+        const client = await pool.connect()
+        try {
+            if (online)
+                await client.query('UPDATE Users SET is_online = $1, last_connection = NOW() WHERE id = $2', [online, userId])
+            else
+            {
+                await client.query('UPDATE Users SET is_online = $1, last_connection = NOW() WHERE id = $2', [online, userId])
+            }
         } finally {
             client.release()
         }

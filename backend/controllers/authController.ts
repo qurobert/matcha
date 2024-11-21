@@ -11,14 +11,14 @@ export default class AuthController {
         await AuthController._checkUserExist(email);
 
         const user = await UserModel.create(email, username, password);
-        if (!user) throw new Error("User not created");
+        if (!user) throw new Error("Auth not created");
 
         await AuthController.sendEmailLink(email);
 
         return res.json({
             status: 200,
-            message: "User created successfully",
-            user: UserController._responseUser(user),
+            message: "Auth created successfully",
+            user: await UserController._responseUser(user),
             access_token: JWTAccessToken.sign({
                 email,
                 id: user.id,
@@ -36,8 +36,8 @@ export default class AuthController {
 
         return res.json({
             status: 200,
-            message: "User logged in successfully",
-            user: UserController._responseUser(user),
+            message: "Auth logged in successfully",
+            user: await UserController._responseUser(user),
             access_token: JWTAccessToken.sign({email: user.email, id: user.id}),
             refresh_token: JWTRefreshToken.sign({id: user.id}),
         });
@@ -79,7 +79,7 @@ export default class AuthController {
 
             res.json({
                 status: 200,
-                message: "User reauthenticated",
+                message: "Auth reauthenticated",
                 access_token,
                 refresh_token
             });
@@ -88,13 +88,13 @@ export default class AuthController {
 
     static async _checkUserExist(email: string) {
         const userExist = await UserModel.findOneByEmail(email);
-        if (userExist) throw new ErrorMiddleware(400, "User already exists");
+        if (userExist) throw new ErrorMiddleware(400, "Auth already exists");
     }
 
     static async sendEmailLink(email: string) {
         const user = await UserModel.findOneByEmail(email);
         if (!user)
-            throw new ErrorMiddleware(404, "User not found");
+            throw new ErrorMiddleware(404, "Auth not found");
         const token = JWTAccessToken.sign({email: user.email, id: user.id});
         const verificationLink = `http://localhost:3000/auth/verify-email?token=${token}`;
         const emailContent = `<p>Please verify your email by clicking on the following <a href="${verificationLink}">link</a></p>`;

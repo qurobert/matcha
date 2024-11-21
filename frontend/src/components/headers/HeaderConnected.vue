@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {useAuthStore} from "@/stores/userStore";
+import {useAuthStore} from "@/stores/authStore";
 import {useRouter} from "vue-router";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {
@@ -8,31 +8,32 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import HeaderNotifications from "@/components/headers/HeaderNotifications.vue";
 const authStore = useAuthStore()
 const router = useRouter()
+import URL from "@/helpers/URL";
 
 const logout = () => {
   authStore.logout()
   router.push("/")
 }
-const url = "http://localhost:3000/uploads/";
+const url = URL + "/uploads/";
 const user = useAuthStore().user;
 </script>
 
 <template>
   <div class="flex">
-    <font-awesome-icon icon="fa-regular fa-bell" class="mr-4 w-6 h-6"/>
-    <RouterLink :to="{
-      name: 'chat'
-    }" class="relative w-6 h-6 mr-4">
+    <HeaderNotifications />
+
+    <div class="relative w-6 h-6 mr-4">
       <font-awesome-icon icon="comments" class="w-6 h-6"/>
-    </RouterLink>
+    </div>
 
     <DropdownMenu>
       <DropdownMenuTrigger class="h-6">
         <Avatar class="w-6 h-6 flex justify-start">
           <AvatarImage v-if="user?.pictures?.[0]" :src="url + user?.pictures?.[0]" alt="user profile" />
-          <AvatarFallback>User</AvatarFallback>
+          <AvatarFallback>Auth</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent>

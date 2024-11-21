@@ -1,7 +1,7 @@
 import {useForm} from 'vee-validate';
 import {useRouter} from "vue-router";
 import {fetchForgotPassword, fetchResetPassword} from "@/api/auth";
-import {useAuthStore} from "@/stores/userStore";
+import {useAuthStore} from "@/stores/authStore";
 import {ref} from 'vue'
 import {useYup} from "@/composables/useYup";
 import * as yup from "yup";

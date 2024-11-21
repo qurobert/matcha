@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import HeaderChildrenProfilePage from "@/components/headers/HeaderChildrenProfilePage.vue";
+import HeaderChildrenProfilePage from "@/components/headers/HeaderSettingsPages.vue";
 import {useEditProfile} from "@/composables/useEditProfile";
 import FormFieldPictures from "@/components/formField/FormFieldPictures.vue";
 import FormFieldBiography from "@/components/formField/FormFieldBiography.vue";

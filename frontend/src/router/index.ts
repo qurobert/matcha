@@ -1,11 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import HomeView from '../views/homepage/HomeView.vue'
 import LoginView from '@/views/auth/loginSignup/LoginView.vue'
 import SignupView from '@/views/auth/loginSignup/SignupView.vue'
-import {useAuthStore} from "@/stores/userStore";
+import {useAuthStore} from "@/stores/authStore";
 import {fetchStatus} from "@/api/auth";
 import NotFoundView from "@/views/NotFoundView.vue";
-import _ from 'lodash';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -20,7 +19,6 @@ const router = createRouter({
       name: 'login',
       component: LoginView,
       meta: {
-        hideHeaderInfo: true,
         redirectProfileIfConnected: true
       },
     },
@@ -29,21 +27,18 @@ const router = createRouter({
       name: 'signup',
       component: SignupView,
       meta: {
-        hideHeaderInfo: true,
         redirectProfileIfConnected: true
       },
     },
     {
       path: '/forgot-password',
       name: 'forgot-password',
-      meta: {hideHeaderInfo: true},
       component: () => import('@/views/auth/forgotPassword/ForgotPasswordView.vue'),
     },
     {
       path: '/reset-password',
       name: 'reset-password',
       component: () => import('@/views/auth/forgotPassword/ResetPassword.vue'),
-      meta: {hideHeaderInfo: true}
     },
     {
       path: '/verify-email',
@@ -82,24 +77,30 @@ const router = createRouter({
     },
     {
       path: '/chat/',
+      name: 'home-chat',
+      component: () => import('@/views/user/chat/HomeChatView.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/chat/:id',
       name: 'chat',
       component: () => import('@/views/user/chat/ChatView.vue'),
       meta: { requiresAuth: true },
     },
     {
-      path: '/chat/:id',
-      name: 'message',
-      component: () => import('@/views/user/chat/MessageView.vue'),
-      meta: { requiresAuth: true },
+      path: '/profile/:id',
+      name: 'public-profile',
+      component: () => import('@/views/homepage/HomeProfileView.vue'),
+      meta: { hideHeader: true },
     },
     {
       path: '/logout',
       name: 'logout',
-      beforeEnter: (to, from, next) => {
+      beforeEnter: () => {
         const authStore = useAuthStore();
         authStore.logout();
       },
-      redirect(to) {
+      redirect() {
         return {name: 'home'}
       },
     },

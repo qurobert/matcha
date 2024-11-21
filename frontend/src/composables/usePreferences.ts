@@ -4,7 +4,7 @@ import {useForm} from 'vee-validate';
 import {useIsValidForm} from "@/composables/useIsValidForm";
 import _ from 'lodash'
 import {useToast} from "@/components/ui/toast";
-import {useAuthStore} from "@/stores/userStore";
+import {useAuthStore} from "@/stores/authStore";
 import {fetchUpdateUserPreferences} from "@/api/user";
 
 export const usePreferences = () => {

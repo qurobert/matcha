@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import HeaderChildrenProfilePage from "@/components/headers/HeaderChildrenProfilePage.vue";
+import HeaderChildrenProfilePage from "@/components/headers/HeaderSettingsPages.vue";
 import {useSettings} from "@/composables/useSettings";
 import InputWithField from "@/components/utility/InputWithField.vue";
-import {useAuthStore} from "@/stores/userStore";
+import {useAuthStore} from "@/stores/authStore";
 import {Button} from "@/components/ui/button";
 import { Separator } from '@/components/ui/separator'
 import MyContainer from "@/components/utility/MyContainer.vue";

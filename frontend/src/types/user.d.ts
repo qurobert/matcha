@@ -1,10 +1,12 @@
-interface User extends Profile {
+interface User extends Profile, TMPProfile {
 	id: string;
 	email: string;
 	username: string;
 	verify_email: boolean;
 	create_profile: boolean;
 	preferences: Preferences;
+	is_online: boolean;
+	last_connection: Date;
 }
 
 interface Profile {
@@ -25,4 +27,8 @@ interface Preferences {
 	fame_rating: number;
 	distance: number;
 	interests: InterestsPreferences;
+}
+
+interface TMPProfile {
+	location: string;
 }
