@@ -33,12 +33,12 @@ const router = createRouter({
     {
       path: '/forgot-password',
       name: 'forgot-password',
-      component: () => import('@/views/auth/forgot-password/ForgotPasswordView.vue'),
+      component: () => import('@/views/auth/forgotPassword/ForgotPasswordView.vue'),
     },
     {
       path: '/reset-password',
       name: 'reset-password',
-      component: () => import('@/views/auth/forgot-password/ResetPassword.vue'),
+      component: () => import('@/views/auth/forgotPassword/ResetPassword.vue'),
     },
     {
       path: '/verify-email',
@@ -73,6 +73,12 @@ const router = createRouter({
       path: '/profile/settings',
       name: 'settings',
       component: () => import('@/views/user/settings/SettingsView.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/chat/',
+      name: 'home-chat',
+      component: () => import('@/views/user/chat/HomeChatView.vue'),
       meta: { requiresAuth: true },
     },
     {
