@@ -14,7 +14,6 @@ export default class AuthController {
         if (!user) throw new Error("Auth not created");
 
         await AuthController.sendEmailLink(email);
-
         return res.json({
             status: 200,
             message: "Auth created successfully",
