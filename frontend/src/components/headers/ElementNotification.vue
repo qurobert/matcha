@@ -18,7 +18,7 @@ defineProps<{
   }">
     <div class="flex">
       <Avatar class="w-6 h-6 mr-2">
-        <AvatarImage :src="url + notification.target_user.pictures?.[0]" alt="user profile" />
+        <AvatarImage :src="notification.target_user.pictures?.[0] ?? ''" alt="user profile" />
         <AvatarFallback>User</AvatarFallback>
       </Avatar>
       <p class="max-w-80 truncate">

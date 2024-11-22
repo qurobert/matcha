@@ -55,14 +55,9 @@ export const usePreferences = () => {
 	const onSubmit = handleSubmit(async (values) => {
 		const {toast} = useToast();
 		try {
-			console.log('Values', values);
 			const modifiedValues = getModifiedFields(initialValues, values);
 			if (_.isEmpty(modifiedValues))
 				return;
-
-			// @ts-ignore
-			console.log("submit Preferences");
-			console.log('Modified Values', modifiedValues);
 
 			await fetchUpdateUserPreferences(modifiedValues as Preferences);
 			hasWritten.value = false;

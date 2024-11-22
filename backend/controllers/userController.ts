@@ -34,7 +34,7 @@ export default class UserController {
 		const authHeader = req.headers['authorization'];
 		const token = authHeader && authHeader.split(' ')[1];
 
-		if (token == null) {
+		if (!token) {
 			return res.json({
 				connected: false,
 			});
@@ -59,11 +59,11 @@ export default class UserController {
 	static async getUserById (req: Request, res: Response) {
 		const {id} = req.params;
 		const user = await UserModel.findById(id);
-		if (!user) throw new ErrorMiddleware(404, "Auth not found");
+		if (!user) throw new ErrorMiddleware(404, "User not found");
 
 		return res.status(200).json({
 			status: 200,
-			message: "Auth found",
+			message: "User found",
 			user: await UserController._responseUser(user),
 		});
 	}

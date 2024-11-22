@@ -2,9 +2,10 @@ interface User extends Profile, Preferences {
 	id: string;
 	email: string;
 	username: string;
+	password?: string;
 	verify_email: boolean;
-	create_profile: boolean;
-	notification: string;
+	create_profile?: boolean;
+	notification: boolean;
 	is_online: boolean;
 	last_connection: Date;
 }

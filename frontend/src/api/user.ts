@@ -38,6 +38,11 @@ export const fetchMe = async () => {
 	return response.data;
 }
 
+export const fetchUserById = async (id: string) => {
+	const response = await api.get('/users/' + id);
+	return response.data;
+}
+
 export const fetchUpdateUser = async (user: { email: string, password: string, username: string }) => {
 	const response = await api.post('/users/update', user);
 	return response.data;

@@ -23,7 +23,6 @@ export const useAuthStore = defineStore('auth', {
 			this.user.verify_email = false;
 		},
 		store_token(access_token: string, refresh_token: string) {
-			console.log('Access token stored');
 			localStorage.setItem('access_token', access_token);
 			localStorage.setItem('refresh_token', refresh_token);
 		},

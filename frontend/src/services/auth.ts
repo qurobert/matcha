@@ -11,7 +11,6 @@ export const signup = async (email: string, username: string, password: string) 
 			authStore.store_token(access_token, refresh_token);
 
 		} catch (error: any) {
-			console.log(error);
 			if (error?.response?.data?.message?.includes("exists"))
 				throw new Error("Auth with this email or username already exists");
 			else

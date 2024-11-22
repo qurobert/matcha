@@ -1,4 +1,4 @@
-import {useUserStore} from "@/stores/userStore";
+import {useUserTargetStore} from "@/stores/userTargetStore";
 import {useToast} from "@/components/ui/toast";
 import {
 	fetchBlockUser,
@@ -8,9 +8,12 @@ import {
 	fetchUnLikeUser,
 	fetchUnReportUser
 } from "@/api/actions";
-import {reactive, watch, type Reactive, type Ref} from "vue";
+import { type Ref, ref } from 'vue'
 import moment from "moment";
 import { useAsyncState } from '@vueuse/core'
+import { fetchUserById } from '@/api/user'
+import { fetchViewedProfile } from '@/api/notifications'
+import type { RouteParamValue } from 'vue-router'
 
 export interface UserAction {
 	id: string,
@@ -35,41 +38,62 @@ function isNotNull<T>(value: T | null | undefined): value is T {
 	return value !== null && value !== undefined;
 }
 
-export const useUserInfo = (): {user: Reactive<UserWithInfo>, isLoading: Ref<Boolean>} => {
-	const userStore = useUserStore();
-	const user : Reactive<UserWithInfo> = reactive(userStore.getUser);
-	const {state, isReady, isLoading} = useAsyncState(fetchInfoTargetUser(user.id), null);
-	user.age = moment().diff(user.date_of_birth, 'years');
+export const useUserInfo = (id: string | RouteParamValue[]): { user: Ref<UserWithInfo | null>; isLoading: Ref<Boolean> } => {
+	const targetStore = useUserTargetStore();
+	const user = ref({} as UserWithInfo);
+	const isLoading = ref(false);
 
-	user.info = [
-		getGenderInfo(user),
-		getLocationInfo(user),
-	] as UserInfo[];
-	user.actions = [] as UserAction[];
-
-	watch(isReady, () => {
-		if (!state || !state.value) return;
-		const infoTargetUser = state.value;
-
-		user.info = [
-			likedInfo(infoTargetUser),
-			viewedProfileInfo(infoTargetUser),
-			...user.info ?? []
-		].filter(isNotNull);
-
-		user.actions = [
-			unmatchInfo(user, infoTargetUser),
-			unLikeInfo(user, infoTargetUser),
-			reportInfo(user, infoTargetUser),
-			blockInfo(user, infoTargetUser),
-			...user.actions ?? []
-		].filter(isNotNull)
-	})
+	if (!targetStore.activeUser) {
+		isLoading.value = true;
+		useAsyncState(fetchUserById(id as string), null, {
+			immediate: true,
+			onSuccess(data) {
+				const userData = data.user;
+				fetchUserInfo(userData, user, isLoading);
+			},
+			onError(e) {
+				isLoading.value = false;
+			},
+		});
+	} else {
+		fetchUserInfo(targetStore.activeUser, user, isLoading);
+	}
 
 	return {
 		user,
-		isLoading
+		isLoading,
 	};
+}
+
+function fetchUserInfo(activeUser: User, user: Ref<UserWithInfo>, isLoading : Ref<Boolean>) {
+	useAsyncState(fetchInfoTargetUser(activeUser.id), null, {
+		immediate: true,
+		onSuccess(data) {
+			const infoTargetUser = data;
+			user.value = {
+				age: moment().diff(activeUser.date_of_birth, 'years'),
+				info : [
+					likedInfo(infoTargetUser),
+					viewedProfileInfo(infoTargetUser),
+					getGenderInfo(activeUser),
+					getLocationInfo(activeUser),
+				].filter(isNotNull) as UserInfo[],
+				actions: [
+					unmatchInfo(user, infoTargetUser) ,
+					unLikeInfo(user, infoTargetUser),
+					reportInfo(user, infoTargetUser),
+					blockInfo(user, infoTargetUser),
+				].filter(isNotNull) as UserAction[],
+				...activeUser,
+			};
+			isLoading.value = false;
+			fetchViewedProfile(user.value.id);
+		},
+		onError(e) {
+			isLoading.value = false;
+		},
+	});
+
 }
 
 function getGenderInfo(user: User) {
@@ -82,7 +106,7 @@ function getGenderInfo(user: User) {
 function getLocationInfo(user: User) {
 	return {
 		icon: "location-dot",
-		text: user.location.split(',').slice(0, 2).join(', ')
+		text: user?.location?.split(',')?.slice(0, 2).join(', ') || 'Location not found',
 	}
 }
 
@@ -114,17 +138,18 @@ function likedInfo(infoTargetUser: any): UserInfo | null {
 	}
 }
 
-function clickEventUnMatchOrUnLike(user: Reactive<UserWithInfo>, actionId: 'unmatch' | 'unlike') {
+function clickEventUnMatchOrUnLike(user: Ref<UserWithInfo | null>, actionId: 'unmatch' | 'unlike') {
 	const {toast} = useToast();
 
-	fetchUnLikeUser(user.id)
-	user.actions = user.actions?.filter(action => action.id !== actionId);
+	if (!user.value) return;
+	fetchUnLikeUser(user.value.id)
+	user.value.actions = user.value.actions?.filter(action => action.id !== actionId);
 	toast({
 		title: actionId
 	})
 }
 
-function unmatchInfo(user: Reactive<UserWithInfo>, infoTargetUser: any): UserAction | null {
+function unmatchInfo(user: Ref<UserWithInfo | null>, infoTargetUser: any): UserAction | null {
 	if (!infoTargetUser.is_match) return null;
 	return {
 		id: "unmatch",
@@ -134,7 +159,7 @@ function unmatchInfo(user: Reactive<UserWithInfo>, infoTargetUser: any): UserAct
 	}
 }
 
-function unLikeInfo(user: Reactive<UserWithInfo>, infoTargetUser: any): UserAction | null {
+function unLikeInfo(user: Ref<UserWithInfo | null>, infoTargetUser: any): UserAction | null {
 	if (!infoTargetUser.you_like || infoTargetUser.is_match) return null;
 
 	return {
@@ -145,7 +170,7 @@ function unLikeInfo(user: Reactive<UserWithInfo>, infoTargetUser: any): UserActi
 	}
 }
 
-function blockInfo(user: Reactive<UserWithInfo>, infoTargetUser: any): UserAction {
+function blockInfo(user: Ref<UserWithInfo | null>, infoTargetUser: any): UserAction {
 	const textUnblock = 'Unblock User'
 	const textBlock = 'Block User'
 
@@ -157,7 +182,7 @@ function blockInfo(user: Reactive<UserWithInfo>, infoTargetUser: any): UserActio
 	}
 }
 
-function reportInfo(user: Reactive<UserWithInfo>, infoTargetUser: any): UserAction {
+function reportInfo(user: Ref<UserWithInfo | null>, infoTargetUser: any): UserAction {
 	const textUnreport = 'Unreport User'
 	const textReport = 'Report User'
 
@@ -169,15 +194,16 @@ function reportInfo(user: Reactive<UserWithInfo>, infoTargetUser: any): UserActi
 	}
 }
 
-function toggleReportOrBlock(textPrimary: string, textSecondary: string, user: UserWithInfo, id: 'report' | 'block', fetchPrimary: (id: string) => Promise<any>, fetchSecondary: (id: string) => Promise<any>) {
+function toggleReportOrBlock(textPrimary: string, textSecondary: string, user: Ref<UserWithInfo | null>, id: 'report' | 'block', fetchPrimary: (id: string) => Promise<any>, fetchSecondary: (id: string) => Promise<any>) {
 	const {toast} = useToast();
-	const index = user.actions?.findIndex(action => action.id === id);
-	if (index === -1 || !index || user.actions?.[index] === undefined) return
-	const is_primary = user.actions[index].title === textPrimary;
+	const index = user?.value?.actions?.findIndex(action => action.id === id);
+	if (index === -1 || !index || user?.value?.actions?.[index] === undefined) return
+	const is_primary = user?.value?.actions[index].title === textPrimary;
 
-	is_primary ? fetchPrimary(user.id) : fetchSecondary(user.id)
-	user.actions[index].title = is_primary ? textSecondary : textPrimary;
+	is_primary ? fetchPrimary(user?.value?.id) : fetchSecondary(user?.value?.id)
+	user.value.actions[index].title = is_primary ? textSecondary : textPrimary;
 	toast({
 		title: is_primary ? textPrimary : textSecondary,
 	})
+
 }

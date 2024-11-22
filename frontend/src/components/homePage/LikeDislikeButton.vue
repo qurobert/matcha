@@ -1,30 +1,42 @@
 <script setup lang="ts">
-
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
-import {useUserStore} from "@/stores/userStore";
-import {useToast} from "@/components/ui/toast";
+import {useUserTargetStore} from "@/stores/userTargetStore";
 import {fetchDislikeUser, fetchLikeUser} from "@/api/actions";
-const userStore = useUserStore();
-const user = userStore.getUser;
-function dislikeUser() {
-  fetchDislikeUser(user.id)
+import {useImageHomeStore} from "@/stores/imageHomeStore";
+import {useToast} from "@/components/ui/toast";
+import { useRoute, useRouter } from 'vue-router'
+const imageHomeStore = useImageHomeStore();
+const targetStore = useUserTargetStore();
+const route = useRoute();
+const router = useRouter();
+
+function goToNext(message: string) {
   const {toast} = useToast();
+
   toast({
-    title: 'Dislike User',
+    title: message,
+    duration: 1500,
   })
+  imageHomeStore.reset()
+  targetStore.goToNextUser()
+  if (route.name !== 'home') {
+    router.push({name: 'home'})
+  }
+}
+function dislikeUser() {
+  fetchDislikeUser(targetStore.activeUser.id)
+  goToNext(`Dislike ${targetStore.activeUser.first_name}`)
 }
 
 function likeUser() {
-  fetchLikeUser(user.id)
-  const {toast} = useToast();
-  toast({
-    title: 'Like User',
-  })
+
+  fetchLikeUser(targetStore.activeUser.id)
+  goToNext(`Like ${targetStore.activeUser.first_name}`)
 }
 </script>
 
 <template>
-  <div class="flex justify-center items-center w-full m-2">
+  <div class="flex justify-center items-center w-full m-2" v-if="!targetStore.isLoading">
     <button class="w-16 h-16 rounded-full shadow-xl flex justify-center items-center mr-12 bg-white" @click="dislikeUser">
       <font-awesome-icon icon="xmark" class="w-8 h-8 text-accent" />
     </button>
@@ -33,7 +45,3 @@ function likeUser() {
     </button>
   </div>
 </template>
-
-<style scoped>
-
-</style>
