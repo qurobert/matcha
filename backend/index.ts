@@ -12,6 +12,7 @@ import UserRouter from "./routes/userRouter.ts";
 import NotificationRouter from "./routes/notificationRouter.ts";
 import AuthRouter from "./routes/authRouter.ts";
 import UserActionRouter from "./routes/actionsRouter.ts";
+import BrowsingRouter from "./routes/browsingRouter.ts";
 import {error404, globalErrorLogger, globalErrorMiddleware} from "./middlewares/errorMiddleware.ts";
 import IndexRouter from "./routes";
 import path from "node:path";
@@ -34,6 +35,7 @@ app.use('/users', UserRouter);
 app.use('/auth', AuthRouter);
 app.use('/actions', UserActionRouter);
 app.use('/notifications', NotificationRouter);
+app.use('/browse', BrowsingRouter);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use(

@@ -12,7 +12,6 @@ export const useSocket = () => {
 	});
 	setInterval(() => {
 		if (socket.connected) {
-			console.log('ping');
 			socket.emit('client-ping');
 		}
 	}, 5000);

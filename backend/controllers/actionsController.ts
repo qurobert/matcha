@@ -133,10 +133,25 @@ export default class ActionsController {
 		const interactions = await ActionsModel.getInteractions(user.id);
 		const notifications = await NotificationModel.getNotifications(target_user_id);
 
-		const likeYou = interactions.findIndex((interaction) => interaction.user_id == target_user_id && interaction.action_type == ActionType.like);
-		const youLike = interactions.findIndex((interaction) => interaction.user_id == user.id && interaction.action_type == ActionType.like);
-		const viewYou = notifications.findIndex((notification) => notification.target_user_id == user.id && notification.notification_type == NotificationType.viewed);
-		const youView = notifications.findIndex((notification) => notification.target_user_id == target_user_id && notification.notification_type == NotificationType.viewed);
+		const likeYou = interactions.findIndex((interaction) =>
+			interaction.user_id == target_user_id
+			&& interaction.target_user_id == user.id
+			&& interaction.action_type == ActionType.like
+		);
+		const youLike = interactions.findIndex((interaction) =>
+			interaction.user_id == user.id
+			&& interaction.target_user_id == target_user_id
+			&& interaction.action_type == ActionType.like
+		);
+		const viewYou = notifications.findIndex((notification) =>
+			notification.user_id == target_user_id
+			&& notification.target_user_id == user.id
+			&& notification.notification_type == NotificationType.viewed
+		);
+		const youView = notifications.findIndex((notification) =>
+			notification.user_id == user.id
+			&& notification.target_user_id == target_user_id
+			&& notification.notification_type == NotificationType.viewed);
 		res.json({
 			status: 200,
 			message: "Check info target user",

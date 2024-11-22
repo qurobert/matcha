@@ -22,7 +22,7 @@ async function isOpen(open: boolean) {
 }
 
 const socket = useSocket();
-socket.on(`notification_${authStore.user.id}`, (...args: any[]) => {
+socket?.on(`notification_${authStore.user.id}`, (...args: any[]) => {
   hasUnreadNotifications.value = true
 })
 

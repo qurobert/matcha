@@ -14,6 +14,15 @@ export default class UserModel {
             client.release()
         }
     }
+    static async getRandomUsers(limit: number, user_id: string) {
+        const client = await pool.connect()
+        try {
+            const {rows} = await client.query('SELECT * FROM Users WHERE id != $1 ORDER BY RANDOM() LIMIT $2', [user_id, limit])
+            return rows
+        } finally {
+            client.release()
+        }
+    }
 
     static async findOneByUsername(username: string) {
         const client = await pool.connect()
@@ -29,6 +38,7 @@ export default class UserModel {
         const client = await pool.connect()
         try {
             const {rows} = await client.query('SELECT * FROM Users WHERE id = $1', [id])
+            console.log(rows);
             return rows[0]
         } finally {
             client.release()
@@ -116,16 +126,6 @@ export default class UserModel {
         }
     }
 
-    static async updateNotification(userId: string, notification: string) {
-        const client = await pool.connect()
-        try {
-            if (notification === undefined) return
-            await client.query('UPDATE Users SET notification = $1 WHERE id = $2', [notification, userId])
-        } finally {
-            client.release()
-        }
-    }
-
     static async updatePictures(userId: string, pictures: string[] | null) {
         const client = await pool.connect()
         try {
@@ -176,6 +176,16 @@ export default class UserModel {
             {
                 await client.query('UPDATE Users SET is_online = $1, last_connection = NOW() WHERE id = $2', [online, userId])
             }
+        } finally {
+            client.release()
+        }
+    }
+
+    static async createFakeUser(user: User) {
+        const client = await pool.connect()
+        try {
+            const query = `INSERT INTO Users(${Object.keys(user).join(', ')}) VALUES(${Object.keys(user).map((_, i) => `$${i + 1}`).join(', ')})`
+            await client.query(query, Object.values(user))
         } finally {
             client.release()
         }

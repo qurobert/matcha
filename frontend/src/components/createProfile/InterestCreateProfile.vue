@@ -20,7 +20,7 @@ const {onSubmit} = useInterestCreateProfile(interestCreateProfileSchema);
       <FormItem class="flex flex-col pb-4">
         <FormLabel>Interests *</FormLabel>
         <FormControl>
-          <FormFieldInterests/>
+          <FormFieldInterests name="interests"/>
         </FormControl>
         <FormMessage />
       </FormItem>

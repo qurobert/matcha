@@ -59,11 +59,11 @@ export default class UserController {
 	static async getUserById (req: Request, res: Response) {
 		const {id} = req.params;
 		const user = await UserModel.findById(id);
-		if (!user) throw new ErrorMiddleware(404, "Auth not found");
+		if (!user) throw new ErrorMiddleware(404, "User not found");
 
 		return res.status(200).json({
 			status: 200,
-			message: "Auth found",
+			message: "User found",
 			user: await UserController._responseUser(user),
 		});
 	}
