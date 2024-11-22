@@ -11,7 +11,9 @@ import { onMounted } from "vue";
 
 const router = useRouter();
 const targetStore = useUserTargetStore();
-
+onMounted(() => {
+  targetStore.fetchNewUsers();
+})
 function redirectToHomeProfile() {
   if (!targetStore.activeUser.id) return;
   router.push({name: "public-profile", params: {id: targetStore.activeUser.id}});

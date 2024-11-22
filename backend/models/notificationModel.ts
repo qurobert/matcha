@@ -8,12 +8,15 @@ export default class NotificationModel {
 		const queryText = `SELECT * FROM notifications WHERE user_id = $1`
 		return await NotificationModel.executeQuery(queryText, [user_id])
 	}
+	static async getTargetNotifications(user_id: string) {
+		const queryText = `SELECT * FROM notifications WHERE target_user_id = $1`
+		return await NotificationModel.executeQuery(queryText, [user_id])
+	}
 
 	static async createNotification(user_id: string, target_user_id: string, notification_type: NotificationType) {
 		const queryText = `INSERT INTO Notifications (user_id, target_user_id, notification_type)
             VALUES ($1, $2, $3) RETURNING *;`
 		const res =  await NotificationModel.executeQuery(queryText, [user_id, target_user_id, notification_type])
-		console.log("EMITTING NOTIFICATION", `notification_${user_id}`, {user_id, notification_type})
 		io.emit(`notification_${user_id}`, {user_id, notification_type})
 		return res;
 	}

@@ -35,17 +35,18 @@ export const useUserTargetStore = defineStore('targetUser', () => {
             incrementActiveUserIndex();
         }
     };
-
-    onMounted(() => {
-        if (users?.value?.length > 0) return ;
-        fetchNewUsers();
-    })
+    const reset = () => {
+        users.value = [];
+        isLoading.value = false
+        activeUserIndex.value = 0;
+    };
     return {
         users,
         isLoading,
         activeUser,
         fetchNewUsers,
         activeUserIndex,
-        goToNextUser
+        goToNextUser,
+        reset
     }
 });

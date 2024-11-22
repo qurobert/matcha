@@ -26,7 +26,6 @@ export const useSignup = () => {
 		signup(email, username, password).then(() => {
 			router.push('/verify-email');
 		}).catch(err => {
-			console.log("ERREUR : ", err);
 			errorOnSubmit.value = err;
 		});
 	});

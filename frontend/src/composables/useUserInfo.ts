@@ -120,7 +120,6 @@ function getJeSuis(user: User) {
 }
 
 function viewedProfileInfo(infoTargetUser: any): UserInfo | null {
-	console.log(infoTargetUser)
 	if (!infoTargetUser.view_you) return null;
 
 	return {

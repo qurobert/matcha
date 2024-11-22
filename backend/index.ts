@@ -56,21 +56,25 @@ export const io = socketIo(server, {
 });
 
 io.on("connection", (socket: any) => {
-	const user_id = socket.handshake.query.user_id;
+	const user_id = socket?.handshake?.query?.user_id;
+	if (user_id === null || user_id === undefined) return;
 	if (!user_id) return;
 
-	console.log("New client connected", user_id);
-	activeUsers.set(user_id, Date.now());
-	UserModel.setStatusConnection(user_id, true);
+	if (user_id)
+		activeUsers.set(user_id, Date.now());
+	if (user_id)
+		UserModel.setStatusConnection(user_id, true);
 
 	socket.on('client-ping', () => {
-		activeUsers.set(user_id, Date.now()); // Met à jour le dernier ping reçu
+		if (user_id)
+			activeUsers.set(user_id, Date.now()); // Met à jour le dernier ping reçu
 	});
 
 	socket.on("disconnect", () => {
-		UserModel.setStatusConnection(user_id, false);
-		activeUsers.delete(user_id);
-		console.log("New client disconnected", user_id);
+		if (user_id)
+			UserModel.setStatusConnection(user_id, false);
+		if (user_id)
+			activeUsers.delete(user_id);
 	});
 })
 
@@ -80,8 +84,10 @@ setInterval(() => {
 	for (const [userId, lastPing] of activeUsers.entries()) {
 		if (now - lastPing > 30000) {
 			console.log(`User ${userId} is offline (ping timeout)`);
-			activeUsers.delete(userId);
-			UserModel.setStatusConnection(userId, false);
+			if (userId)
+				activeUsers.delete(userId);
+			if (userId)
+				UserModel.setStatusConnection(userId, false);
 		}
 	}
 }, 10000); // Vérifie toutes les 10 secondes

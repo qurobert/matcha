@@ -52,11 +52,17 @@ export default class ActionsModel {
 		})
 	}
 
-	static async getTargetInteraction(user_id: string, target_user_id: string) {
+	static async getTargetInteractionsByUserAndTargetId(user_id: string, target_user_id: string) {
 		const queryText = `SELECT * FROM useractions
             WHERE (user_id = $1 AND target_user_id = $2)
             OR (user_id = $2 AND target_user_id = $1);`
 		return await ActionsModel.executeQuery(queryText, [user_id, target_user_id])
+	}
+
+	static async getAllTargetInteractionsByTargetUserId(target_user_id: string) {
+		const queryText = `SELECT * FROM useractions
+						WHERE target_user_id = $1;`
+		return await ActionsModel.executeQuery(queryText, [target_user_id])
 	}
 
 	static async executeQuery(queryText: string, values?: string[]) {

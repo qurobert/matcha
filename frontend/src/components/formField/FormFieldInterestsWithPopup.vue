@@ -12,19 +12,12 @@ import {
 import {FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
 import FormFieldInterests from "@/components/formField/FormFieldInterests.vue";
 import {Button} from "@/components/ui/button";
-import {watch} from "vue";
 
 const props = defineProps<{
   name: string;
 }>();
 
 const {fields} = useFieldArray(props.name);
-console.log(fields.value);
-console.log(props.name);
-
-watch(() => fields.value, () => {
-  console.log(fields.value);
-}, {deep: true});
 
 </script>
 

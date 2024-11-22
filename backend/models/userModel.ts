@@ -38,7 +38,6 @@ export default class UserModel {
         const client = await pool.connect()
         try {
             const {rows} = await client.query('SELECT * FROM Users WHERE id = $1', [id])
-            console.log(rows);
             return rows[0]
         } finally {
             client.release()
@@ -51,8 +50,6 @@ export default class UserModel {
             const passwordEncrypted = bcrypt.hashSync(password, bcrypt.genSaltSync(10))
             const verify_email = false
             const code_password_reset = null
-            console.log(email, username, passwordEncrypted, verify_email, code_password_reset);
-            console.log("create");
             const {rows} = await client.query('INSERT INTO Users(email, username, password, verify_email, code_password_reset) VALUES($1, $2, $3, $4, $5) RETURNING *', [email, username, passwordEncrypted, verify_email, code_password_reset])
             return rows[0]
         } finally {

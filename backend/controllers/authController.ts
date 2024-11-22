@@ -33,6 +33,7 @@ export default class AuthController {
         const {username, password} = req.body;
         const user = await UserModel.login(username, password);
 
+        if (!user) throw new ErrorMiddleware(400, "Auth not found");
         return res.json({
             status: 200,
             message: "Auth logged in successfully",
@@ -68,7 +69,6 @@ export default class AuthController {
         const refresh_token = req.body.refresh_token;
 
         JWTRefreshToken.verify(refresh_token, async (err, refresh_token_info) => {
-            console.log(err);
             if (err) return res.sendStatus(403);
 
             const user = await UserModel.findById(refresh_token_info.id);

@@ -26,7 +26,6 @@ export const useForgotPassword = () => {
 			authStore.tmpEmail = email;
 			router.push('/reset-password')
 		}).catch(err => {
-			console.log(err);
 		});
 	});
 

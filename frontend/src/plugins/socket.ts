@@ -4,7 +4,7 @@ import {useAuthStore} from "@/stores/authStore";
 
 export const useSocket = () => {
 	const authStore = useAuthStore();
-	if (!authStore.user) return;
+	if (!authStore.user.id || authStore.user.id === undefined || authStore.user.id === null) return;
 	const socket = io(URL, {
 		query: {
 			user_id: authStore.user.id

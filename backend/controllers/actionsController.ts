@@ -3,6 +3,7 @@ import ActionsModel from "../models/actionsModel.ts";
 import {ActionType} from "../types/enumActionType.ts";
 import {NotificationType} from "../types/enumNotificationType.ts";
 import NotificationModel from "../models/notificationModel.ts";
+import UserModel from "../models/userModel.ts";
 
 export default class ActionsController {
 	static async likeUser(req: Request, res: Response) {
@@ -65,15 +66,34 @@ export default class ActionsController {
 		})
 	}
 
-	static async getInteractions(req: Request, res: Response) {
+	static async getInteractionsMe(req: Request, res: Response) {
 		const user = req.user;
 		if (!user) throw new Error("Not connected")
-		const interactions = await ActionsModel.getInteractions(user.id)
+		const interactions = (await ActionsModel.getAllTargetInteractionsByTargetUserId(user.id)).map((interaction) => ({
+				...interaction,
+				user_id: interaction.target_user_id,
+				target_user_id: interaction.user_id,
+			}));
+		const viewNotifications = (await NotificationModel.getNotifications(user.id))
+		.filter((notification) => notification.notification_type === NotificationType.viewed)
+			.map((notification) => ({
+				...notification,
+				action_type: notification.notification_type,
+			}))
 		const matches = await ActionsModel.getMatches(user.id);
+		const finalInteractions = [
+			...viewNotifications,
+			...interactions,
+			...matches
+		];
+		for (let i = 0; i < finalInteractions.length; i++) {
+			const user	= await UserModel.findById(finalInteractions[i].target_user_id);
+			finalInteractions[i].user = user;
+		}
 		res.json({
 			status: 200,
 			message: "Get interaction successful",
-			interactions: interactions.concat(matches)
+			interactions: finalInteractions
 		})
 	}
 
@@ -130,6 +150,7 @@ export default class ActionsController {
 		const {target_user_id} = req.params;
 		if (!user) throw new Error("Not connected")
 		if (user.id == target_user_id) throw new Error("Can't have same user_id and target_user_id")
+		console.log("user.id", user.id)
 		const interactions = await ActionsModel.getInteractions(user.id);
 		const notifications = await NotificationModel.getNotifications(target_user_id);
 
@@ -144,13 +165,13 @@ export default class ActionsController {
 			&& interaction.action_type == ActionType.like
 		);
 		const viewYou = notifications.findIndex((notification) =>
-			notification.user_id == target_user_id
-			&& notification.target_user_id == user.id
+			notification.user_id == user.id
+			&& notification.target_user_id == target_user_id
 			&& notification.notification_type == NotificationType.viewed
 		);
 		const youView = notifications.findIndex((notification) =>
-			notification.user_id == user.id
-			&& notification.target_user_id == target_user_id
+			notification.user_id == target_user_id
+			&& notification.target_user_id == user.id
 			&& notification.notification_type == NotificationType.viewed);
 		res.json({
 			status: 200,

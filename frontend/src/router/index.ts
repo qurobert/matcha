@@ -5,6 +5,7 @@ import SignupView from '@/views/auth/loginSignup/SignupView.vue'
 import {useAuthStore} from "@/stores/authStore";
 import {fetchStatus} from "@/api/auth";
 import NotFoundView from "@/views/NotFoundView.vue";
+import {useUserTargetStore} from "@/stores/userTargetStore";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -120,7 +121,14 @@ const router = createRouter({
   ]
 })
 
-
+router.beforeResolve(async (to, from, next) => {
+  if (from.name === "home" && to.name !== "public-profile") {
+    console.log("RESET STORE");
+    const useTargetStore = useUserTargetStore();
+    useTargetStore.reset();
+  }
+  next();
+})
 // Before each
 router.beforeEach(async (to, from, next) => {
 
