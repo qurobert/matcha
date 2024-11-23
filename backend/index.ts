@@ -17,6 +17,7 @@ import {error404, globalErrorLogger, globalErrorMiddleware} from "./middlewares/
 import IndexRouter from "./routes";
 import path from "node:path";
 import UserModel from "./models/userModel.ts";
+import ChatRouter from "./routes/chatRouter.ts";
 
 // Configuring the app
 app.use(cors({
@@ -36,6 +37,7 @@ app.use('/auth', AuthRouter);
 app.use('/actions', UserActionRouter);
 app.use('/notifications', NotificationRouter);
 app.use('/browse', BrowsingRouter);
+app.use('/chat', ChatRouter);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use(

@@ -13,7 +13,8 @@ import moment from "moment";
 import { useAsyncState } from '@vueuse/core'
 import { fetchUserById } from '@/api/user'
 import { fetchViewedProfile } from '@/api/notifications'
-import type { RouteParamValue } from 'vue-router'
+import {type RouteParamValue, useRouter} from 'vue-router'
+import {useAuthStore} from "@/stores/authStore";
 
 export interface UserAction {
 	id: string,
@@ -42,6 +43,12 @@ export const useUserInfo = (id: string | RouteParamValue[]): { user: Ref<UserWit
 	const targetStore = useUserTargetStore();
 	const user = ref({} as UserWithInfo);
 	const isLoading = ref(false);
+	const router = useRouter();
+	const authStore = useAuthStore();
+
+	if (id == authStore.user.id) {
+		router.push({ name: 'private-profile'});
+	}
 
 	if (!targetStore.activeUser) {
 		isLoading.value = true;
