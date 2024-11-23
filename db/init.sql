@@ -1,4 +1,4 @@
-CREATE TABLE Users (
+CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     email VARCHAR(255) NOT NULL UNIQUE,
     username VARCHAR(255) NOT NULL UNIQUE,
@@ -26,7 +26,7 @@ CREATE TABLE Users (
     last_connection TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE UserActions (
+CREATE TABLE user_actions (
     id SERIAL PRIMARY KEY,
     user_id INT NOT NULL,
     target_user_id INT NOT NULL,
@@ -37,7 +37,7 @@ CREATE TABLE UserActions (
     FOREIGN KEY (target_user_id) REFERENCES Users(id) ON DELETE CASCADE
 );
 
-CREATE TABLE NOTIFICATIONS (
+CREATE TABLE notifications (
     id SERIAL PRIMARY KEY,
     user_id INT REFERENCES Users(id) ON DELETE CASCADE NOT NULL,
     target_user_id INT REFERENCES Users(id) ON DELETE CASCADE NOT NULL,
@@ -45,3 +45,14 @@ CREATE TABLE NOTIFICATIONS (
     is_read BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 )
+
+CREATE TABLE user_messages (
+    id SERIAL PRIMARY KEY,
+    sender_id INTEGER NOT NULL,
+    receiver_id INTEGER,
+    message_content TEXT NOT NULL,
+    sent_at TIMESTAMP DEFAULT NOW(),
+    is_read BOOLEAN DEFAULT FALSE,
+    FOREIGN KEY (sender_id) REFERENCES users(id),
+    FOREIGN KEY (receiver_id) REFERENCES users(id)
+);

@@ -5,6 +5,9 @@ import {useRoute, useRouter} from "vue-router";
 import Loading from "@/components/icons/Loading.vue";
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import URL from "@/helpers/URL";
+import {sendMessage} from "@/api/chat";
+import {useSocket} from "@/plugins/socket";
+import {useAuthStore} from "@/stores/authStore";
 
 const route = useRoute()
 const router = useRouter()
@@ -12,9 +15,15 @@ const id = route.params.id as string;
 const user = ref({} as User)
 const isLoading = ref(true)
 const message = defineModel();
+const socket = useSocket();
+const authStore = useAuthStore();
+
+socket?.on(`message_${authStore.user.id}`, (data) => {
+  console.log("Message received", data);
+});
 
 onMounted(async() => {
-  user.value = (await fetchUserById('3')).user;
+  user.value = (await fetchUserById(id)).user;
   isLoading.value = false;
 });
 
@@ -26,10 +35,10 @@ function goToProfile() {
   router.push({name: "public-profile", params: {id: user.value.id}});
 }
 
-function sendMessage() {
+function send() {
   console.log("Sending message");
+  sendMessage(id, message.value);
   message.value = "";
-
 }
 
 </script>
@@ -52,8 +61,8 @@ function sendMessage() {
         <p>Yo</p>
       </div>
       <div class=" w-full flex py-2 px-4">
-        <input v-model="message"  type="text" class="w-full p-2" placeholder="Type a message" @keyup.enter="sendMessage"/>
-        <button class="pl-2 text-accent" @click="sendMessage" >Send</button>
+        <input v-model="message"  type="text" class="w-full p-2" placeholder="Type a message" @keyup.enter="send"/>
+        <button class="pl-2 text-accent" @click="send" >Send</button>
       </div>
     </div>
 </template>
