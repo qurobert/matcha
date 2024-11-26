@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import URL from "@/helpers/URL";
-const url = URL + "/uploads/";
-
+import {getSrcImageFromPicture} from "@/helpers/getSrcImageFromPicture";
 defineProps<{
   users: User[];
 }>()
@@ -17,7 +15,7 @@ defineProps<{
       }"
           v-for="user in users" :key="user.first_name" class="w-44 h-60 relative cursor-pointer"
       >
-        <img :src="(user?.pictures?.[0]?.startsWith('https') ? '' : url) + (user.pictures?.[0] ?? '') " alt="profile picture" class="rounded-md w-full h-full object-cover mix-blend-overlay	" />
+        <img :src="getSrcImageFromPicture(user?.pictures?.[0])" alt="profile picture" class="rounded-md w-full h-full object-cover mix-blend-overlay	" />
         <div class="absolute bottom-0 left-0 z-10 w-full h-full bg-gradient-to-b from-[rgba(255,255,255,0)] via-[rgba(125,132,144,0)] to-black	"></div>
         <div class="absolute bottom-0 left-0 w-full p-4 text-white z-20">
           <p class="text-md">

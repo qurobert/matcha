@@ -8,6 +8,8 @@ import URL from "@/helpers/URL";
 import {sendMessage} from "@/api/chat";
 import {useSocket} from "@/plugins/socket";
 import {useAuthStore} from "@/stores/authStore";
+import {useToast} from "@/components/ui/toast";
+import {getSrcImageFromPicture} from "@/helpers/getSrcImageFromPicture";
 
 const route = useRoute()
 const router = useRouter()
@@ -23,8 +25,17 @@ socket?.on(`message_${authStore.user.id}`, (data) => {
 });
 
 onMounted(async() => {
-  user.value = (await fetchUserById(id)).user;
-  isLoading.value = false;
+  fetchUserById(id).then((res) => {
+    user.value = res.user;
+    isLoading.value = false;
+  }).catch((err) => {
+    router.push({name: "home-chat"});
+    const {toast} = useToast();
+    toast({
+      title: "User not found",
+      variant: "destructive",
+    });
+  });
 });
 
 function getBackToChats() {
@@ -50,7 +61,7 @@ function send() {
         <font-awesome-icon icon="chevron-left" class="w-6 h-6 cursor-pointer text-accent" @click="getBackToChats"/>
         <div class="flex items-center cursor-pointer" @click="goToProfile">
           <Avatar>
-            <AvatarImage :src="URL + '/uploads/' + user.pictures[0]" alt="@radix-vue" />
+            <AvatarImage :src="getSrcImageFromPicture(user.pictures?.[0])" alt="@radix-vue" />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
           <p class="ml-2 font-bold">{{user.first_name}}</p>

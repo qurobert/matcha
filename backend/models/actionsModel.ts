@@ -42,7 +42,7 @@ export default class ActionsModel {
 				 AND i2.action_type = 'like';
 		`
 		const matches = await ActionsModel.executeQuery(queryText, [user_id])
-		return matches.map((match: {matched_user_id: number}) => {
+		return matches.map((match: {matched_user_id: string}) => {
 			return {
 				id: generateId(),
 				user_id,

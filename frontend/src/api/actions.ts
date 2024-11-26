@@ -46,6 +46,10 @@ export const fetchInteractions = async () => {
 	return response.data;
 }
 
+export const fetchMatches = async () => {
+	const response = await api.get('/actions/matches');
+	return response.data;
+}
 export const fetchInfoTargetUser = async(target_user_id: string) => {
 	const response = await api.get(`/actions/${target_user_id}`);
 	return response.data;

@@ -59,6 +59,7 @@ export const useUserInfo = (id: string | RouteParamValue[]): { user: Ref<UserWit
 				fetchUserInfo(userData, user, isLoading);
 			},
 			onError(e) {
+				router.push({ name: 'home' });
 				isLoading.value = false;
 			},
 		});

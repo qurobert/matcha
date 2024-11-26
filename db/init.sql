@@ -44,7 +44,7 @@ CREATE TABLE notifications (
     notification_type VARCHAR(100) NOT NULL,
     is_read BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
-)
+);
 
 CREATE TABLE user_messages (
     id SERIAL PRIMARY KEY,
