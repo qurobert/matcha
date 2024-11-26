@@ -17,6 +17,7 @@ const userInfo = reactive(useUserInfo(route.params.id));
 function goBack() {
   router.back();
 }
+
 </script>
 
 <template>
@@ -96,6 +97,6 @@ function goBack() {
       <h2 class="text-lg font-bold mb-2">{{action?.title}}</h2>
       <p class="w-5/6 text-center text-md">{{action?.description}}</p>
     </button>
-    <LikeDislikeButton class="fixed bottom-0 left-0" v-if="!userInfo.isLoading"/>
+    <LikeDislikeButton class="fixed bottom-0 left-0" v-if="!userInfo.isLoading && userInfo.fromHomePage"/>
   </div>
 </template>

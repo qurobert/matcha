@@ -4,7 +4,7 @@ import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
 import {fetchMarkAsReadNotifications, fetchNotifications} from "@/api/notifications";
 import {type Notification} from "@/types/notification";
 import ElementNotification from "@/components/headers/ElementNotification.vue";
-import {ref, computed} from 'vue'
+import {ref, computed, onMounted} from 'vue'
 import {useSocket} from "@/plugins/socket";
 import {useAuthStore} from "@/stores/authStore";
 
@@ -13,6 +13,14 @@ const notifications = ref<Notification[]>([]);
 const unreadNotifications = computed(() => notifications.value.filter((notif) => !notif.is_read));
 const readNotifications = computed(() => notifications.value.filter((notif) => notif.is_read));
 const hasUnreadNotifications = ref(false);
+
+onMounted(async () => {
+  notifications.value = (await fetchNotifications())?.notifications
+  if (notifications.value?.some((notif) => !notif.is_read)) {
+    hasUnreadNotifications.value = true
+  }
+})
+
 async function isOpen(open: boolean) {
   if (open) {
     hasUnreadNotifications.value = false

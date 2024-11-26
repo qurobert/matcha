@@ -13,7 +13,7 @@ import moment from "moment";
 import { useAsyncState } from '@vueuse/core'
 import { fetchUserById } from '@/api/user'
 import { fetchViewedProfile } from '@/api/notifications'
-import {type RouteParamValue, useRouter} from 'vue-router'
+import {type RouteParamValue, useRoute, useRouter} from 'vue-router'
 import {useAuthStore} from "@/stores/authStore";
 
 export interface UserAction {
@@ -39,13 +39,13 @@ function isNotNull<T>(value: T | null | undefined): value is T {
 	return value !== null && value !== undefined;
 }
 
-export const useUserInfo = (id: string | RouteParamValue[]): { user: Ref<UserWithInfo | null>; isLoading: Ref<Boolean> } => {
+export const useUserInfo = (id: string | RouteParamValue[]) => {
 	const targetStore = useUserTargetStore();
 	const user = ref({} as UserWithInfo);
 	const isLoading = ref(false);
 	const router = useRouter();
 	const authStore = useAuthStore();
-
+	const fromHomePage = ref(false);
 	if (id == authStore.user.id) {
 		router.push({ name: 'private-profile'});
 	}
@@ -58,18 +58,20 @@ export const useUserInfo = (id: string | RouteParamValue[]): { user: Ref<UserWit
 				const userData = data.user;
 				fetchUserInfo(userData, user, isLoading);
 			},
-			onError(e) {
+			onError() {
 				router.push({ name: 'home' });
 				isLoading.value = false;
 			},
 		});
 	} else {
+		fromHomePage.value = true;
 		fetchUserInfo(targetStore.activeUser, user, isLoading);
 	}
 
 	return {
 		user,
 		isLoading,
+		fromHomePage
 	};
 }
 

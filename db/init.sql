@@ -48,11 +48,11 @@ CREATE TABLE notifications (
 
 CREATE TABLE user_messages (
     id SERIAL PRIMARY KEY,
-    sender_id INTEGER NOT NULL,
-    receiver_id INTEGER,
-    message_content TEXT NOT NULL,
+    user_id INTEGER NOT NULL,
+    target_user_id INTEGER,
+    message TEXT NOT NULL,
     sent_at TIMESTAMP DEFAULT NOW(),
     is_read BOOLEAN DEFAULT FALSE,
-    FOREIGN KEY (sender_id) REFERENCES users(id),
-    FOREIGN KEY (receiver_id) REFERENCES users(id)
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (target_user_id) REFERENCES users(id)
 );
