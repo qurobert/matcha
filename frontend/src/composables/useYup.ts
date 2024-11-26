@@ -7,15 +7,10 @@ export const useYup = () => {
 	.required("Email is required");
 
 	const usernameSchemaNotRequired = yup.string()
-		.notRequired()
-		.nullable()
-		.test('min-length-or-empty', 'The username should be between 6 and 15 characters', function(value) {
-			return value === null || value === '' || value === undefined || (value.length >= 6 && value.length <= 15)
-		})
+	.notRequired()
+	.nullable()
 
 	const usernameSchema = yup.string()
-	.min(6, "Minimum 6 characters")
-	.max(15, "Maximum 15 characters")
 	.required("Username is required")
 
 	const passwordSchemaNotRequired =  yup.string()
