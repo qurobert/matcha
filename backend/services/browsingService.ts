@@ -1,166 +1,191 @@
-function getUsersFromDatabase(): User[] {
-    // Placeholder implementation with corrected data structure
-    const allProfiles: User[] = [
-        {
-            id: "cd678b13-ad03-4fec-a4ce-5e3c5627a29f",
-            email: "user1@example.com",
-            username: "user1",
-            verify_email: true,
-            create_profile: true,
-            notification: true,
-            gender: "female",
-            interested_in: "female",
-            location_lat: 45.5017,
-            location_lng: -73.5673,
-            interests: ["education", "note", "off", "poor"],
-            date_of_birth: new Date("1990-01-01"),
-            age_preference_min: 24,
-            age_preference_max: 30,
-            fame_rating_preference_min: 0.29,
-            fame_rating_preference_max: 0.82,
-            distance_preference: 25,
-            interests_preference: ["government", "soldier"],
-            is_online: false,
-            last_connection: new Date("2021-01-01")
-        },
-        {
-            id: "bc398f36-f5ab-40ef-b4fe-438c034209a7",
-            email: "user2@example.com",
-            username: "user2",
-            verify_email: true,
-            create_profile: true,
-            notification: true,
-            gender: "male",
-            interested_in: "female",
-            location_lat: 45.6,
-            location_lng: -73.6,
-            interests: ["race", "write"],
-            date_of_birth: new Date("1992-01-01"),
-            age_preference_min: 23,
-            age_preference_max: 35,
-            fame_rating_preference_min: 0.19,
-            fame_rating_preference_max: 0.97,
-            distance_preference: 7,
-            interests_preference: ["then", "imagine", "staff", "age", "become"],
-            is_online: false,
-            last_connection: new Date("2021-01-01")
-        },
-        {
-            id: "ea18e499-7b28-49e2-8087-9bdff3ff1d7d",
-            email: "user3@example.com",
-            username: "user3",
-            verify_email: true,
-            create_profile: true,
-            notification: true,
-            gender: "male",
-            interested_in: "male",
-            location_lat: 45.7,
-            location_lng: -73.7,
-            interests: ["voice", "investment", "chair", "tend"],
-            date_of_birth: new Date("1985-01-01"),
-            age_preference_min: 21,
-            age_preference_max: 41,
-            fame_rating_preference_min: 0.29,
-            fame_rating_preference_max: 0.29,
-            distance_preference: 27,
-            interests_preference: ["professional", "number", "reality"],
-            is_online: false,
-            last_connection: new Date("2021-01-01")
-        },
-        {
-            id: "ebf66117-d65a-471f-9701-9a133b37edcd",
-            email: "user4@example.com",
-            username: "user4",
-            verify_email: true,
-            create_profile: true,
-            notification: true,
-            gender: "non-binary",
-            interested_in: "female",
-            location_lat: 45.8,
-            location_lng: -73.8,
-            interests: ["economic", "quality", "body", "little", "today"],
-            date_of_birth: new Date("1988-01-01"),
-            age_preference_min: 23,
-            age_preference_max: 30,
-            fame_rating_preference_min: 0.27,
-            fame_rating_preference_max: 0.97,
-            distance_preference: 59,
-            interests_preference: ["adult", "would", "almost", "fly"],
-            is_online: false,
-            last_connection: new Date("2021-01-01")
+import UserModel from '../models/userModel';
+import ActionsModel from "../models/actionsModel.ts";
+
+
+class UserMatchingService {
+    async getMatchingUsersForUser(
+        currentUserId: string,
+        filter: boolean = false
+    ): Promise<User[]> {
+        // Fetch current user details
+        const currentUser: User = await UserModel.findById(currentUserId);
+
+        // Fetch blocked and liked users
+        const actionsResult = await ActionsModel.getAllTargetInteractionsByTargetUserId(currentUserId);
+        const blockedUserIds = actionsResult
+            .filter(action => action.action_type === 'block')
+            .map(action => action.target_user_id);
+
+        let matchingUsers = await UserModel.getMatchingUsersForUser(
+            currentUserId, blockedUserIds, currentUser.gender, currentUser.interested_in);
+
+        // Sort and filter users
+        matchingUsers = await this.sortUsers(matchingUsers, currentUser);
+
+        if (filter) {
+            matchingUsers = await this.filterUsers(matchingUsers, currentUser);
         }
-    ];
-    return allProfiles;
-}
 
-function sortUsers(users: User[], currentUser: User): User[] {
-    return users.sort((a, b) => {
-        // Sort by age preference
-        const ageGapA = Math.abs((currentUser.date_of_birth?.getFullYear() || 0) - (a.date_of_birth?.getFullYear() || 0));
-        const ageGapB = Math.abs((currentUser.date_of_birth?.getFullYear() || 0) - (b.date_of_birth?.getFullYear() || 0));
-
-        // Sort by distance
-        const distanceA = Math.sqrt(
-            ((a.location_lat || 0) - (currentUser.location_lat || 0)) ** 2 +
-            ((a.location_lng || 0) - (currentUser.location_lng || 0)) ** 2
-        );
-        const distanceB = Math.sqrt(
-            ((b.location_lat || 0) - (currentUser.location_lat || 0)) ** 2 +
-            ((b.location_lng || 0) - (currentUser.location_lng || 0)) ** 2
-        );
-
-        // Sort by common interests
-        const commonTagsA = (a.interests_preference || []).filter(tag => (currentUser.interests || []).includes(tag)).length;
-        const commonTagsB = (b.interests_preference || []).filter(tag => (currentUser.interests || []).includes(tag)).length;
-
-        // Multi-criteria sorting with weighted approach
-        const scoreA =
-            (ageGapA >= currentUser.age_preference_min && ageGapA <= currentUser.age_preference_max ? 100 : 0) +
-            (distanceA <= currentUser.distance_preference ? 50 : 0) +
-            commonTagsA * 10;
-
-        const scoreB =
-            (ageGapB >= currentUser.age_preference_min && ageGapB <= currentUser.age_preference_max ? 100 : 0) +
-            (distanceB <= currentUser.distance_preference ? 50 : 0) +
-            commonTagsB * 10;
-
-        return scoreB - scoreA;
-    });
-}
-
-function filterUsers(users: User[], currentUser: User): User[] {
-    return users.filter(user => {
-        // Filter by age preference
-        const ageGap = Math.abs((user.date_of_birth?.getFullYear() || 0) - (currentUser.date_of_birth?.getFullYear() || 0));
-        if (ageGap < currentUser.age_preference_min || ageGap > currentUser.age_preference_max) return false;
-
-        // Filter by distance
-        const distance = Math.sqrt(
-            ((user.location_lat || 0) - (currentUser.location_lat || 0)) ** 2 +
-            ((user.location_lng || 0) - (currentUser.location_lng || 0)) ** 2
-        );
-        if (distance > currentUser.distance_preference) return false;
-
-        // Filter by fame rating
-        if ((user.fame_rating_preference_min || 0) < currentUser.fame_rating_preference_min ||
-            (user.fame_rating_preference_max || 0) > currentUser.fame_rating_preference_max) return false;
-
-        // Filter by common interests
-        const commonTags = (user.interests_preference || []).filter(tag => (currentUser.interests || []).includes(tag)).length;
-        if (commonTags === 0) return false;
-
-        return true;
-    });
-}
-
-export function getMatchingUsersForUser(user: User, filter: boolean = false): User[] {
-    const allUsers = getUsersFromDatabase().filter(u => u.id !== user.id);
-
-    const sortedUsers = sortUsers(allUsers, user);
-
-    if (filter) {
-        return filterUsers(sortedUsers, user);
+        return matchingUsers;
     }
 
-    return sortedUsers;
+    private async sortUsers(users: User[], currentUser: User): Promise<User[]> {
+        // Pre-calculate scores in parallel, but avoid multiple async calls
+        const scoredUsers = await Promise.all(
+            users.map(user => this.calculateMatchScore(user, currentUser).then(score => ({ user, score })))
+        );
+
+        // Sort in a single operation
+        return scoredUsers
+            .sort((a, b) => b.score - a.score)
+            .map(({ user }) => user);
+    }
+
+    private async calculateMatchScore(user: User, currentUser: User): Promise<number> {
+        let score = 0;
+
+        // Distance score
+        const distance = this.calculateDistance(
+            currentUser.location_lat || 0,
+            currentUser.location_lng || 0,
+            user.location_lat || 0,
+            user.location_lng || 0
+        );
+        score += Math.max(0, 50 - (distance / currentUser.distance_preference) * 50);
+
+        // Age preference score
+        const age = this.calculateAge(user.date_of_birth);
+        const agePreferenceMatch =
+            age >= currentUser.age_preference_min &&
+            age <= currentUser.age_preference_max;
+        score += agePreferenceMatch ? 20 : 0;
+
+        // Fame rating compatibility
+        const fameRating = await this.calculateFameRating(user);
+        if (fameRating >= currentUser.fame_rating_preference_min &&
+            fameRating <= currentUser.fame_rating_preference_max) {
+            score += 15;
+        }
+
+        // Online status bonus
+        if (user.is_online) {
+            score += 10;
+        }
+
+        // Recent activity bonus
+        const daysSinceActive = user.last_connection ?
+            (new Date().getTime() - user.last_connection.getTime()) / (1000 * 3600 * 24) : 30;
+        score += Math.max(0, 10 - daysSinceActive);
+
+        // Common interests score
+        const commonInterests = (user.interests || []).filter(
+            interest => (currentUser.interests || []).includes(interest)
+        ).length;
+        score += commonInterests * 3;
+
+        // Interests preference score
+        const commonInterestsPreference = (user.interests || []).filter(
+            interest => (currentUser.interests_preference || []).includes(interest)
+        ).length;
+        score += commonInterestsPreference * 5;
+
+        return score;
+    }
+
+    private async filterUsers(users: User[], currentUser: User): Promise<User[]> {
+        return users.filter(async user => {
+            // Age filter
+            const age = this.calculateAge(user.date_of_birth);
+            if (age < currentUser.age_preference_min || age > currentUser.age_preference_max) {
+                return false;
+            }
+
+            // Distance filter
+            const distance = this.calculateDistance(
+                currentUser.location_lat || 0,
+                currentUser.location_lng || 0,
+                user.location_lat || 0,
+                user.location_lng || 0
+            );
+            if (distance > currentUser.distance_preference) {
+                return false;
+            }
+
+            // Fame rating compatibility
+            const fameRating = await this.calculateFameRating(user);
+            if (fameRating < currentUser.fame_rating_preference_min &&
+                fameRating > currentUser.fame_rating_preference_max) {
+                return false
+            }
+
+            // Minimum interests match filter
+            const commonInterests = (user.interests || []).filter(
+                interest => (currentUser.interests || []).includes(interest)
+            ).length;
+            if (commonInterests === 0) {
+                return false;
+            }
+
+        });
+    }
+
+    // Utility methods (same as previous implementation)
+    private calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
+        // Haversine formula implementation
+        const R = 6371; // Earth's radius in kilometers
+        const dLat = this.toRad(lat2 - lat1);
+        const dLon = this.toRad(lon2 - lon1);
+        const a =
+            Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.cos(this.toRad(lat1)) * Math.cos(this.toRad(lat2)) *
+            Math.sin(dLon/2) * Math.sin(dLon/2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        return R * c;
+    }
+
+    private async calculateFameRating(user: User): Promise<number> {
+        const userInteractions = await ActionsModel.getInteractions(user.id);
+        const likes = userInteractions.filter(interaction => interaction.action_type === 'like').length;
+        const dislikes = userInteractions.filter(interaction => interaction.action_type === 'dislike').length;
+        if (likes + dislikes === 0) return 0;
+        return (likes / (dislikes + likes) * 100);
+    }
+
+    private toRad(degrees: number): number {
+        return degrees * (Math.PI/180);
+    }
+
+    private calculateAge(birthDate?: Date): number {
+        if (!birthDate) return 0;
+
+        const today = new Date();
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const monthDifference = today.getMonth() - birthDate.getMonth();
+
+        if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+
+        return age;
+    }
 }
+
+// // Example usage
+// async function exampleUsage() {
+//     const matchingService = new UserMatchingService('');
+//
+//     try {
+//         // Get matching users for a specific user
+//         const currentUserId = 1; // Replace with actual user ID
+//         const matchingUsers = await matchingService.getMatchingUsersForUser(currentUserId, true);
+//         console.log(matchingUsers);
+//
+//         // Block a user
+//         await matchingService.blockUser(1, 2);
+//
+//         // Like a user
+//         await matchingService.likeUser(1, 3);
+//     } catch (error) {
+//         console.error('Error in matching process:', error);
+//     }
+// }
