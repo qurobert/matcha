@@ -1,5 +1,7 @@
 import type {Request, Response} from "express";
 import ChatService from "../services/chatService.ts";
+import NotificationModel from "../models/notificationModel.ts";
+import {NotificationType} from "../types/enumNotificationType.ts";
 
 export default class ChatController {
     static async sendMessage(req: Request, res: Response) {
@@ -8,8 +10,8 @@ export default class ChatController {
         const {message, id} = req.body;
         if (!message || !id) throw new Error("Message or id not found");
         // call service check : if user exists, if user is not himself, if user is not blocked
-        // call service to send message via websokcet
         await ChatService.sendMessage(user.id, id, message);
+        await NotificationModel.createNotification(id, user.id, NotificationType.message);
         // call service to notify user
         res.json({message: "Message sent!"});
     }

@@ -42,9 +42,9 @@ socket?.on(`notification_${authStore.user.id}`, (...args: any[]) => {
       <font-awesome-icon icon="bell" class="mr-4 w-6 h-6" />
       <div class="w-3.5 h-3.5 rounded-full bg-accent absolute -bottom-1 right-3.5 border-2 border-white" v-if="hasUnreadNotifications"/>
     </DropdownMenuTrigger>
-    <DropdownMenuContent class="min-w-96">
-      <Tabs default-value="Unread" class="w-full">
-        <TabsList class="w-full justify-start">
+    <DropdownMenuContent class="min-w-96 overflow-y-scroll max-h-96 relative">
+      <Tabs default-value="Unread" class="w-full mt-10">
+        <TabsList class="w-full justify-start fixed top-0 left-0 bg-white">
           <TabsTrigger value="Unread">
             All
           </TabsTrigger>
