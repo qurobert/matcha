@@ -12,7 +12,8 @@ import { onMounted } from "vue";
 const router = useRouter();
 const targetStore = useUserTargetStore();
 onMounted(() => {
-  targetStore.fetchNewUsers();
+  if (!targetStore.activeUser)
+    targetStore.fetchNewUsers();
 })
 function redirectToHomeProfile() {
   if (!targetStore.activeUser.id) return;
@@ -24,7 +25,12 @@ function redirectToHomeProfile() {
 <template>
   <div class="h-full flex flex-col items-center justify-center px-4">
       <Loading v-if="targetStore.isLoading"/>
-      <HomeProfileImage :images="targetStore.activeUser?.pictures ?? []" class="rounded-md h-[90%]" v-else>
+      <p v-if="!targetStore.isLoading && !targetStore.activeUser" class="text-center">
+        No users found in your area. <br />
+        Please try again later.
+
+      </p>
+      <HomeProfileImage :images="targetStore.activeUser?.pictures ?? []" class="rounded-md h-[90%]" v-if="!targetStore.isLoading && targetStore.activeUser">
         <div class="absolute bottom-0 left-0 w-full p-4 text-white z-10">
           <div class="justify-between flex items-center mb-2">
             <h1 class="text-3xl font-bold">{{targetStore.activeUser?.first_name}} {{targetStore.activeUser?.last_name}} {{moment().diff(targetStore.activeUser?.date_of_birth, 'years')}}</h1>
@@ -41,7 +47,7 @@ function redirectToHomeProfile() {
           </div>
         </div>
       </HomeProfileImage>
-      <LikeDislikeButton class="h-[10%]" />
+      <LikeDislikeButton class="h-[10%]" v-if="!targetStore.isLoading && targetStore.activeUser"/>
   </div>
 </template>
 

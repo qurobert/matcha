@@ -18,7 +18,10 @@ const userMatches = computed(() => (userActions.interactions.value.filter(intera
       Activités
     </h2>
     <Loading v-if="userActions.isLoading?.value" />
-    <Tabs default-value="likes" class="w-full" v-else>
+    <p v-if="!userActions.isLoading?.value && !userActions.interactions.value.length" class="ml-4">
+      You have no activities yet.
+    </p>
+    <Tabs default-value="likes" class="w-full" v-if="!userActions.isLoading?.value && userActions.interactions.value.length">
       <TabsList class="w-full justify-start">
         <TabsTrigger value="likes">
           {{usersLikes.length}} Like{{usersLikes.length > 1 ? 's' : ''}}
@@ -27,7 +30,7 @@ const userMatches = computed(() => (userActions.interactions.value.filter(intera
           {{usersViews.length}} View{{usersViews.length > 1 ? 's' : ''}}
         </TabsTrigger>
         <TabsTrigger value="matches">
-          {{userMatches.length}} Matche{{userMatches.length > 1 ? 's' : ''}}
+          {{userMatches.length}} Match{{userMatches.length > 1 ? 's' : ''}}
         </TabsTrigger>
       </TabsList>
       <TabsContent value="likes">
