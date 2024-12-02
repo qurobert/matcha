@@ -15,18 +15,11 @@ export const useHomeChat = () => {
 		async onSuccess(data) {
 			users.value = await Promise.all(data.matches?.map(async (match: any) => {
 				const user = match.user;
-				const message = await fetchMessages(user?.id);
+				const message = await fetchMessages(user?.id, true);
 				user.message = message?.messages?.message;
 				return user;
 			}));
 			isLoading.value = false;
-			// 			data.matches?.map((match: any) => {
-			// 				const user = match.user;
-			// 				console.log(user.id);
-			// 				// const message = await fetchMessages(user?.id);
-			// 				// user.message = message.messages;
-			// 				users.value.push(user);
-			// 			}).then(() => isLoading.value = false);
 		},
 		onError(e) {
 			console.log(e);

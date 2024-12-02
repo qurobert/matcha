@@ -18,7 +18,7 @@ export default class ChatController {
     static async getMessages(req: Request, res: Response) {
         const user = req.user;
         const id = req.params.id;
-        const lastMessage = req.query.lastMessage;
+        const lastMessage = req.query.lastMessage === "true";
 
         if (!user) throw new Error("User not found");
         const messages = await ChatService.getMessages(user.id, id);

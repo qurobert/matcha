@@ -4,7 +4,6 @@ import AvatarWithStatus from "@/components/ui/avatar/AvatarWithStatus.vue";
 import moment from "moment";
 import {useHomeChat} from "@/composables/useHomeChat";
 import Loading from "@/components/icons/Loading.vue";
-import {getSrcImageFromPicture} from "@/helpers/getSrcImageFromPicture";
 const homeChat = useHomeChat();
 </script>
 
@@ -47,11 +46,8 @@ const homeChat = useHomeChat();
                 moment().diff(user.date_of_birth, 'years', false)
               }}
             </p>
-            <p class="truncate text-sm text-gray" v-if="user.message">
-              {{user.message}}
-            </p>
-            <p v-else class="text-sm text-gray">
-              Click to start a conversation
+            <p class="truncate text-sm text-gray">
+              {{user.message ?? 'Click to start a conversation'}}
             </p>
           </div>
         </RouterLink>
