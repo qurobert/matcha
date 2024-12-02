@@ -47,8 +47,11 @@ const homeChat = useHomeChat();
                 moment().diff(user.date_of_birth, 'years', false)
               }}
             </p>
-            <p class="truncate">
-              Message blabla
+            <p class="truncate text-sm text-gray" v-if="user.message">
+              {{user.message}}
+            </p>
+            <p v-else class="text-sm text-gray">
+              Click to start a conversation
             </p>
           </div>
         </RouterLink>

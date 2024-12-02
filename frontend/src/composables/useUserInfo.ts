@@ -13,7 +13,7 @@ import moment from "moment";
 import { useAsyncState } from '@vueuse/core'
 import { fetchUserById } from '@/api/user'
 import { fetchViewedProfile } from '@/api/notifications'
-import {type RouteParamValue, useRoute, useRouter} from 'vue-router'
+import {type RouteParamValue, useRouter} from 'vue-router'
 import {useAuthStore} from "@/stores/authStore";
 
 export interface UserAction {
@@ -215,5 +215,4 @@ function toggleReportOrBlock(textPrimary: string, textSecondary: string, user: R
 	toast({
 		title: is_primary ? textPrimary : textSecondary,
 	})
-
 }

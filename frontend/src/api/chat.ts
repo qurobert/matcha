@@ -5,7 +5,7 @@ export const sendMessage = async (id: string, message: string) => {
     return response.data;
 }
 
-export const fetchMessages = async (id: string) => {
-    const response = await api.get(`/chat/get-message/${id}`);
+export const fetchMessages = async (id: string, lastMessage: boolean = false) => {
+    const response = await api.get(`/chat/get-message/${id}?lastMessage=${lastMessage}`);
     return response.data;
 }

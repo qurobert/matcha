@@ -8,11 +8,11 @@ import LikeDislikeButton from "@/components/homePage/LikeDislikeButton.vue";
 import Loading from "@/components/icons/Loading.vue";
 import {useUserTargetStore} from "@/stores/userTargetStore";
 import { onMounted } from "vue";
-
 const router = useRouter();
 const targetStore = useUserTargetStore();
 onMounted(() => {
-  targetStore.fetchNewUsers();
+  if (!targetStore.activeUser)
+    targetStore.fetchNewUsers();
 })
 function redirectToHomeProfile() {
   if (!targetStore.activeUser.id) return;
