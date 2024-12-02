@@ -2,7 +2,7 @@
 import type { HTMLAttributes } from 'vue'
 import { useVModel } from '@vueuse/core'
 import { cn } from '@/lib/utils'
-import { type InputVariants, inputVariants } from '.'
+import { inputVariants } from '.'
 
 const props = defineProps<{
   defaultValue?: string | number
@@ -21,5 +21,5 @@ const modelValue = useVModel(props, 'modelValue', emits, {
 </script>
 
 <template>
-  <input v-model="modelValue" :class="cn(inputVariants(), props.class)">
+  <input v-model="modelValue" :class="cn(inputVariants(), props.class)" autocomplete="">
 </template>

@@ -40,12 +40,6 @@ onMounted(async() => {
 
   } catch {
     router.push({name: "home-chat"});
-    const {toast} = useToast();
-    toast({
-      title: "User not found",
-      variant: "destructive",
-      duration: 5000,
-    });
   }
 });
 

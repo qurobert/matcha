@@ -12,8 +12,8 @@ const userStore = useAuthStore();
 </script>
 
 <template>
-  <HeaderChildrenProfilePage text="Settings" :is-valid="isValid" :on-submit="onSubmit" :has-written="hasWritten"/>
   <MyContainer>
+    <HeaderChildrenProfilePage text="Settings" :is-valid="isValid" :on-submit="onSubmit" :has-written="hasWritten"/>
     <form @submit.prevent="onSubmit">
       <InputWithField name="username" label="Username" :placeholder="userStore.username" type="text" />
       <Separator class="mt-6 mb-4" label="And / Or" />

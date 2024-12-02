@@ -36,7 +36,6 @@ async function reverseGeoCode(lat: number, lng: number) {
 
 // OnMounted
 onMounted(async () => {
-
   if (!value.value?.lat || !value.value?.lng) {
     isLoading.value = false;
     return ;
@@ -49,11 +48,16 @@ onMounted(async () => {
 // Reactive
 async function onMapClicked(e: any) {
   formattedLocation.value = await reverseGeoCode(e.latlng.lat, e.latlng.lng);
-  setValue({
-    lat: e.latlng.lat,
-    lng: e.latlng.lng
-  });
-  markerPosition.value = e.latlng;
+  if (!formattedLocation.value) {
+    formattedLocation.value = 'Location selected is not valid';
+    setValue(null);
+  } else {
+    setValue({
+      lat: e.latlng.lat,
+      lng: e.latlng.lng
+    });
+  }
+    markerPosition.value = e.latlng;
 }
 
 function resetLocation() {
@@ -119,7 +123,7 @@ function resetLocation() {
               Reset location
             </Button>
             <DialogClose as-child>
-              <Button class="px-12">
+              <Button class="px-12" :disabled="!value?.lat && !value?.lng">
                 Save location
               </Button>
             </DialogClose>

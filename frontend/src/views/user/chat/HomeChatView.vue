@@ -22,7 +22,7 @@ const homeChat = useHomeChat();
              }"
                     :to="'/chat/' + user?.id"
         >
-          <AvatarWithStatus :picture="user?.pictures?.[0]" />
+          <AvatarWithStatus :picture="user?.pictures?.[0]" :online="user?.is_online" />
           <p class="text-lg">{{user.username}}</p>
         </RouterLink>
       </div>
@@ -37,7 +37,7 @@ const homeChat = useHomeChat();
              }"
                     :to="'/chat/' + user.id"
         >
-          <AvatarWithStatus :picture="user.pictures?.[0]" size="md"/>
+          <AvatarWithStatus :picture="user?.pictures?.[0]" size="md" :online="user?.is_online"/>
           <div class="truncate px-4 group-hover:opacity-65">
             <p>
               {{

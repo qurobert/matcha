@@ -47,7 +47,7 @@ const {fields} = useFieldArray(props.name);
               Interests
             </DialogTitle>
             <DialogDescription>
-              Select your new interests
+              Select some interests
             </DialogDescription>
           </DialogHeader>
           <FormLabel>Interests</FormLabel>

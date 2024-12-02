@@ -56,7 +56,7 @@ export const useYup = () => {
 	})
 	.required("Pictures are required");
 
-	const interestsSchemaNotRequired = yup.array().of(yup.string());
+	const interestsSchemaNotRequired = yup.array().of(yup.string()).notRequired().nullable();
 	const interestsSchema = yup.array().of(yup.string()
 	.required("You need to choose one of this field"))
 	.min(1, "You need to choose one of this field")
