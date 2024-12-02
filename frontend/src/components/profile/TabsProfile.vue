@@ -18,7 +18,10 @@ const userMatches = computed(() => (userActions.interactions.value.filter(intera
       Activités
     </h2>
     <Loading v-if="userActions.isLoading?.value" />
-    <Tabs default-value="likes" class="w-full" v-else>
+    <p v-if="!userActions.isLoading?.value && !userActions.interactions.value.length" class="ml-4">
+      You have no activities yet.
+    </p>
+    <Tabs default-value="likes" class="w-full" v-if="!userActions.isLoading?.value && userActions.interactions.value.length">
       <TabsList class="w-full justify-start">
         <TabsTrigger value="likes">
           {{usersLikes.length}} like{{usersLikes.length > 1 ? 's' : ''}}

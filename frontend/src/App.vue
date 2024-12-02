@@ -14,7 +14,7 @@ const authStore = useAuthStore();
   <ToastProvider>
     <div class="h-screen flex flex-col"
     :class="{
-      'bg-home bg-bottom mix-blend-overlay': route.name === 'home' && !authStore.is_connected
+      'bg-home bg-bottom mix-blend-overlay bg-cover': route.name === 'home' && !authStore.is_connected
     }"
     >
       <!-- Overlay uniquement si on est sur la page home et non connecté -->

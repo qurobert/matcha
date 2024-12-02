@@ -7,7 +7,10 @@ defineProps<{
 
 <template>
   <section class="w-full flex justify-center">
-    <section class="flex flex-wrap justify-center gap-4 mt-2 w-full">
+    <p v-if="!users">
+      No user yet.
+    </p>
+    <div class="flex flex-wrap justify-center gap-4 mt-2 w-full">
       <RouterLink
           :to="{
           name: 'public-profile',
@@ -26,7 +29,7 @@ defineProps<{
           </p>
         </div>
       </RouterLink>
-    </section>
+    </div>
   </section>
 
 </template>

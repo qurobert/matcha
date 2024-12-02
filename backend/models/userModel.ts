@@ -24,6 +24,40 @@ export default class UserModel {
         }
     }
 
+    static async getAllUsers() {
+        const client = await pool.connect()
+        try {
+            const {rows} = await client.query('SELECT * FROM Users')
+            return rows
+        } finally {
+            client.release()
+        }
+    }
+
+    static async getMatchingUsersForUser(userId: string, blockedUserIds: string[], userGender?: string, userInterestedIn?: string) {
+        const client = await pool.connect()
+        try {
+            const {rows} = await client.query(`
+            SELECT * FROM Users
+            WHERE
+                first_name IS NOT NULL AND
+                id != $1 AND
+                id NOT IN (SELECT unnest($2::int[])) AND
+                (
+                    interested_in = 'everyone' OR
+                    interested_in = $3
+                ) AND
+                (
+                    $4 = 'everyone' OR
+                    gender = $4
+                )
+            `, [userId, blockedUserIds, userGender, userInterestedIn]);
+            return rows
+        } finally {
+            client.release()
+        }
+    }
+
     static async findOneByUsername(username: string) {
         const client = await pool.connect()
         try {
