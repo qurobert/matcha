@@ -24,13 +24,13 @@ const userMatches = computed(() => (userActions.interactions.value.filter(intera
     <Tabs default-value="likes" class="w-full" v-if="!userActions.isLoading?.value && userActions.interactions.value.length">
       <TabsList class="w-full justify-start">
         <TabsTrigger value="likes">
-          {{usersLikes.length}} Like{{usersLikes.length > 1 ? 's' : ''}}
+          {{usersLikes.length}} like{{usersLikes.length > 1 ? 's' : ''}}
         </TabsTrigger>
         <TabsTrigger value="views">
-          {{usersViews.length}} View{{usersViews.length > 1 ? 's' : ''}}
+          {{usersViews.length}} view{{usersViews.length > 1 ? 's' : ''}}
         </TabsTrigger>
         <TabsTrigger value="matches">
-          {{userMatches.length}} Match{{userMatches.length > 1 ? 's' : ''}}
+          {{userMatches.length}} match{{userMatches.length > 1 ? 's' : ''}}
         </TabsTrigger>
       </TabsList>
       <TabsContent value="likes">

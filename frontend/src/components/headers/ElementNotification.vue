@@ -2,9 +2,7 @@
 import {type Notification, NotificationType} from "@/types/notification";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {capitalizeFirstLetter} from "../../lib/utils";
-import URL from "@/helpers/URL";
-
-const url = URL + "/uploads/";
+import {getSrcImageFromPicture} from "@/helpers/getSrcImageFromPicture";
 
 defineProps<{
   notifications: Notification[],
@@ -18,7 +16,7 @@ defineProps<{
   }">
     <div class="flex">
       <Avatar class="w-6 h-6 mr-2">
-        <AvatarImage :src="notification.target_user.pictures?.[0] ?? ''" alt="user profile" />
+        <AvatarImage :src="getSrcImageFromPicture(notification.target_user.pictures?.[0])" alt="user profile" />
         <AvatarFallback>User</AvatarFallback>
       </Avatar>
       <p class="max-w-80 truncate">

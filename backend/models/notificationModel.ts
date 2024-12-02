@@ -5,11 +5,12 @@ import {io} from "../index.ts";
 
 export default class NotificationModel {
 	static async getNotifications(user_id: string) {
-		const queryText = `SELECT * FROM notifications WHERE user_id = $1`
-		return await NotificationModel.executeQuery(queryText, [user_id])
-	}
-	static async getTargetNotifications(user_id: string) {
-		const queryText = `SELECT * FROM notifications WHERE target_user_id = $1`
+		const queryText = `SELECT * FROM notifications WHERE user_id = $1 AND target_user_id NOT IN (
+        SELECT target_user_id
+        FROM user_actions
+        WHERE user_id = $1
+          AND action_type = 'block'
+    );`
 		return await NotificationModel.executeQuery(queryText, [user_id])
 	}
 

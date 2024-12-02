@@ -26,7 +26,13 @@ export default class ActionsModel {
 		const queryText = `
 					SELECT * FROM user_actions
 					WHERE user_id = $1
-					OR target_user_id = $1;
+					OR target_user_id = $1
+				  AND target_user_id NOT IN (
+                  SELECT target_user_id
+                  FROM user_actions
+                  WHERE user_id = $1
+                    AND action_type = 'block'
+              );
 			`;
 		return await ActionsModel.executeQuery(queryText, [user_id])
 	}
@@ -38,8 +44,14 @@ export default class ActionsModel {
 										 ON i1.user_id = i2.target_user_id
 												 AND i1.target_user_id = i2.user_id
 			 WHERE i1.user_id = $1
-				 AND i1.action_type = 'like'
-				 AND i2.action_type = 'like';
+				AND i1.action_type = 'like'
+				AND i2.action_type = 'like'
+				AND i1.target_user_id NOT IN (
+					SELECT target_user_id
+					FROM user_actions
+					WHERE user_id = $1
+				AND action_type = 'block'
+				);
 		`
 		const matches = await ActionsModel.executeQuery(queryText, [user_id])
 		return matches.map((match: {matched_user_id: string}) => {
@@ -52,16 +64,13 @@ export default class ActionsModel {
 		})
 	}
 
-	static async getTargetInteractionsByUserAndTargetId(user_id: string, target_user_id: string) {
-		const queryText = `SELECT * FROM user_actions
-            WHERE (user_id = $1 AND target_user_id = $2)
-            OR (user_id = $2 AND target_user_id = $1);`
-		return await ActionsModel.executeQuery(queryText, [user_id, target_user_id])
-	}
-
 	static async getAllTargetInteractionsByTargetUserId(target_user_id: string) {
-		const queryText = `SELECT * FROM user_actions
-						WHERE target_user_id = $1;`
+		const queryText = `SELECT * FROM user_actions WHERE target_user_id = $1 AND user_id NOT IN (
+        SELECT target_user_id
+        FROM user_actions
+        WHERE user_id = $1
+          AND action_type = 'block'
+    );`
 		return await ActionsModel.executeQuery(queryText, [target_user_id])
 	}
 

@@ -14,7 +14,8 @@ export default class BrowsingController {
 
 		// TODO: QUENTIN : Je te laisse ajouter ton matchning users ici, et supprimer mon random user
 		// const matchingUsers = getMatchingUsersForUser(user, true);
-		const users : User[] = await UserModel.getRandomUsers(limit, user.id)
+		let users : User[] = await UserModel.getRandomUsers(limit, user.id)
+		users = users.filter(u => u.first_name !== null);
 
 		const formattedUsers = [];
 

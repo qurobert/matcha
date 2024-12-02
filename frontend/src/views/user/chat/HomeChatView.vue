@@ -1,53 +1,53 @@
 <script setup lang="ts">
-import {useFakeUser} from "@/composables/useFakeUser";
 import MyContainer from "@/components/utility/MyContainer.vue";
 import AvatarWithStatus from "@/components/ui/avatar/AvatarWithStatus.vue";
 import moment from "moment";
-import _ from "lodash";
-const fakeUsers = useFakeUser(1);
+import {useHomeChat} from "@/composables/useHomeChat";
+import Loading from "@/components/icons/Loading.vue";
+const homeChat = useHomeChat();
 </script>
 
 <template>
   <MyContainer>
     <h1 class="text-center text-3xl">Chat</h1>
-    <section class="m-4 mb-8">
+    <Loading v-if="homeChat.isLoading.value" />
+    <p v-if="!homeChat.isLoading.value && !homeChat.users.value.length">No matches yet</p>
+    <section class="m-4 mb-8" v-if="!homeChat.isLoading.value && homeChat.users.value.length">
       <h2 class="text-gradient-primary text-lg">Matches</h2>
       <div class="flex w-full overflow-x-auto whitespace-nowrap">
-        <RouterLink v-for="(fakeUser, index) in fakeUsers" :key="fakeUser.id" class="my-2"
+        <RouterLink v-for="(user, index) in homeChat.users.value" :key="user?.id" class="my-2 text-center"
              :class="{
-                'mr-1': index === 0,
-                'mx-1': index !== 0
+                'mr-4': index === 0,
+                'mx-4': index !== 0
              }"
-                    :to="'/chat/' + fakeUser.id"
+                    :to="'/chat/' + user?.id"
         >
-          <AvatarWithStatus :picture="fakeUser.pictures?.[0]" />
-          <p class="text-lg">{{fakeUser.username}}</p>
+          <AvatarWithStatus :picture="user?.pictures?.[0]" />
+          <p class="text-lg">{{user.username}}</p>
         </RouterLink>
       </div>
     </section>
-    <section class="m-4">
+    <section class="m-4" v-if="!homeChat.isLoading.value && homeChat.users.value.length">
       <h2 class="text-gradient-primary text-lg">Messages</h2>
 
-        <RouterLink v-for="(fakeUser, index) in _.shuffle(fakeUsers)" :key="fakeUser.id" class="flex flex-nowrap cursor-pointer group"
+        <RouterLink v-for="(user, index) in homeChat.users.value" :key="user.id" class="flex flex-nowrap cursor-pointer group"
              :class="{
                 'mt-2 mb-6': index === 0,
                 'my-6': index !== 0
              }"
-                    :to="'/chat/' + fakeUser.id"
+                    :to="'/chat/' + user.id"
         >
-          <AvatarWithStatus :picture="fakeUser.pictures?.[0]" size="md"/>
+          <AvatarWithStatus :picture="user.pictures?.[0]" size="md"/>
           <div class="truncate px-4 group-hover:opacity-65">
             <p>
               {{
-                fakeUser.first_name + ' ' +
-                fakeUser.last_name + ' ' +
-                moment().diff(fakeUser.date_of_birth, 'years', false)
+                user.first_name + ' ' +
+                user.last_name + ' ' +
+                moment().diff(user.date_of_birth, 'years', false)
               }}
             </p>
-            <p class="truncate ">
-              {{
-                fakeUser.biography
-              }}
+            <p class="truncate text-sm text-gray">
+              {{user.message ?? 'Click to start a conversation'}}
             </p>
           </div>
         </RouterLink>

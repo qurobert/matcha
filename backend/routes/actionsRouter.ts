@@ -13,6 +13,7 @@ actionsRouter.delete('/report', verifyAuth, TargetInteractionValidator(), Action
 actionsRouter.post('/block', verifyAuth, TargetInteractionValidator(), ActionsController.blockUser)
 actionsRouter.delete('/block', verifyAuth, TargetInteractionValidator(), ActionsController.unBlockUser)
 actionsRouter.get('/me', verifyAuth, ActionsController.getInteractionsMe)
+actionsRouter.get('/matches', verifyAuth, ActionsController.getMatches)
 actionsRouter.get('/:target_user_id', verifyAuth, ActionsController.infoTargetUser)
 
 export default actionsRouter
