@@ -4,6 +4,8 @@ import {sendMail} from "../mail/sendMail.ts";
 import {generateVerificationCode} from "../helpers/generateVerificationCode.ts";
 import type {NextFunction, Request, Response} from "express";
 import {JWTAccessToken} from "../helpers/jwt.ts";
+import ActionsModel from "../models/actionsModel.ts";
+import {ActionType} from "../types/enumActionType.ts";
 
 export default class UserController {
 	static async getUserConnected (req: Request, res: Response) {
@@ -116,6 +118,17 @@ export default class UserController {
 		return data.display_name || null;
 	}
 
+	static async _getFameRating(id: string) {
+		const interactions = await ActionsModel.getInteractions(id);
+		const likes = interactions.filter((i) => i.action_type === ActionType.like).length;
+		const dislikes = interactions.filter((i) => i.action_type === ActionType.dislike).length;
+
+		if (likes === 0 && dislikes === 0) {
+			return 0;
+		}
+		return (likes / (likes + dislikes)) * 100;
+	}
+
 	static async _responseUser(user: User) {
 		return {
 			id: user.id,
@@ -137,6 +150,7 @@ export default class UserController {
 			pictures: user.pictures,
 			is_online: user.is_online,
 			last_connection: user.last_connection,
+			fame_rating: await UserController._getFameRating(user.id),
 			preferences: {
 				age: [user.age_preference_min, user.age_preference_max],
 				fame_rating: [user.fame_rating_preference_min, user.fame_rating_preference_max],

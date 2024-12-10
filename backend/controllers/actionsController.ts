@@ -4,6 +4,7 @@ import {ActionType} from "../types/enumActionType.ts";
 import {NotificationType} from "../types/enumNotificationType.ts";
 import NotificationModel from "../models/notificationModel.ts";
 import UserModel from "../models/userModel.ts";
+import UserController from "./userController.ts";
 
 export default class ActionsController {
 	static async likeUser(req: Request, res: Response) {
@@ -107,7 +108,7 @@ export default class ActionsController {
 		];
 		for (let i = 0; i < finalInteractions.length; i++) {
 			const user	= await UserModel.findById(finalInteractions[i].target_user_id);
-			finalInteractions[i].user = user;
+			finalInteractions[i].user = await UserController._responseUser(user);
 		}
 		res.json({
 			status: 200,

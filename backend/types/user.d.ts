@@ -21,6 +21,7 @@ interface Profile {
 	location_lng?: number;
 	interests?: string[];
 	pictures?: string[];
+	fame_rating?: number;
 }
 
 interface Preferences {

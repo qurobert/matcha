@@ -4,8 +4,7 @@ import {FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/compon
 import {Badge} from "@/components/ui/badge";
 import { useField } from 'vee-validate';
 
-
-const interestedInOptions = ['men', 'women', 'both'];
+const interestedInOptions = ['man', 'woman', 'both'];
 const { value, setValue } = useField('interested_in');
 function onInterestedInClick(interestedIn: string) {
   setValue(interestedIn);

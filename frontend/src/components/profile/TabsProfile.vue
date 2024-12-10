@@ -15,7 +15,7 @@ const userMatches = computed(() => (userActions.interactions.value.filter(intera
   <section>
     <h2 class="flex items-center m-4 text-gradient-primary">
       <font-awesome-icon icon="bolt" class="w-6 h-6 mr-2 text-accent background-gradient-primary bg-clip-text" />
-      Activités
+      Activities
     </h2>
     <Loading v-if="userActions.isLoading?.value" />
     <p v-if="!userActions.isLoading?.value && !userActions.interactions.value.length" class="ml-4">

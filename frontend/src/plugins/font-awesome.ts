@@ -27,7 +27,8 @@ import {faPepperHot,
 	faEye,
 	faShapes,
 	faChevronLeft,
-	faEllipsis
+	faEllipsis,
+	faPercent,
 } from "@fortawesome/free-solid-svg-icons";
 import {faBell as faBellRegular} from "@fortawesome/free-regular-svg-icons";
 
@@ -61,7 +62,8 @@ library.add(
 	faEye,
 	faShapes,
 	faChevronLeft,
-	faEllipsis
+	faPercent,
+	faEllipsis,
 );
 
 export {FontAwesomeIcon};

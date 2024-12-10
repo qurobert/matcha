@@ -68,6 +68,13 @@ function goBack() {
               :icon_content="item?.icon"
               :class="item?.color"
           />
+          <IconPublicProfile
+              :text_content="'Fame rating: ' + (userInfo.user?.fame_rating ?? '0') + '%' "
+              :text_is_bold="false"
+              :text_is_title="false"
+              icon_content="percent"
+              :icon_is_margin_right="true"
+          />
         </div>
         <!-- Interests -->
         <div class="mb-2">

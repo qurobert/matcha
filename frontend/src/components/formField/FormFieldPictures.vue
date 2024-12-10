@@ -77,7 +77,7 @@ function clearPicture(event: Event, index: any) {
             </label>
             <input
                 type="file"
-                accept="image/*"
+                accept="image/png, image/jpeg"
                 class="hidden"
                 @change="(event: Event) => previewImage(event, index)"
                 :id="'input-file' + index"
