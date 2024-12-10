@@ -66,6 +66,25 @@ export default class ActionsController {
 		})
 	}
 
+	static async getMatches(req: Request, res: Response) {
+		const user = req.user;
+		if (!user) throw new Error("Not connected")
+		const matches = await ActionsModel.getMatches(user.id);
+		const final_matches = [];
+		for (let i = 0; i < matches.length; i++) {
+			const user	= await UserModel.findById(matches[i].target_user_id);
+			final_matches.push({
+				...matches[i],
+				user,
+			});
+		}
+		res.json({
+			status: 200,
+			message: "Get matches",
+			matches: final_matches
+		})
+	}
+
 	static async getInteractionsMe(req: Request, res: Response) {
 		const user = req.user;
 		if (!user) throw new Error("Not connected")
@@ -150,7 +169,6 @@ export default class ActionsController {
 		const {target_user_id} = req.params;
 		if (!user) throw new Error("Not connected")
 		if (user.id == target_user_id) throw new Error("Can't have same user_id and target_user_id")
-		console.log("user.id", user.id)
 		const interactions = await ActionsModel.getInteractions(user.id);
 		const notifications = await NotificationModel.getNotifications(target_user_id);
 

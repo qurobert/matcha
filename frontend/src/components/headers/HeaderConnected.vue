@@ -11,28 +11,28 @@ import {
 import HeaderNotifications from "@/components/headers/HeaderNotifications.vue";
 const authStore = useAuthStore()
 const router = useRouter()
-import URL from "@/helpers/URL";
+import {getSrcImageFromPicture} from "@/helpers/getSrcImageFromPicture";
 
 const logout = () => {
   authStore.logout()
   router.push("/")
 }
-const url = URL + "/uploads/";
-const user = useAuthStore().user;
 </script>
 
 <template>
   <div class="flex">
     <HeaderNotifications />
 
-    <div class="relative w-6 h-6 mr-4">
+    <RouterLink class="relative w-6 h-6 mr-4" :to="{
+      name: 'home-chat'
+    }">
       <font-awesome-icon icon="comments" class="w-6 h-6"/>
-    </div>
+    </RouterLink>
 
     <DropdownMenu>
       <DropdownMenuTrigger class="h-6">
         <Avatar class="w-6 h-6 flex justify-start">
-          <AvatarImage v-if="user?.pictures?.[0]" :src="url + user?.pictures?.[0]" alt="user profile" />
+          <AvatarImage v-if="authStore.is_connected" :src="getSrcImageFromPicture(authStore?.user.pictures?.[0])" alt="user profile" />
           <AvatarFallback>Auth</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>

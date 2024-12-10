@@ -11,7 +11,6 @@ export default class BrowsingController {
 		const user = req.user;
 		const limit = Number(req.query.n) || 10;
 		if (limit > 30) throw new Error('Number of users to browse must be less than 30');
-
 		if (!user || !user.id) throw new Error('User not found');
 
 		const matchingUsers: User[] = await BrowsingService.getMatchingUsersForUser(user.id, true);

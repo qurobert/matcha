@@ -23,7 +23,7 @@ const url = URL + "/uploads/";
       <AvatarImage v-if="user.pictures?.[0]" :src="url + user.pictures?.[0]" alt="user profile" />
       <AvatarFallback>Auth</AvatarFallback>
     </Avatar>
-    <p class="text-lg">{{ capitalizeFirstLetter(user.username) }}, {{ age }}</p>
+    <p class="text-lg">{{ capitalizeFirstLetter(user.first_name) + ' ' + capitalizeFirstLetter(user.last_name) }}, {{ age }}</p>
     <div class="lg:w-1/2 md:w-2/3 sm:w-full flex justify-between p-4 w-full">
 
       <RouterLink to="/profile/preferences" class="flex items-center flex-col">

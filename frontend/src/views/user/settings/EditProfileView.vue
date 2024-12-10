@@ -16,8 +16,8 @@ const {onSubmit, hasWritten, isValid} = useEditProfile();
 </script>
 
 <template>
-  <HeaderChildrenProfilePage :on-submit="onSubmit" :is-valid="isValid" :has-written="hasWritten" text="Edit info" />
   <MyContainer>
+    <HeaderChildrenProfilePage :on-submit="onSubmit" :is-valid="isValid" :has-written="hasWritten" text="Edit info" />
     <form @submit.prevent="onSubmit">
 
       <FormFieldPictures />

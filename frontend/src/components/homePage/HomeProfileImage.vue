@@ -2,6 +2,7 @@
 import {Button} from "@/components/ui/button";
 import {type Ref, ref} from "vue";
 import {useImageHomeStore} from "@/stores/imageHomeStore";
+import {getSrcImageFromPicture} from "@/helpers/getSrcImageFromPicture";
 
 
 const imageHomeStore = useImageHomeStore();
@@ -39,7 +40,7 @@ const props = defineProps({
 
 <template>
   <div class="bg-no-repeat bg-cover md:w-2/3 lg:w-6/12 xl:w-1/3 w-full bg-top relative"
-       :style="'background-image: url(\'' + images[imageHomeStore.getCurrentIndex] + '\')'"
+       :style="'background-image: url(\'' + getSrcImageFromPicture(images[imageHomeStore.getCurrentIndex]) + '\')'"
        @click.prevent="handleClick">
 
     <div class="flex justify-center absolute w-full p-4" ref="divRef">

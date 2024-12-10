@@ -86,7 +86,7 @@ const router = createRouter({
       path: '/chat/:id',
       name: 'chat',
       component: () => import('@/views/user/chat/ChatView.vue'),
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: true, hideHeader: true },
     },
     {
       path: '/profile/:id',
@@ -123,7 +123,6 @@ const router = createRouter({
 
 router.beforeResolve(async (to, from, next) => {
   if (from.name === "home" && to.name !== "public-profile") {
-    console.log("RESET STORE");
     const useTargetStore = useUserTargetStore();
     useTargetStore.reset();
   }
