@@ -60,9 +60,15 @@ export default class ActionsModel {
 	}
 
 	static async getAllTargetInteractionsByTargetUserId(target_user_id: string) {
-		const queryText = `SELECT * FROM user_actions
-						WHERE target_user_id = $1;`
-		return await ActionsModel.executeQuery(queryText, [target_user_id])
+		const client = await pool.connect();
+		try {
+			const query = `SELECT * FROM user_actions WHERE target_user_id = $1;`
+			const queryReturned = await client.query(query, [target_user_id])
+			return queryReturned.rows
+		}
+		finally {
+			client.release()
+		}
 	}
 
 	static async executeQuery(queryText: string, values?: string[]) {

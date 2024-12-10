@@ -106,8 +106,17 @@ export default class UserController {
 		});
 	}
 
+	static async getLocationDisplayName(lat: number | undefined, lng: number | undefined): Promise<string | null> {
+		if (!lat || !lng) {
+			return null;
+		}
+
+		const response = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&zoom=10&format=jsonv2`);
+		const data = await response.json();
+		return data.display_name || null;
+	}
+
 	static async _responseUser(user: User) {
-		const url = (lat: number, lng: number) => `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&zoom=10&format=jsonv2`
 		return {
 			id: user.id,
 			email: user.email,
@@ -123,7 +132,7 @@ export default class UserController {
 			biography: user.biography,
 			location_lat: user.location_lat,
 			location_lng: user.location_lng,
-			location: user.location_lat && user.location_lng ? await fetch(url(user.location_lat, user.location_lng)).then(res => res.json()).then(data => data.display_name) : null,
+			location: await this.getLocationDisplayName(user.location_lat, user.location_lng),
 			interests: user.interests,
 			pictures: user.pictures,
 			is_online: user.is_online,

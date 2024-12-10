@@ -4,21 +4,21 @@ import {faker} from "@faker-js/faker";
 import UserModel from "../models/userModel.ts";
 import bcrypt from "bcryptjs";
 import UserController from "./userController.ts";
+import BrowsingService from "../services/browsingService.ts";
 
 export default class BrowsingController {
 	static async browse(req: Request, res: Response) {
 		const user = req.user;
 		const limit = Number(req.query.n) || 10;
 		if (limit > 30) throw new Error('Number of users to browse must be less than 30');
+
 		if (!user || !user.id) throw new Error('User not found');
 
-		// TODO: QUENTIN : Je te laisse ajouter ton matchning users ici, et supprimer mon random user
-		// const matchingUsers = getMatchingUsersForUser(user, true);
-		const users : User[] = await UserModel.getRandomUsers(limit, user.id)
+		const matchingUsers: User[] = await BrowsingService.getMatchingUsersForUser(user.id, true);
 
 		const formattedUsers = [];
 
-		for (const user of users) {
+		for (const user of matchingUsers) {
 			formattedUsers.push(await UserController._responseUser(user));
 		}
 		res.status(200).json({status: 200, message: 'Browsing', users: formattedUsers});
@@ -32,7 +32,7 @@ export default class BrowsingController {
 			'museum', 'humor', 'history', 'mode', 'trip', 'action movie', 'boards games', 'horror', 'pop', 'painting', 'documentary'
 		];
 		const gender = ["woman", "man"]
-		const interested_in = ["men", "women", "both"]
+		const interested_in = ["man", "woman", "both"]
 		for (let i = 0; i < numbers; i++) {
 			const age_preference_min = faker.number.int({ min: 18, max: 100 });
 			const fame_rating_preference_min = faker.number.int({max: 100 });
@@ -71,7 +71,7 @@ export default class BrowsingController {
 				verify_email: true,
 				notification: true,
 			}
-			UserModel.createFakeUser(user);
+			await UserModel.createFakeUser(user);
 		}
 		res.status(200).json({status: 200, message: `Created ${numbers} fake user(s)`,});
 	}

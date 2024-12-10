@@ -34,24 +34,24 @@ export default class UserModel {
         }
     }
 
-    static async getMatchingUsersForUser(userId: string, blockedUserIds: string[], userGender?: string, userInterestedIn?: string) {
+    static async getMatchingUsersForUser(userId: string, blockedUserIds: string[], gender: string, interestedIn: string) {
         const client = await pool.connect()
         try {
             const {rows} = await client.query(`
             SELECT * FROM Users
             WHERE
-                first_name IS NOT NULL AND
-                id != $1 AND
-                id NOT IN (SELECT unnest($2::int[])) AND
-                (
-                    interested_in = 'everyone' OR
-                    interested_in = $3
-                ) AND
-                (
-                    $4 = 'everyone' OR
-                    gender = $4
+                id != $1
+                AND id NOT IN (SELECT unnest($2::int[]))
+                AND first_name IS NOT NULL
+                AND (
+                    interested_in = 'both'
+                    OR interested_in = $3
                 )
-            `, [userId, blockedUserIds, userGender, userInterestedIn]);
+                AND (
+                    $4 = 'both'
+                    OR gender = $4
+                )
+            `, [userId, blockedUserIds, gender, interestedIn]);
             return rows
         } finally {
             client.release()
