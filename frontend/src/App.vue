@@ -22,7 +22,7 @@ const authStore = useAuthStore();
           v-if="route.name === 'home' && !authStore.is_connected"
           class="absolute inset-0 bg-black/10 backdrop-blur-sm"
       ></div>
-      <div v-if="route.name === 'home' && !authStore.is_connected" class="absolute bg-gradient-to-t from-[rgba(255,255,255,0)] via-[rgba(125,132,144,0)] to-black w-full h-full"></div>
+      <div v-if="route.name === 'home' && !authStore.is_connected" class="absolute bg-gradient-to-t from-[rgba(255,255,255,0)] to-black w-full h-full"></div>
 <!--      -->
       <AppHeader />
       <main class="flex-1">
