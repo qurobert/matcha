@@ -207,7 +207,7 @@ function reportInfo(user: Ref<UserWithInfo | null>, infoTargetUser: any): UserAc
 function toggleReportOrBlock(textPrimary: string, textSecondary: string, user: Ref<UserWithInfo | null>, id: 'report' | 'block', fetchPrimary: (id: string) => Promise<any>, fetchSecondary: (id: string) => Promise<any>) {
 	const {toast} = useToast();
 	const index = user?.value?.actions?.findIndex(action => action.id === id);
-	if (index === -1 || !index || user?.value?.actions?.[index] === undefined) return
+	if (index === -1 || index === undefined || index === null || user?.value?.actions?.[index] === undefined) return
 	const is_primary = user?.value?.actions[index].title === textPrimary;
 
 	is_primary ? fetchPrimary(user?.value?.id) : fetchSecondary(user?.value?.id)

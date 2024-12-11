@@ -29,7 +29,7 @@ export const useUserTargetStore = defineStore('targetUser', () => {
         activeUserIndex.value += 1;
     };
     const goToNextUser =  () => {
-        if (activeUserIndex.value + 1 >= users.value.length - 1) {
+        if (activeUserIndex.value + 1 > users.value.length - 1) {
             fetchNewUsers()
         } else {
             incrementActiveUserIndex();

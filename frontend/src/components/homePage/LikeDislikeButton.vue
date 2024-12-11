@@ -24,14 +24,16 @@ function goToNext(message: string) {
   }
 }
 function dislikeUser() {
-  fetchDislikeUser(targetStore.activeUser.id)
-  goToNext(`Dislike ${targetStore.activeUser.first_name}`)
+  fetchDislikeUser(targetStore.activeUser.id).then(() => {
+    goToNext(`Dislike ${targetStore.activeUser.first_name}`)
+  })
 }
 
 function likeUser() {
 
-  fetchLikeUser(targetStore.activeUser.id)
-  goToNext(`Like ${targetStore.activeUser.first_name}`)
+  fetchLikeUser(targetStore.activeUser.id).then(() => {
+    goToNext(`Like ${targetStore.activeUser.first_name}`)
+  })
 }
 </script>
 

@@ -124,7 +124,7 @@ export default class UserController {
 		const dislikes = interactions.filter((i) => i.action_type === ActionType.dislike).length;
 
 		if (likes === 0 && dislikes === 0) {
-			return 0;
+			return 50;
 		}
 		return (likes / (likes + dislikes)) * 100;
 	}

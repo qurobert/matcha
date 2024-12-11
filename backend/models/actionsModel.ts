@@ -1,4 +1,4 @@
-import type {ActionType} from "../types/enumActionType.ts";
+import {ActionType} from "../types/enumActionType.ts";
 import pool from "./db.ts";
 import {generateId} from "../helpers/generateId.ts";
 
@@ -72,6 +72,11 @@ export default class ActionsModel {
           AND action_type = 'block'
     );`
 		return await ActionsModel.executeQuery(queryText, [target_user_id])
+	}
+
+	static async getAllInteractions(user_id: string) {
+		const queryText = `SELECT * FROM user_actions WHERE (user_id = $1 OR target_user_id = $1);`;
+		return await ActionsModel.executeQuery(queryText, [user_id]);
 	}
 
 	static async executeQuery(queryText: string, values?: string[]) {

@@ -54,8 +54,8 @@ export default class BrowsingController {
 					faker.image.urlPicsumPhotos({ width: 1920, height: 1080, blur: 0, grayscale: false }),
 				],
 				interests: allInterests.slice(0, faker.number.int({ min: 1, max: 8 })),
-				location_lat: faker.number.float({ min: 45, max: 49 }),
-				location_lng: faker.number.float({ min: -5, max: 0 }),
+				location_lat: 48.85206549830759,
+				location_lng: 2.3483276367187504,
 
 				interests_preference: allInterests.slice(0, faker.number.int({ min: 1, max: 8 })),
 				interested_in: interested_in[faker.number.int({ min: 0, max: 1 })],

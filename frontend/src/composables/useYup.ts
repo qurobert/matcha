@@ -79,7 +79,7 @@ export const useYup = () => {
 	})
 	.typeError("Veuillez entrer une date valide au format DD/MM/YYYY")
 	.required("La date est obligatoire")
-	.min(new Date(1900, 0, 0), "La date est trop ancienne");
+	.max(new Date(2007, 0, 0), "You need to have at leat 18 years old");
 
 	return {
 		emailSchema,

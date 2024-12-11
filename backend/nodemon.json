@@ -1,5 +1,5 @@
 {
-  "watch": ["controllers", "helpers", "mail", "middlewares", "models", "routes", "validators", "index.ts", "nodemon.json", "tsconfig.json"],
+  "watch": ["controllers", "helpers", "mail", "middlewares", "models", "routes", "validators", "index.ts", "nodemon.json", "tsconfig.json", "services"],
   "ext": "ts,js,json",
   "ignore": ["node_modules"],
   "exec": "bun run index.ts",

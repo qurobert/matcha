@@ -34,7 +34,7 @@ export default class UserModel {
         }
     }
 
-    static async getMatchingUsersForUser(userId: string, blockedUserIds: string[], gender: string, interestedIn: string) {
+    static async getMatchingUsersForUser(userId: string, filteredUserIds: string[], gender: string, interestedIn: string) {
         const client = await pool.connect()
         try {
             const {rows} = await client.query(`
@@ -51,7 +51,7 @@ export default class UserModel {
                     $4 = 'both'
                     OR gender = $4
                 )
-            `, [userId, blockedUserIds, gender, interestedIn]);
+            `, [userId, filteredUserIds, gender, interestedIn]);
             return rows
         } finally {
             client.release()
@@ -183,7 +183,7 @@ export default class UserModel {
             const values: any[] = [];
 
             Object.entries(profile_or_preference).forEach(([key, value]) => {
-                if (value) {
+                if (value !== null && value !== undefined) {
                     setClauses.push(`${key} = $${setClauses.length + 1}`);
                     values.push(value);
                 }

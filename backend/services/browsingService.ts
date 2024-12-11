@@ -10,22 +10,20 @@ export default class BrowsingService {
         // Fetch current user details
         const currentUser: User = await UserModel.findById(currentUserId);
 
-        // Fetch blocked
-        const actionsResult = await ActionsModel.getAllTargetInteractionsByTargetUserId(currentUserId);
-
-        const blockedUserIds = actionsResult
-            .filter(action => action.action_type === 'block')
+        // Fetch blocked and already liked
+        const filteredUserIds = (await ActionsModel.getAllInteractions(currentUserId))
+            .filter(action => action.action_type === 'block' || action.action_type === 'like')
             .map(action => action.target_user_id);
 
+        console.log(filteredUserIds);
         let matchingUsers = await UserModel.getMatchingUsersForUser(
-            currentUserId, blockedUserIds, currentUser.gender!, currentUser.interested_in!);
+            currentUserId, filteredUserIds, currentUser.gender!, currentUser.interested_in!);
 
         // Sort and filter users
         matchingUsers = await this.sortUsers(matchingUsers, currentUser);
         if (filter) {
             matchingUsers = await this.filterUsers(matchingUsers, currentUser);
         }
-
 
         return matchingUsers;
     }
@@ -120,15 +118,14 @@ export default class BrowsingService {
 
             // Minimum interests match filter
             const commonInterests = (user.interests || []).filter(
-                interest => (currentUser.interests || []).includes(interest)
+                interest => (currentUser.interests_preference || []).includes(interest)
             ).length;
-            if (commonInterests === 0) {
+            if (commonInterests === 0 && currentUser.interests_preference && currentUser.interests_preference.length != 0) {
                 return false;
             }
-            return true; // Ne pas oublier de retourner true si tous les filtres passent !
+            return true;
         }));
 
-        // Maintenant on filtre en fonction des résultats du Promise.all
         return users.filter((_, index) => results[index] === true);
     }
 

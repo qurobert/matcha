@@ -22,7 +22,6 @@ export const useHomeChat = () => {
 			isLoading.value = false;
 		},
 		onError(e) {
-			console.log(e);
 			const {toast} = useToast();
 			toast({
 				title: "An error occurred while fetching users",
