@@ -51,7 +51,7 @@ export default class AuthController {
             const user = await UserModel.findById(emailTokenInfo.id);
             if (!user) return res.status(403).send("Error refresh token");
             await UserModel.validate_email(user.email);
-            return res.redirect('http://localhost/mail-verify-email');
+            return res.redirect('http://localhost:8080/mail-verify-email');
         })
     }
 

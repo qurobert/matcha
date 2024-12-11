@@ -27,7 +27,7 @@ const {
         <FormItem>
           <FormLabel>Email</FormLabel>
           <FormControl>
-            <Input placeholder="Enter your username" v-bind="componentField" type="email"/>
+            <Input placeholder="Enter your email" v-bind="componentField" type="email"/>
           </FormControl>
           <FormMessage />
         </FormItem>

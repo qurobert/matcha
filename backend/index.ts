@@ -21,7 +21,7 @@ import ChatRouter from "./routes/chatRouter.ts";
 
 // Configuring the app
 app.use(cors({
-	origin: 'http://localhost',
+	origin: 'http://localhost:8080',
 	methods: ['GET', 'POST', 'PUT', 'DELETE'],
 	credentials: true,
 	preflightContinue: false,
@@ -51,7 +51,7 @@ const server = http.createServer(app);
 const activeUsers = new Map();
 export const io = socketIo(server, {
 	cors: {
-		origin: "http://localhost",
+		origin: "http://localhost:8080",
 		methods: ["GET", "POST"],
 		credentials: true,
 	},
