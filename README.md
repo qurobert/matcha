@@ -29,10 +29,11 @@ cd <project-directory>
 
 ### 2. Environment Configuration
 
-Create a `.env` file in the root directory with necessary environment variables:
-- Database credentials
-- API keys
-- Other configuration settings
+Create a `.env` file in the root directory with necessary environment variables like the .env.example and add:
+- random jwt access token
+- random jwt refresh token
+- address mail for sending verification and reset password mail
+- password of the mail address
 
 ### 3. Launch the Application
 
@@ -107,9 +108,3 @@ npm run dev
 ## License
 
 Specify your project's license here (e.g., MIT, Apache 2.0)
-
-## Contact
-
-Your Name - your.email@example.com
-
-Project Link: [https://github.com/your-username/your-project-name](https://github.com/your-username/your-project-name)
